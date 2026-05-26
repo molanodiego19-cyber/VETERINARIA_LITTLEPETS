@@ -135,13 +135,7 @@ USE_TZ = True
 import os
 
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
 TIME_ZONE = 'America/Bogota'
 USE_TZ = True
 USE_L10N = False
