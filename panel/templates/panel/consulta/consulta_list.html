@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Consultas</div>
+    <div class="page-sub">Gestión de consultas médicas</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_consulta_create' %}">+ Nueva Consulta</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Cita</th>
+        <th>Veterinario</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin</th>
+        <th>Diagnóstico</th>
+        <th>Peso</th>
+        <th>Temp.</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for consulta in consultas %}
+      <tr>
+        <td><strong>{{ consulta.cita }}</strong></td>
+        <td>{{ consulta.veterinario }}</td>
+        <td>{{ consulta.fecha_inicio }}</td>
+        <td>{{ consulta.fecha_fin }}</td>
+        <td>{{ consulta.diagnostico_definitivo }}</td>
+        <td>{{ consulta.peso_en_consulta }} kg</td>
+        <td>{{ consulta.temperatura }} °C</td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_consulta_edit' consulta.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_consulta_delete' consulta.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="empty-msg">No hay consultas registradas aún.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

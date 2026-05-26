@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel Veterinario{% endblock %}</title>
+
+    {% load static %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --green: #3a7d5c;
+            --green-mid: #52a878;
+            --green-light: #6dc492;
+            --green-bg: #e9f5ee;
+            --cream: #f5f0e8;
+            --white: #ffffff;
+            --text: #222222;
+            --muted: #888888;
+            --border: #f0ebe0;
+            --sidebar-w: 220px;
+            --nav-h: 60px;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── PAGE HEADER ── */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--texto);
+}
+
+.page-sub {
+    font-size: 0.95rem;
+    color: #555;
+    margin-top: 0.2rem;
+}
+
+/* ── BOTONES ── */
+.btn-verde {
+    background-color: var(--verde);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-verde:hover {
+    background-color: var(--verde-claro);
+    transform: scale(1.05);
+}
+
+.btn-verde:active {
+    transform: scale(0.95);
+}
+
+/* ── TABLA ── */
+.table-wrap {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background-color: var(--blanco);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead th {
+    text-align: left;
+    padding: 12px 15px;
+    background-color: var(--borde);
+    color: var(--texto);
+    font-weight: 600;
+    border-bottom: 2px solid var(--borde);
+}
+
+tbody td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: middle;
+    color: var(--texto);
+}
+
+tbody tr:hover {
+    background-color: var(--gris-claro);
+}
+
+/* ── ACCIONES EN FILA ── */
+.acciones {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-editar {
+    background-color: #52b788;
+    color: #fff;
+}
+
+.btn-editar:hover {
+    background-color: #2d6a4f;
+    transform: scale(1.05);
+}
+
+.btn-eliminar {
+    background-color: #ff4d4f;
+    color: #fff;
+}
+
+.btn-eliminar:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05);
+}
+
+/* ── MENSAJE VACÍO ── */
+.empty-msg {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 1rem 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .table-wrap {
+        overflow-x: scroll;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tbody tr {
+        margin-bottom: 1rem;
+        border-bottom: 2px solid var(--borde);
+    }
+
+    tbody td {
+        position: relative;
+        padding-left: 50%;
+        text-align: left;
+    }
+
+    tbody td::before {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        font-weight: 600;
+        white-space: nowrap;
+        content: attr(data-label);
+    }
+}
+
+        /* NAVBAR */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            height: var(--nav-h);
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        }
+
+        .nav-brand {
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: var(--green);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-brand span { color: var(--text); }
+
+        .nav-page-title {
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--muted);
+            flex: 1;
+        }
+
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--green);
+        }
+
+        .btn-danger {
+            font-size: .8rem;
+            font-weight: 700;
+            color: #fff;
+            background: #e05555;
+            border-radius: 20px;
+            padding: 7px 16px;
+            text-decoration: none;
+        }
+
+        .btn-danger:hover { background: #c43d3d; }
+
+        /* LAYOUT */
+        .layout {
+            display: flex;
+            margin-top: var(--nav-h);
+            flex: 1;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--white);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: var(--nav-h);
+            bottom: 0;
+            overflow-y: auto;
+            padding: 16px 0;
+            transition: transform .25s;
+        }
+
+        .sidebar-home {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            font-weight: 700;
+            color: #fff;
+            background: var(--green);
+            border-radius: 10px;
+            margin: 0 12px 8px;
+            text-decoration: none;
+        }
+
+        .sidebar-sep {
+            height: 1px;
+            background: var(--border);
+            margin: 8px 16px;
+        }
+
+        .acc-btn {
+            width: 100%;
+            border: none;
+            background: none;
+            padding: 10px 20px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .acc-panel { max-height: 0; overflow: hidden; transition: .25s; }
+        .acc-panel.open { max-height: 300px; }
+
+        .sidebar-link {
+            display: block;
+            padding: 8px 28px;
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .sidebar-link:hover {
+            color: var(--green);
+            background: var(--green-bg);
+        }
+
+        /* CONTENT */
+        .page-content {
+            margin-left: var(--sidebar-w);
+            padding: 32px 28px;
+            flex: 1;
+        }
+
+        footer {
+            margin-left: var(--sidebar-w);
+            text-align: center;
+            padding: 14px;
+            font-size: .78rem;
+            color: var(--muted);
+            background: var(--white);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .page-content, footer { margin-left: 0; }
+            .sidebar-toggle { display: block; }
+        }
+
+        
+
+        /* ── FORM CARD ── */
+        .form-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 2rem;
+            max-width: 600px;
+            box-shadow: 0 4px 16px rgba(0,0,0,.06);
+            border: 1px solid var(--borde);
+        }
+
+        /* ── TITULO ── */
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--verde);
+            margin-bottom: 1.5rem;
+        }
+
+        /* ── FORM GROUP ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: .72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--verde);
+            margin-bottom: .35rem;
+        }
+
+        /* ── INPUTS ── */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+           width: 100%;
+           padding: .7rem 1rem;
+           border: 1.5px solid #e8e8e8;
+           border-radius: 10px;
+           background: var(--crema);
+           font-size: .9rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+           border-color: var(--verde-claro);
+           background: #fff;
+           outline: none;
+        }
+
+        /* ── BOTONES ── */
+        .form-actions {
+           display: flex;
+           gap: .8rem;
+           margin-top: 1.5rem;
+        }
+
+        .btn-verde {
+           background: var(--verde);
+           color: #13d15c;
+           border: none;
+           padding: .6rem 1.4rem;
+           border-radius: 50px;
+           font-weight: 700;
+           cursor: pointer;
+        }
+
+        .btn-verde:hover {
+           background: var(--verde-claro);
+        }
+
+        .btn-marron {
+           background: #6b3a2a;
+           color: #fff;
+           padding: .6rem 1.4rem;
+           border-radius: 50px;
+           text-decoration: none;
+        }
+
+        .btn-marron:hover {
+          background: var(--dorado);
+          color: #6b3a2a;
+        }
+
+        .table-card {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.tabla-bonita {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.tabla-bonita thead {
+    background: linear-gradient(135deg, #3a7d5c, #52a878);
+    color: #fff;
+}
+
+.tabla-bonita th {
+    padding: 14px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.tabla-bonita td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.tabla-bonita tbody tr {
+    transition: all 0.2s ease;
+}
+
+.tabla-bonita tbody tr:hover {
+    background-color: #f4f9f7;
+}
+
+/* total en verde */
+.total {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+/* badge método pago */
+.badge {
+    background: #e0f2f1;
+    color: #00695c;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* acciones */
+.acciones {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-editar {
+    background: #52b788;
+    color: white;
+}
+
+.btn-editar:hover {
+    background: #2d6a4f;
+}
+
+.btn-eliminar {
+    background: #ff4d4f;
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background: #d32f2f;
+}
+
+/* mensaje vacío */
+.empty-msg {
+    text-align: center;
+    padding: 15px;
+    color: #888;
+    font-style: italic;
+}
+    </style>
+    {% block extra_styles %}
+        
+        {% endblock %}
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <a href="{% url 'usuarios:panel_veterinario' %}" class="nav-brand">
+        🐾 Little<span>Pets</span>
+    </a>
+
+    <!-- 🔥 AQUÍ EL FIX -->
+    <span class="nav-page-title">
+        {% block page_name %}Panel del Veterinario{% endblock %}
+    </span>
+
+    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+
+    <a href="{% url 'usuarios:logout' %}" class="btn-danger">Cerrar sesión</a>
+</nav>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a href="{% url 'usuarios:panel_veterinario' %}" class="sidebar-home">🏠 Dashboard</a>
+
+        <div class="sidebar-sep"></div>
+
+        <button class="acc-btn" onclick="toggleAcc(this)">Mi Cuenta ▼</button>
+        <div class="acc-panel">
+            <a href="{% url 'usuarios:perfil_veterinario' %}" class="sidebar-link">👨‍⚕️ Perfil</a>
+            <a href="{% url 'usuarios:contraseña_vet' %}" class="sidebar-link">🔒 Contraseña</a>
+        </div>
+
+        <button class="acc-btn" onclick="toggleAcc(this)">Citas ▼</button>
+        <div class="acc-panel">
+            <a href="{% url 'usuarios:citas_veterinario' %}" class="sidebar-link">📅 Ver citas</a>
+        </div>
+        <button class="acc-btn" onclick="toggleAcc(this)">Factura ▼</button>
+        <div class="acc-panel">
+    <a href="{% url 'panel:panel_factura_list' %}"           class="sidebar-link{% if u == 'panel_factura_list' %} active{% endif %}">           <span class="icon">🧾</span> Facturas</a>
+            <a href="{% url 'panel:panel_detallefactura_list' %}"    class="sidebar-link{% if u == 'panel_detallefactura_list' %} active{% endif %}">    <span class="icon">📊</span> Detalle Factura</a>
+</div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="page-content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+<footer>Little Pets © 2025</footer>
+
+<script>
+function toggleAcc(btn){
+    btn.nextElementSibling.classList.toggle('open');
+}
+
+const sidebar = document.getElementById('sidebar');
+
+document.getElementById('sidebarToggle').onclick = () => {
+    sidebar.classList.toggle('open');
+};
+</script>
+
+{% block extra_scripts %}{% endblock %}
+
+</body>
+</html>

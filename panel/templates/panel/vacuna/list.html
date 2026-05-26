@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Vacunas Catalogo</div>
+    <div class="page-sub">Catálogo de vacunación</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_vacuna_create' %}">+ Nueva Vacuna</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Fabricante</th>
+        <th>Especie</th>
+        <th>Dosis</th>
+        <th>Refuerzo</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vacunas %}
+      <tr>
+        <td><strong>{{ v.nombre }}</strong></td>
+        <td>{{ v.fabricante }}</td>
+        <td>{{ v.especie_objetivo }}</td>
+        <td>{{ v.dosis_total }}</td>
+        <td>{{ v.refuerzo_meses }} meses</td>
+        <td>
+          {% if v.activo %}
+            <span class="badge badge-success">Activa</span>
+          {% else %}
+            <span class="badge badge-default">Inactiva</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_vacuna_edit' v.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_vacuna_delete' v.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="empty-msg">No hay vacunas registradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

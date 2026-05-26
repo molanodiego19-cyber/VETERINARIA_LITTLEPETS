@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetCare — Mi Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf7f2;
+    --warm: #f0e9dc;
+    --sage: #7a9e7e;
+    --sage-dark: #5a7a5e;
+    --sage-light: #b8d4bb;
+    --terracotta: #c4714a;
+    --terracotta-light: #e8b49a;
+    --text: #2c2416;
+    --text-muted: #7a6e60;
+    --white: #ffffff;
+    --card: rgba(255,255,255,0.85);
+    --border: rgba(122,110,96,0.15);
+    --shadow: 0 4px 32px rgba(44,36,22,0.08);
+    --shadow-md: 0 8px 48px rgba(44,36,22,0.12);
+    --radius: 20px;
+    --radius-sm: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(122,158,126,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(196,113,74,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 60% 30%, rgba(184,212,187,0.15) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 260px;
+    background: var(--text);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding: 32px 0;
+    transition: transform 0.3s ease;
+  }
+
+  .logo {
+    padding: 0 28px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .logo-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+
+  .logo-mark span { color: var(--sage-light); font-style: italic; }
+
+  .logo-sub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 2px;
+  }
+
+  .nav {
+    flex: 1;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-section {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.25);
+    padding: 16px 12px 8px;
+    font-weight: 600;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+  .nav-item.active {
+    color: var(--white);
+    background: linear-gradient(135deg, rgba(122,158,126,0.25), rgba(122,158,126,0.12));
+    border: 1px solid rgba(122,158,126,0.3);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: var(--sage-light);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .nav-icon {
+    width: 18px;
+    text-align: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--terracotta);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-user {
+    padding: 20px 20px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sidebar-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-user-info { flex: 1; min-width: 0; }
+  .sidebar-user-name { font-size: 13px; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sidebar-user-role { font-size: 11px; color: rgba(255,255,255,0.35); }
+
+  .logout-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 16px;
+  }
+  .logout-btn:hover { color: var(--terracotta-light); background: rgba(196,113,74,0.1); }
+
+  /* MAIN */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 40px;
+    background: rgba(250,247,242,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--text);
+  }
+
+  .page-title span { color: var(--sage); font-style: italic; }
+
+  .topbar-actions { display: flex; align-items: center; gap: 12px; }
+
+  .topbar-notif {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 18px;
+  }
+
+  .topbar-notif:hover { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(122,158,126,0.1); }
+
+  .notif-dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    border: 2px solid var(--cream);
+  }
+
+  .topbar-cta {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .topbar-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(90,122,94,0.35); }
+
+  /* CONTENT */
+  .content {
+    padding: 36px 40px;
+  }
+
+  /* PANEL SECTIONS */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* WELCOME HERO */
+  .welcome-hero {
+    background: linear-gradient(135deg, var(--sage-dark), var(--text) 60%);
+    border-radius: var(--radius);
+    padding: 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .welcome-hero::before {
+    content: '🐾';
+    position: absolute;
+    right: 40px;
+    font-size: 120px;
+    opacity: 0.07;
+    transform: rotate(-10deg);
+    pointer-events: none;
+  }
+
+  .welcome-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--white);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .welcome-text p { color: rgba(255,255,255,0.55); font-size: 14px; }
+
+  .welcome-stats {
+    display: flex;
+    gap: 20px;
+  }
+
+  .welcome-stat {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 16px 24px;
+    text-align: center;
+  }
+
+  .welcome-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .welcome-stat-label { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--text);
+  }
+
+  .card-action {
+    font-size: 12px;
+    color: var(--sage);
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 4px 10px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .card-action:hover { background: rgba(122,158,126,0.1); }
+
+  /* PET CARDS */
+  .pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+  }
+
+  .pet-card {
+    background: var(--warm);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+  }
+
+  .pet-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--sage-light); }
+  .pet-card.selected { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(122,158,126,0.15); }
+
+  .pet-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage-light), var(--sage));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 10px;
+    box-shadow: 0 4px 12px rgba(122,158,126,0.3);
+  }
+
+  .pet-name { font-weight: 700; font-size: 14px; color: var(--text); }
+  .pet-breed { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .pet-age { font-size: 11px; color: var(--sage-dark); font-weight: 600; margin-top: 6px; background: rgba(122,158,126,0.1); padding: 2px 8px; border-radius: 20px; display: inline-block; }
+
+  .pet-card-add {
+    border: 1.5px dashed var(--sage-light);
+    background: rgba(184,212,187,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 130px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .pet-card-add:hover { background: rgba(122,158,126,0.08); border-color: var(--sage); transform: translateY(-3px); }
+  .pet-card-add .add-icon { font-size: 28px; color: var(--sage); }
+  .pet-card-add span { font-size: 12px; color: var(--sage); font-weight: 600; }
+
+  /* APPOINTMENT */
+  .appt-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .appt-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .appt-date-box {
+    background: var(--warm);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: center;
+    flex-shrink: 0;
+    min-width: 56px;
+  }
+
+  .appt-day { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--text); line-height: 1; }
+  .appt-month { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+
+  .appt-info { flex: 1; }
+  .appt-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .appt-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .appt-status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-upcoming { background: rgba(122,158,126,0.12); color: var(--sage-dark); }
+  .status-done { background: rgba(122,110,96,0.08); color: var(--text-muted); }
+  .status-pending { background: rgba(196,113,74,0.12); color: var(--terracotta); }
+
+  /* VACCINE LIST */
+  .vaccine-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vaccine-item:last-child { border-bottom: none; }
+
+  .vaccine-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .vaccine-ok { background: rgba(122,158,126,0.12); }
+  .vaccine-due { background: rgba(196,113,74,0.12); }
+
+  .vaccine-info { flex: 1; }
+  .vaccine-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .vaccine-date { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .vaccine-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .badge-ok { background: rgba(122,158,126,0.12); color: var(--sage-dark); }
+  .badge-due { background: rgba(196,113,74,0.12); color: var(--terracotta); }
+
+  /* NOTIF */
+  .notif-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 10px;
+    background: var(--warm);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .notif-item:hover { border-color: var(--sage-light); transform: translateX(3px); }
+  .notif-item.unread { border-left: 3px solid var(--sage); background: rgba(184,212,187,0.1); }
+
+  .notif-dot-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: rgba(122,158,126,0.12); }
+  .notif-body { flex: 1; }
+  .notif-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .notif-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .notif-time { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+  /* HISTORIAL */
+  .history-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 20px;
+    position: relative;
+  }
+
+  .history-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: -4px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .history-item:last-child::before { display: none; }
+
+  .history-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--sage-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .history-body { flex: 1; padding-top: 4px; }
+  .history-date { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+  .history-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .history-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+  .history-tag { display: inline-block; margin-top: 6px; background: rgba(122,158,126,0.1); color: var(--sage-dark); font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* PERFIL FORM */
+  .profile-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--warm);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+
+  .profile-big-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    box-shadow: 0 8px 24px rgba(90,122,94,0.3);
+    flex-shrink: 0;
+  }
+
+  .profile-avatar-info h3 { font-family: 'Playfair Display', serif; font-size: 20px; }
+  .profile-avatar-info p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .change-photo-btn { margin-top: 10px; font-size: 12px; color: var(--sage); font-weight: 600; cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; padding: 0; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: span 2; }
+
+  label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  input, select, textarea {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(122,158,126,0.1); }
+  textarea { resize: vertical; min-height: 90px; }
+
+  .btn-save {
+    background: linear-gradient(135deg, var(--sage), var(--sage-dark));
+    color: white;
+    border: none;
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 8px;
+  }
+
+  .btn-save:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(90,122,94,0.35); }
+
+  .btn-danger {
+    background: rgba(196,113,74,0.08);
+    color: var(--terracotta);
+    border: 1.5px solid rgba(196,113,74,0.2);
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 8px;
+  }
+
+  .btn-danger:hover { background: rgba(196,113,74,0.15); transform: translateY(-1px); }
+
+  /* PEDIR CITA */
+  .cita-steps {
+    display: flex;
+    gap: 0;
+    margin-bottom: 32px;
+    background: var(--warm);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .step-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .step-tab.active { background: var(--white); color: var(--sage-dark); box-shadow: 0 2px 8px rgba(44,36,22,0.08); }
+
+  .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+
+  .service-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .service-card:hover { border-color: var(--sage-light); transform: translateY(-2px); }
+  .service-card.selected { border-color: var(--sage); background: rgba(122,158,126,0.05); }
+  .service-card .svc-icon { font-size: 28px; margin-bottom: 8px; }
+  .service-card .svc-name { font-size: 12px; font-weight: 600; color: var(--text); }
+  .service-card .svc-price { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* QUICK STATS */
+  .quick-stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+
+  .quick-stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .quick-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .qs-green { background: rgba(122,158,126,0.12); }
+  .qs-terr { background: rgba(196,113,74,0.12); }
+  .qs-blue { background: rgba(100,140,180,0.12); }
+  .qs-purple { background: rgba(140,100,180,0.12); }
+
+  .quick-stat-info {}
+  .quick-stat-num { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text); line-height: 1; }
+  .quick-stat-label { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44,36,22,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border-radius: var(--radius);
+    padding: 32px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 32px 80px rgba(44,36,22,0.25);
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+
+  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 20px; }
+  .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 4px; border-radius: 8px; }
+  .modal-close:hover { background: var(--warm); }
+
+  /* SUCCESS TOAST */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--text);
+    color: white;
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 32px rgba(44,36,22,0.25);
+    z-index: 300;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Scroll */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--sage-light); border-radius: 3px; }
+
+  @media (max-width: 900px) {
+    .sidebar { transform: translateX(-260px); }
+    .main { margin-left: 0; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .quick-stat-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-mark">Pet<span>Care</span></div>
+    <div class="logo-sub">Clínica Veterinaria</div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-section">Principal</div>
+    <button class="nav-item active" onclick="showPanel('inicio')">
+      <span class="nav-icon">🏠</span> Inicio
+    </button>
+    <button class="nav-item" onclick="showPanel('mascotas')">
+      <span class="nav-icon">🐾</span> Mis Mascotas
+    </button>
+    <button class="nav-item" onclick="showPanel('citas')">
+      <span class="nav-icon">📅</span> Pedir Cita
+    </button>
+
+    <div class="nav-section">Historial</div>
+    <button class="nav-item" onclick="showPanel('historial')">
+      <span class="nav-icon">📋</span> Historial Clínico
+    </button>
+    <button class="nav-item" onclick="showPanel('vacunas')">
+      <span class="nav-icon">💉</span> Vacunas
+    </button>
+    <button class="nav-item" onclick="showPanel('miscitas')">
+      <span class="nav-icon">🗓️</span> Mis Citas
+    </button>
+
+    <div class="nav-section">Cuenta</div>
+    <button class="nav-item" onclick="showPanel('notificaciones')">
+      <span class="nav-icon">🔔</span> Notificaciones
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('perfil')">
+      <span class="nav-icon">👤</span> Mi Perfil
+    </button>
+  </div>
+
+  <div class="sidebar-user">
+    <div class="sidebar-avatar">👩</div>
+    <div class="sidebar-user-info">
+      <div class="sidebar-user-name">María González</div>
+      <div class="sidebar-user-role">Cliente Premium</div>
+    </div>
+    <button class="logout-btn" onclick="logout()" title="Cerrar sesión">⏻</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="page-title" id="pageTitle">Bienvenida de <span>vuelta</span></div>
+    <div class="topbar-actions">
+      <div class="topbar-notif" onclick="showPanel('notificaciones')">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <button class="topbar-cta" onclick="showPanel('citas')">+ Pedir Cita</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- === INICIO === -->
+    <div class="panel active" id="panel-inicio">
+      <div class="welcome-hero">
+        <div class="welcome-text">
+          <h2>¡Hola, María! 👋</h2>
+          <p>Tus mascotas están en buenas manos. Revisa sus próximas citas.</p>
+        </div>
+        <div class="welcome-stats">
+          <div class="welcome-stat">
+            <div class="welcome-stat-num">3</div>
+            <div class="welcome-stat-label">Mascotas</div>
+          </div>
+          <div class="welcome-stat">
+            <div class="welcome-stat-num">2</div>
+            <div class="welcome-stat-label">Citas próximas</div>
+          </div>
+          <div class="welcome-stat">
+            <div class="welcome-stat-num">1</div>
+            <div class="welcome-stat-label">Vacuna pendiente</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-stat-row">
+        <div class="quick-stat">
+          <div class="quick-stat-icon qs-green">🐶</div>
+          <div class="quick-stat-info">
+            <div class="quick-stat-num">3</div>
+            <div class="quick-stat-label">Mascotas activas</div>
+          </div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-icon qs-terr">📅</div>
+          <div class="quick-stat-info">
+            <div class="quick-stat-num">2</div>
+            <div class="quick-stat-label">Citas este mes</div>
+          </div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-icon qs-blue">💉</div>
+          <div class="quick-stat-info">
+            <div class="quick-stat-num">8</div>
+            <div class="quick-stat-label">Vacunas al día</div>
+          </div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-icon qs-purple">🔔</div>
+          <div class="quick-stat-info">
+            <div class="quick-stat-num">3</div>
+            <div class="quick-stat-label">Notificaciones</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Próximas Citas</div>
+            <button class="card-action" onclick="showPanel('miscitas')">Ver todas →</button>
+          </div>
+          <div class="appt-item">
+            <div class="appt-date-box"><div class="appt-day">28</div><div class="appt-month">Mar</div></div>
+            <div class="appt-info">
+              <div class="appt-title">Revisión general — Luna</div>
+              <div class="appt-meta">🕐 10:30 · Dr. Martínez</div>
+            </div>
+            <div class="appt-status status-upcoming">Próxima</div>
+          </div>
+          <div class="appt-item">
+            <div class="appt-date-box"><div class="appt-day">05</div><div class="appt-month">Abr</div></div>
+            <div class="appt-info">
+              <div class="appt-title">Vacunación — Rocky</div>
+              <div class="appt-meta">🕐 15:00 · Dra. López</div>
+            </div>
+            <div class="appt-status status-pending">Pendiente</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Mis Mascotas</div>
+            <button class="card-action" onclick="showPanel('mascotas')">Ver todas →</button>
+          </div>
+          <div class="pets-grid">
+            <div class="pet-card">
+              <div class="pet-avatar">🐶</div>
+              <div class="pet-name">Rocky</div>
+              <div class="pet-breed">Labrador</div>
+              <div class="pet-age">3 años</div>
+            </div>
+            <div class="pet-card">
+              <div class="pet-avatar">🐱</div>
+              <div class="pet-name">Luna</div>
+              <div class="pet-breed">Siamés</div>
+              <div class="pet-age">2 años</div>
+            </div>
+            <div class="pet-card">
+              <div class="pet-avatar">🐦</div>
+              <div class="pet-name">Pipo</div>
+              <div class="pet-breed">Canario</div>
+              <div class="pet-age">1 año</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === MASCOTAS === -->
+    <div class="panel" id="panel-mascotas">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Mis Mascotas</div>
+          <button class="card-action" onclick="openAddPet()">+ Agregar mascota</button>
+        </div>
+        <div class="pets-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px;">
+          <div class="pet-card selected">
+            <div class="pet-avatar">🐶</div>
+            <div class="pet-name">Rocky</div>
+            <div class="pet-breed">Labrador Retriever</div>
+            <div class="pet-age">3 años</div>
+          </div>
+          <div class="pet-card">
+            <div class="pet-avatar">🐱</div>
+            <div class="pet-name">Luna</div>
+            <div class="pet-breed">Gato Siamés</div>
+            <div class="pet-age">2 años</div>
+          </div>
+          <div class="pet-card">
+            <div class="pet-avatar">🐦</div>
+            <div class="pet-name">Pipo</div>
+            <div class="pet-breed">Canario</div>
+            <div class="pet-age">1 año</div>
+          </div>
+          <div class="pet-card pet-card-add" onclick="openAddPet()">
+            <div class="add-icon">+</div>
+            <span>Agregar mascota</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--border);">
+          <h3 style="font-family:'Playfair Display',serif; font-size:16px; margin-bottom: 16px; color: var(--text);">Detalle — Rocky 🐶</h3>
+          <div class="form-grid" style="pointer-events:none; opacity:0.85;">
+            <div class="form-group"><label>Nombre</label><input value="Rocky" readonly></div>
+            <div class="form-group"><label>Especie</label><input value="Perro" readonly></div>
+            <div class="form-group"><label>Raza</label><input value="Labrador Retriever" readonly></div>
+            <div class="form-group"><label>Edad</label><input value="3 años" readonly></div>
+            <div class="form-group"><label>Peso</label><input value="28 kg" readonly></div>
+            <div class="form-group"><label>Color</label><input value="Dorado" readonly></div>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn-save" style="margin-top:0; padding: 10px 22px; font-size:13px;">✏️ Editar</button>
+            <button class="btn-danger" style="margin-top:0; padding: 10px 22px; font-size:13px;">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === PEDIR CITA === -->
+    <div class="panel" id="panel-citas">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Pedir Nueva Cita</div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+          <label style="display:block; margin-bottom:10px;">Selecciona el servicio</label>
+          <div class="service-grid">
+            <div class="service-card selected" onclick="selectService(this)">
+              <div class="svc-icon">🩺</div>
+              <div class="svc-name">Consulta General</div>
+              <div class="svc-price">Desde $35.000</div>
+            </div>
+            <div class="service-card" onclick="selectService(this)">
+              <div class="svc-icon">💉</div>
+              <div class="svc-name">Vacunación</div>
+              <div class="svc-price">Desde $25.000</div>
+            </div>
+            <div class="service-card" onclick="selectService(this)">
+              <div class="svc-icon">🔬</div>
+              <div class="svc-name">Laboratorio</div>
+              <div class="svc-price">Desde $45.000</div>
+            </div>
+            <div class="service-card" onclick="selectService(this)">
+              <div class="svc-icon">✂️</div>
+              <div class="svc-name">Peluquería</div>
+              <div class="svc-price">Desde $30.000</div>
+            </div>
+            <div class="service-card" onclick="selectService(this)">
+              <div class="svc-icon">🦷</div>
+              <div class="svc-name">Odontología</div>
+              <div class="svc-price">Desde $55.000</div>
+            </div>
+            <div class="service-card" onclick="selectService(this)">
+              <div class="svc-icon">🏥</div>
+              <div class="svc-name">Cirugía</div>
+              <div class="svc-price">Desde $150.000</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Mascota</label>
+            <select>
+              <option>Rocky — Perro</option>
+              <option>Luna — Gato</option>
+              <option>Pipo — Canario</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Veterinario</label>
+            <select>
+              <option>Dr. Carlos Martínez</option>
+              <option>Dra. Ana López</option>
+              <option>Dr. Pedro Ruiz</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" value="2026-04-05">
+          </div>
+          <div class="form-group">
+            <label>Hora</label>
+            <select>
+              <option>09:00 AM</option>
+              <option>10:00 AM</option>
+              <option>10:30 AM</option>
+              <option>11:00 AM</option>
+              <option>02:00 PM</option>
+              <option>03:00 PM</option>
+              <option>04:00 PM</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Motivo / Síntomas</label>
+            <textarea placeholder="Describe brevemente el motivo de la consulta..."></textarea>
+          </div>
+        </div>
+        <div style="display:flex; gap:12px; margin-top:8px;">
+          <button class="btn-save" onclick="showToast('✅ ¡Cita agendada exitosamente!')">📅 Confirmar Cita</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === HISTORIAL === -->
+    <div class="panel" id="panel-historial">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Historial Clínico</div>
+          <select style="font-size:12px; padding: 6px 12px; border-radius:8px; border: 1px solid var(--border); width:auto; font-family:'DM Sans',sans-serif;">
+            <option>Rocky — Perro</option>
+            <option>Luna — Gato</option>
+            <option>Pipo — Canario</option>
+          </select>
+        </div>
+
+        <div style="padding: 8px 0;">
+          <div class="history-item">
+            <div class="history-dot">🩺</div>
+            <div class="history-body">
+              <div class="history-date">15 Mar 2026</div>
+              <div class="history-title">Consulta General</div>
+              <div class="history-desc">El paciente se presenta con leve apatía y pérdida de apetito. Se realiza examen físico completo. Sin hallazgos graves. Se prescribe suplemento vitamínico.</div>
+              <div class="history-tag">Dr. Martínez</div>
+            </div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot">💉</div>
+            <div class="history-body">
+              <div class="history-date">10 Feb 2026</div>
+              <div class="history-title">Vacunación — Rabia + Moquillo</div>
+              <div class="history-desc">Aplicación de vacuna antirrábica y bivalente. Refuerzo anual completado. Próxima dosis: Febrero 2027.</div>
+              <div class="history-tag">Dra. López</div>
+            </div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot">🔬</div>
+            <div class="history-body">
+              <div class="history-date">05 Ene 2026</div>
+              <div class="history-title">Exámenes de Laboratorio</div>
+              <div class="history-desc">Hemograma completo y coproscópico. Resultados normales. Sin evidencia de parásitos. Peso: 27.5 kg.</div>
+              <div class="history-tag">Dr. Ruiz</div>
+            </div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot">🏥</div>
+            <div class="history-body">
+              <div class="history-date">12 Oct 2025</div>
+              <div class="history-title">Limpieza dental</div>
+              <div class="history-desc">Profilaxis dental bajo sedación leve. Se retiraron depósitos de sarro. Encías en buen estado. Se recomienda mantenimiento semestral.</div>
+              <div class="history-tag">Dr. Martínez</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === VACUNAS === -->
+    <div class="panel" id="panel-vacunas">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Cartilla de Vacunas</div>
+          <select style="font-size:12px; padding: 6px 12px; border-radius:8px; border: 1px solid var(--border); width:auto; font-family:'DM Sans',sans-serif;">
+            <option>Rocky — Perro</option>
+            <option>Luna — Gato</option>
+            <option>Pipo — Canario</option>
+          </select>
+        </div>
+
+        <div class="vaccine-item">
+          <div class="vaccine-icon vaccine-ok">💉</div>
+          <div class="vaccine-info">
+            <div class="vaccine-name">Rabia</div>
+            <div class="vaccine-date">Aplicada: 10 Feb 2026 · Próxima: Feb 2027</div>
+          </div>
+          <div class="vaccine-badge badge-ok">✓ Al día</div>
+        </div>
+        <div class="vaccine-item">
+          <div class="vaccine-icon vaccine-ok">💉</div>
+          <div class="vaccine-info">
+            <div class="vaccine-name">Moquillo / Parvovirus</div>
+            <div class="vaccine-date">Aplicada: 10 Feb 2026 · Próxima: Feb 2027</div>
+          </div>
+          <div class="vaccine-badge badge-ok">✓ Al día</div>
+        </div>
+        <div class="vaccine-item">
+          <div class="vaccine-icon vaccine-ok">💉</div>
+          <div class="vaccine-info">
+            <div class="vaccine-name">Hepatitis Canina</div>
+            <div class="vaccine-date">Aplicada: 15 Ago 2025 · Próxima: Ago 2026</div>
+          </div>
+          <div class="vaccine-badge badge-ok">✓ Al día</div>
+        </div>
+        <div class="vaccine-item">
+          <div class="vaccine-icon vaccine-due">⏰</div>
+          <div class="vaccine-info">
+            <div class="vaccine-name">Leptospirosis</div>
+            <div class="vaccine-date">Última: Mar 2025 · Vence: <strong>Abr 2026</strong></div>
+          </div>
+          <div class="vaccine-badge badge-due">⚠ Próxima</div>
+        </div>
+        <div class="vaccine-item">
+          <div class="vaccine-icon vaccine-ok">💉</div>
+          <div class="vaccine-info">
+            <div class="vaccine-name">Bordetella</div>
+            <div class="vaccine-date">Aplicada: 20 Nov 2025 · Próxima: Nov 2026</div>
+          </div>
+          <div class="vaccine-badge badge-ok">✓ Al día</div>
+        </div>
+
+        <div style="margin-top: 20px; padding: 16px; background: rgba(196,113,74,0.06); border: 1px solid rgba(196,113,74,0.15); border-radius: 12px; display:flex; align-items:center; gap:12px;">
+          <span style="font-size:22px;">⚠️</span>
+          <div>
+            <div style="font-size:13px; font-weight:600; color:var(--terracotta);">Vacuna próxima a vencer</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">La vacuna de Leptospirosis de Rocky vence en Abril 2026. Te recomendamos agendar una cita.</div>
+          </div>
+          <button class="btn-save" style="margin:0; padding: 8px 16px; font-size:12px; flex-shrink:0;" onclick="showPanel('citas')">Agendar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- === MIS CITAS === -->
+    <div class="panel" id="panel-miscitas">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Mis Citas</div>
+          <button class="card-action" onclick="showPanel('citas')">+ Nueva cita</button>
+        </div>
+
+        <div style="margin-bottom: 20px; display:flex; gap:8px;">
+          <button style="padding:6px 16px; border-radius:20px; border: none; background: var(--sage); color:white; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif;">Todas</button>
+          <button style="padding:6px 16px; border-radius:20px; border: 1px solid var(--border); background: var(--white); color:var(--text-muted); font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;">Próximas</button>
+          <button style="padding:6px 16px; border-radius:20px; border: 1px solid var(--border); background: var(--white); color:var(--text-muted); font-size:12px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif;">Completadas</button>
+        </div>
+
+        <div class="appt-item">
+          <div class="appt-date-box"><div class="appt-day">28</div><div class="appt-month">Mar</div></div>
+          <div class="appt-info">
+            <div class="appt-title">Revisión general — Luna</div>
+            <div class="appt-meta">🕐 10:30 · Dr. Carlos Martínez · Consulta General</div>
+          </div>
+          <div class="appt-status status-upcoming">Próxima</div>
+        </div>
+        <div class="appt-item">
+          <div class="appt-date-box"><div class="appt-day">05</div><div class="appt-month">Abr</div></div>
+          <div class="appt-info">
+            <div class="appt-title">Vacunación Leptospirosis — Rocky</div>
+            <div class="appt-meta">🕐 15:00 · Dra. Ana López · Vacunación</div>
+          </div>
+          <div class="appt-status status-pending">Pendiente</div>
+        </div>
+        <div class="appt-item">
+          <div class="appt-date-box"><div class="appt-day">15</div><div class="appt-month">Mar</div></div>
+          <div class="appt-info">
+            <div class="appt-title">Consulta general — Rocky</div>
+            <div class="appt-meta">🕐 09:00 · Dr. Carlos Martínez · Consulta General</div>
+          </div>
+          <div class="appt-status status-done">Completada</div>
+        </div>
+        <div class="appt-item">
+          <div class="appt-date-box"><div class="appt-day">10</div><div class="appt-month">Feb</div></div>
+          <div class="appt-info">
+            <div class="appt-title">Vacunación anual — Rocky</div>
+            <div class="appt-meta">🕐 11:00 · Dra. Ana López · Vacunación</div>
+          </div>
+          <div class="appt-status status-done">Completada</div>
+        </div>
+        <div class="appt-item">
+          <div class="appt-date-box"><div class="appt-day">05</div><div class="appt-month">Ene</div></div>
+          <div class="appt-info">
+            <div class="appt-title">Laboratorio — Rocky</div>
+            <div class="appt-meta">🕐 08:30 · Dr. Pedro Ruiz · Laboratorio</div>
+          </div>
+          <div class="appt-status status-done">Completada</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === NOTIFICACIONES === -->
+    <div class="panel" id="panel-notificaciones">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Notificaciones</div>
+          <button class="card-action">Marcar todas como leídas</button>
+        </div>
+
+        <div class="notif-item unread">
+          <div class="notif-dot-icon">💉</div>
+          <div class="notif-body">
+            <div class="notif-title">Vacuna próxima a vencer</div>
+            <div class="notif-desc">La vacuna de Leptospirosis de Rocky vence en abril. Agenda una cita pronto.</div>
+            <div class="notif-time">Hace 2 horas</div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-dot-icon">📅</div>
+          <div class="notif-body">
+            <div class="notif-title">Recordatorio de cita</div>
+            <div class="notif-desc">Tienes una cita mañana a las 10:30 AM con el Dr. Martínez para Luna.</div>
+            <div class="notif-time">Hace 5 horas</div>
+          </div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-dot-icon">✅</div>
+          <div class="notif-body">
+            <div class="notif-title">Resultados disponibles</div>
+            <div class="notif-desc">Los resultados del laboratorio de Rocky ya están disponibles en tu historial clínico.</div>
+            <div class="notif-time">Ayer, 3:15 PM</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot-icon">🎉</div>
+          <div class="notif-body">
+            <div class="notif-title">¡Bienvenida de vuelta!</div>
+            <div class="notif-desc">Tu cita del 15 de marzo fue completada exitosamente. ¡Rocky está muy bien!</div>
+            <div class="notif-time">15 Mar 2026</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot-icon">📋</div>
+          <div class="notif-body">
+            <div class="notif-title">Historial actualizado</div>
+            <div class="notif-desc">El Dr. Martínez ha actualizado el historial clínico de Rocky tras su última consulta.</div>
+            <div class="notif-time">15 Mar 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- === PERFIL === -->
+    <div class="panel" id="panel-perfil">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Mi Perfil</div>
+          <button class="card-action" onclick="showToast('✅ Perfil guardado exitosamente')">Guardar cambios</button>
+        </div>
+
+        <div class="profile-avatar-section">
+          <div class="profile-big-avatar">👩</div>
+          <div class="profile-avatar-info">
+            <h3>María González</h3>
+            <p>Miembro desde Enero 2024 · Cliente Premium</p>
+            <button class="change-photo-btn">📷 Cambiar foto de perfil</button>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" value="María">
+          </div>
+          <div class="form-group">
+            <label>Apellido</label>
+            <input type="text" value="González">
+          </div>
+          <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" value="maria.gonzalez@email.com">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" value="+57 310 234 5678">
+          </div>
+          <div class="form-group">
+            <label>Ciudad</label>
+            <input type="text" value="Bogotá">
+          </div>
+          <div class="form-group">
+            <label>Dirección</label>
+            <input type="text" value="Cra. 15 #87-32, Chapinero">
+          </div>
+          <div class="form-group full">
+            <label>Notas adicionales</label>
+            <textarea placeholder="Alguna información relevante para tu veterinario..."></textarea>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border); margin-top: 28px; padding-top: 24px;">
+          <h3 style="font-family:'Playfair Display',serif; font-size:16px; margin-bottom:16px;">Seguridad</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Contraseña actual</label>
+              <input type="password" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Nueva contraseña</label>
+              <input type="password" placeholder="••••••••">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top: 8px;">
+          <button class="btn-save" onclick="showToast('✅ Cambios guardados exitosamente')">💾 Guardar cambios</button>
+          <button class="btn-danger" onclick="logout()">⏻ Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODAL: Agregar Mascota -->
+<div class="modal-overlay" id="addPetModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Agregar Nueva Mascota</div>
+      <button class="modal-close" onclick="document.getElementById('addPetModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" placeholder="Nombre de la mascota">
+      </div>
+      <div class="form-group">
+        <label>Especie</label>
+        <select>
+          <option>Perro</option>
+          <option>Gato</option>
+          <option>Ave</option>
+          <option>Conejo</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Raza</label>
+        <input type="text" placeholder="Raza">
+      </div>
+      <div class="form-group">
+        <label>Fecha de nacimiento</label>
+        <input type="date">
+      </div>
+      <div class="form-group">
+        <label>Peso (kg)</label>
+        <input type="number" placeholder="0.0">
+      </div>
+      <div class="form-group">
+        <label>Color</label>
+        <input type="text" placeholder="Color principal">
+      </div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px;">
+      <button class="btn-save" style="margin:0;" onclick="addPet()">🐾 Agregar mascota</button>
+      <button class="btn-danger" style="margin:0;" onclick="document.getElementById('addPetModal').classList.remove('open')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const pageTitles = {
+    inicio: 'Bienvenida de <span>vuelta</span>',
+    mascotas: 'Mis <span>Mascotas</span>',
+    citas: 'Pedir <span>Cita</span>',
+    historial: 'Historial <span>Clínico</span>',
+    vacunas: 'Cartilla de <span>Vacunas</span>',
+    miscitas: 'Mis <span>Citas</span>',
+    notificaciones: '<span>Notificaciones</span>',
+    perfil: 'Mi <span>Perfil</span>',
+  };
+
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    document.getElementById('pageTitle').innerHTML = pageTitles[id] || id;
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+        n.classList.add('active');
+      }
+    });
+  }
+
+  function openAddPet() {
+    document.getElementById('addPetModal').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+  }
+
+  function addPet() {
+    document.getElementById('addPetModal').classList.remove('open');
+    showToast('🐾 ¡Mascota agregada exitosamente!');
+  }
+
+  function selectService(el) {
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function logout() {
+    if (confirm('¿Estás segura que deseas cerrar sesión?')) {
+      showToast('👋 Sesión cerrada. ¡Hasta pronto!');
+    }
+  }
+</script>
+</body>
+</html>

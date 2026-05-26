@@ -1,0 +1,374 @@
+/* =============================================
+   registro.css — Clínica Veterinaria
+   Colocar en: static/css/registro.css
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:      #27ae72;
+  --green-dark: #1a8a56;
+  --green-lt:   #e4f5ed;
+  --orange:     #f4a742;
+  --bg:         #f2f8f5;
+  --white:      #ffffff;
+  --border:     #cce5d8;
+  --text:       #12261c;
+  --muted:      #6b9880;
+  --danger:     #e05252;
+  --r:          12px;
+  --ih:         48px;
+}
+
+/* ── Layout ──────────────────────────────── */
+body {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ── Panel izquierdo (slider) ────────────── */
+.left-panel {
+  width: 60%;
+  min-width: 30px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* ── Slider Ken Burns ────────────────────── */
+.slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slider-slide {
+  position: absolute;   /* 👈 IMPORTANTE */
+  inset: 0;             /* 👈 ocupa todo */
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.slider-slide.active {
+  opacity: 1;
+}
+
+/* Estado base: zoom grande, sin transición */
+.slider-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+
+
+/* overlay degradado */
+.slider-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,30,20,0.25) 0%,
+    rgba(10,30,20,0.10) 40%,
+    rgba(10,30,20,0.65) 100%
+  );
+}
+
+/* texto sobre el slider */
+.slider-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 40px 38px;
+  color: #fff;
+}
+
+.slider-text .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.slider-text .brand span {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.slider-text .brand .paw {
+  font-size: 22px;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+.slider-text h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+}
+
+.slider-text p {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+/* puntos del slider */
+.slider-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.slider-dots button {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  border: none;
+  background: rgba(255,255,255,0.4);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, width 0.3s;
+}
+
+.slider-dots button.active {
+  background: #fff;
+  width: 24px;
+}
+
+/* ── Panel derecho (formulario) ──────────── */
+.right-panel {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 32px;
+  background: var(--bg);
+}
+
+.registro-card {
+  width: 100%;
+  max-width: 800px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 16px 48px rgba(39,174,114,0.09), 0 4px 16px rgba(0,0,0,0.06);
+  overflow: hidden;
+  animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform: translateY(24px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* header del form */
+.registro-header {
+  padding: 32px 36px 26px;
+  background: linear-gradient(135deg, #dff2ea 0%, #fef6e8 100%);
+  border-bottom: 1.5px solid var(--border);
+  text-align: center;
+}
+
+.step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-lt);
+  color: var(--green);
+  border: 1px solid rgba(39,174,114,0.25);
+  border-radius: 99px;
+  padding: 4px 13px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.step-pill::before {
+  content:'';
+  width:6px; height:6px;
+  border-radius:50%;
+  background: var(--green);
+  display:inline-block;
+}
+
+.registro-header h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.registro-header p {
+  margin-top: 7px;
+  font-size: 0.83rem;
+  color: var(--muted);
+}
+
+/* body del form */
+.registro-body { padding: 30px 36px; }
+
+/* alert */
+.registro-alert {
+  background: rgba(224,82,82,0.08);
+  border: 1px solid rgba(224,82,82,0.25);
+  color: var(--danger);
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 0.83rem;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+}
+
+.form-grid .full { grid-column: 1 / -1; }
+
+/* section label */
+.section-label {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-top: 6px;
+}
+
+.section-label::after {
+  content:'';
+  flex:1;
+  height:1.5px;
+  background: var(--border);
+  border-radius:2px;
+}
+
+/* fields */
+.field { display:flex; flex-direction:column; gap:6px; }
+
+.field label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #2b5c42;
+}
+
+.field input,
+.field select {
+  height: var(--ih);
+  background: #f7fcf9;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  padding: 0 14px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' fill='none'%3E%3Cpath d='M1 1l4.5 5L10 1' stroke='%236b9880' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-color: #f7fcf9;
+  padding-right: 38px;
+  cursor: pointer;
+}
+
+.field input::placeholder { color: #b0d0c0; font-weight:300; }
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(39,174,114,0.13);
+  background: #fff;
+}
+
+.field input:hover:not(:focus),
+.field select:hover:not(:focus) { border-color: #9fd0b8; }
+
+/* botón */
+.btn-registro {
+  margin-top: 26px;
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: var(--r);
+  background: var(--green);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.18s, transform 0.14s, box-shadow 0.18s;
+  box-shadow: 0 6px 20px rgba(39,174,114,0.30);
+}
+
+.btn-registro .arrow { transition: transform 0.2s; display:inline-block; }
+.btn-registro:hover  { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(39,174,114,0.38); }
+.btn-registro:hover .arrow { transform: translateX(5px); }
+.btn-registro:active { transform: translateY(0); }
+
+/* footer del form */
+.registro-footer {
+  padding: 18px 36px 26px;
+  text-align: center;
+  border-top: 1.5px solid var(--border);
+  background: #f7fcf9;
+}
+
+.registro-footer p { font-size:0.82rem; color:var(--muted); }
+.registro-footer a  { color:var(--green); font-weight:600; text-decoration:none; transition:color 0.18s; }
+.registro-footer a:hover { color:var(--green-dark); text-decoration:underline; }
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 860px) {
+  .left-panel  { display: none; }
+  .right-panel { padding: 28px 16px; }
+}
+
+@media (max-width: 500px) {
+  .registro-header { padding: 26px 20px 20px; }
+  .registro-body   { padding: 22px 20px; }
+  .registro-footer { padding: 16px 20px 22px; }
+  .form-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color:#333;
+        }
+
+        .header{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        h2{
+            margin-bottom:10px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:15px;
+        }
+
+        table, th, td{
+            border:1px solid #000;
+        }
+
+        th{
+            background:#f0f0f0;
+        }
+
+        th, td{
+            padding:7px;
+            text-align:left;
+        }
+
+        .totales{
+            margin-top:20px;
+            width:260px;
+            float:right;
+        }
+
+        .text-right{
+            text-align:right;
+        }
+
+        .text-center{
+            text-align:center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+{% if factura %}
+
+    <!-- ===================================== -->
+    <!-- FACTURA INDIVIDUAL -->
+    <!-- ===================================== -->
+
+    <div class="header">
+
+        <h2>
+            Factura #{{ factura.numero_factura }}
+        </h2>
+
+        <p>
+            <strong>Propietario:</strong>
+            {{ factura.cita.mascota.propietario }}
+        </p>
+
+        <p>
+            <strong>Mascota:</strong>
+            {{ factura.cita.mascota.nombre }}
+        </p>
+
+        <p>
+            <strong>Veterinario:</strong>
+            {{ factura.cita.veterinario }}
+        </p>
+
+        <p>
+            <strong>Servicio:</strong>
+
+            {% if factura.cita.servicio %}
+                {{ factura.cita.servicio.nombre }}
+            {% else %}
+                Sin servicio
+            {% endif %}
+        </p>
+
+        <p>
+            <strong>Fecha Emisión:</strong>
+            {{ factura.fecha_emision|date:"d/m/Y" }}
+        </p>
+
+        <p>
+            <strong>Fecha Creación:</strong>
+            {{ factura.fecha_creacion|date:"d/m/Y H:i" }}
+        </p>
+
+        <p>
+            <strong>Método de Pago:</strong>
+            {{ factura.metodo_pago|capfirst }}
+        </p>
+
+        <p>
+            <strong>Notas:</strong>
+            {{ factura.notas|default:"Sin notas" }}
+        </p>
+
+    </div>
+
+    <!-- TABLA DETALLES -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Servicio</th>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for detalle in factura.detalles.all %}
+
+            <tr>
+
+                <td>
+
+                    {% if detalle.servicio %}
+                        {{ detalle.servicio.nombre }}
+                    {% else %}
+                        ---
+                    {% endif %}
+
+                </td>
+
+                <td>
+                    {{ detalle.descripcion }}
+                </td>
+
+                <td class="text-center">
+                    {{ detalle.cantidad }}
+                </td>
+
+                <td class="text-right">
+                    ${{ detalle.precio_unitario|floatformat:2 }}
+                </td>
+
+                <td class="text-right">
+                    ${{ detalle.total|floatformat:2 }}
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="5" class="text-center">
+                    No hay servicios registrados.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    <!-- TOTALES -->
+
+    <table class="totales">
+
+        <tr>
+            <th>Subtotal</th>
+            <td class="text-right">
+                ${{ factura.subtotal|floatformat:2 }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Impuestos</th>
+            <td class="text-right">
+                ${{ factura.impuestos|floatformat:2 }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Total</th>
+            <td class="text-right">
+                <strong>
+                    ${{ factura.total|floatformat:2 }}
+                </strong>
+            </td>
+        </tr>
+
+    </table>
+
+{% elif facturas %}
+
+    <!-- ===================================== -->
+    <!-- LISTADO FACTURAS -->
+    <!-- ===================================== -->
+
+    <h2 style="text-align:center;">
+        Listado de Facturas
+    </h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>N° Factura</th>
+                <th>Mascota</th>
+                <th>Propietario</th>
+                <th>Servicio</th>
+                <th>Subtotal</th>
+                <th>Total</th>
+                <th>Método</th>
+                <th>Notas</th>
+                <th>Fecha Creación</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for f in facturas %}
+
+            <tr>
+
+                <td>
+                    {{ f.numero_factura }}
+                </td>
+
+                <td>
+                    {{ f.cita.mascota.nombre }}
+                </td>
+
+                <td>
+                    {{ f.cita.mascota.propietario }}
+                </td>
+
+                <td>
+
+                    {% if f.cita.servicio %}
+                        {{ f.cita.servicio.nombre }}
+                    {% else %}
+                        Sin servicio
+                    {% endif %}
+
+                </td>
+
+                <td class="text-right">
+                    ${{ f.subtotal|floatformat:2 }}
+                </td>
+
+                <td class="text-right">
+                    ${{ f.total|floatformat:2 }}
+                </td>
+
+                <td>
+                    {{ f.metodo_pago|capfirst }}
+                </td>
+
+                <td>
+                    {{ f.notas|default:"Sin notas" }}
+                </td>
+
+                <td>
+                    {{ f.fecha_creacion|date:"d/m/Y H:i" }}
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="11" class="text-center">
+                    No hay datos
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+{% extends 'usuarios/base_veterinario.html' %}
+{% block content %}
+
+<div class="form-card">
+
+  <div class="page-title">
+    {% if object %}Editar Factura{% else %}Nueva Factura{% endif %}
+  </div>
+
+  <div class="page-sub">
+    Completa la información de la factura
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+
+      {% if field.help_text %}
+        <small style="color:#bbb;font-size:.75rem">
+          {{ field.help_text }}
+        </small>
+      {% endif %}
+
+      {% if field.errors %}
+        <small style="color:var(--marron);font-size:.75rem">
+          {{ field.errors|join:", " }}
+        </small>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">
+        💾 Guardar
+      </button>
+
+      <a class="btn-marron" href="{% url 'panel:panel_factura_list' %}">
+        Cancelar
+      </a>
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}

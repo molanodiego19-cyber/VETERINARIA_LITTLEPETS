@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Razas</div>
+    <div class="page-sub">Gestión de razas por especie</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_raza_create' %}">+ Nueva Raza</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Especie</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for raza in razas %}
+      <tr>
+        <td><strong>{{ raza.nombre }}</strong></td>
+        <td>{{ raza.tipo_especie }}</td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_raza_edit' raza.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_raza_delete' raza.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" class="empty-msg">No hay razas registradas.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

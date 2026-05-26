@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="confirm-card">
+
+  <div class="confirm-icon">🐾</div>
+
+  <div class="page-title">
+    ¿Eliminar mascota?
+  </div>
+
+  <p class="confirm-text">
+    Estás a punto de eliminar la mascota 
+    <strong>{{ object.nombre }}</strong>.
+    <br><br>
+    <span class="danger-text">Esta acción no se puede deshacer.</span>
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-marron">
+        🗑️ Sí, eliminar
+      </button>
+
+      <a class="btn-verde" href="{% url 'panel:panel_mascota_list' %}">
+        Cancelar
+      </a>
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}

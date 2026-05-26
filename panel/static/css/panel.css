@@ -1,0 +1,257 @@
+/* ─────────────────────────────────────
+   panel.css — Little Pets
+   Usar en: listas, formularios, confirmaciones
+───────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
+
+:root {
+  --verde:        #2d6a4f;
+  --verde-claro:  #52b788;
+  --crema:        #fdf8f0;
+  --dorado:       #d4a853;
+  --marron:       #6b3a2a;
+  --gris:         #555;
+  --blanco:       #fff;
+  --borde:        #f0e8d8;
+  --sombra:       0 4px 16px rgba(0,0,0,.06);
+}
+
+/* ── Cabecera de página ── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.8rem;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--verde);
+  margin-bottom: .15rem;
+}
+
+.page-sub {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #bbb;
+}
+
+/* ── Botones principales ── */
+.btn-verde,
+.btn-marron {
+  display: inline-block;
+  padding: .65rem 1.4rem;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.btn-verde  { background: var(--verde);  color: var(--blanco); }
+.btn-marron { background: var(--marron); color: var(--blanco); }
+
+.btn-verde:hover  { background: var(--verde-claro); transform: translateY(-1px); }
+.btn-marron:hover { background: var(--dorado); color: var(--marron); transform: translateY(-1px); }
+
+/* ── Tabla ── */
+.table-wrap {
+  background: var(--blanco);
+  border-radius: 16px;
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  border: 1px solid var(--borde);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  padding: 11px 18px;
+  font-size: .68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--verde);
+  background: #f0faf5;
+  text-align: left;
+  border-bottom: 1.5px solid #d8f0e6;
+}
+
+tbody tr {
+  border-bottom: 1px solid #f5f0e8;
+  transition: background .12s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #fdf8f0; }
+
+tbody td {
+  padding: 12px 18px;
+  font-size: .88rem;
+  color: var(--gris);
+  vertical-align: middle;
+}
+
+tbody td strong { color: var(--marron); font-weight: 600; }
+
+.empty-msg {
+  text-align: center;
+  color: #ccc;
+  padding: 2.5rem !important;
+  font-size: .88rem;
+}
+
+/* ── Acciones de fila ── */
+.acciones { display: flex; gap: .4rem; align-items: center; }
+
+.btn-sm {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all .15s;
+  display: inline-block;
+}
+
+.btn-editar   { background: #f0faf5; color: var(--verde); }
+.btn-editar:hover { background: var(--verde-claro); color: var(--blanco); }
+
+.btn-eliminar { background: #fde8e8; color: var(--marron); }
+.btn-eliminar:hover { background: var(--marron); color: var(--blanco); }
+
+/* ── Badges de estado ── */
+.badge {
+  display: inline-block;
+  font-size: .68rem;
+  font-weight: 700;
+  padding: 3px 11px;
+  border-radius: 50px;
+  letter-spacing: .03em;
+  text-transform: capitalize;
+}
+
+.badge-confirmada { background: #d8f0e6; color: var(--verde); }
+.badge-pendiente  { background: #fef3c7; color: #92400e; }
+.badge-cancelada  { background: #fde8e8; color: var(--marron); }
+.badge-activo     { background: #d8f0e6; color: var(--verde); }
+.badge-inactivo   { background: #f1f5f9; color: #64748b; }
+
+/* ── Tarjeta de formulario ── */
+.form-card {
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--borde);
+}
+
+.form-card .page-title { margin-bottom: 1.6rem; }
+
+.form-group { margin-bottom: 1rem; }
+
+.form-group label {
+  display: block;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: .35rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: .75rem 1rem;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .93rem;
+  color: var(--gris);
+  background: var(--crema);
+  outline: none;
+  transition: border-color .2s, background .2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--verde-claro);
+  background: var(--blanco);
+}
+
+.form-group input::placeholder { color: #ccc; }
+
+.form-actions {
+  display: flex;
+  gap: .8rem;
+  margin-top: 1.6rem;
+}
+
+/* ── Confirmación de eliminación ── */
+.confirm-card {
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 420px;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--borde);
+  text-align: center;
+}
+
+.confirm-icon { font-size: 2.8rem; margin-bottom: 1rem; }
+
+.confirm-card .page-title { justify-content: center; font-size: 1.3rem; }
+
+.confirm-card p {
+  font-size: .9rem;
+  color: var(--gris);
+  margin-bottom: 1.8rem;
+  line-height: 1.6;
+}
+
+.confirm-card .form-actions { justify-content: center; }
+
+/* ── Info box ── */
+.info-box {
+  background: #f0faf5;
+  border-left: 3px solid var(--verde-claro);
+  border-radius: 8px;
+  padding: .7rem 1rem;
+  font-size: .88rem;
+  color: var(--verde);
+  margin-bottom: 1.2rem;
+}
+
+.info-box strong { font-weight: 700; }
+
+/* ── Link volver ── */
+.link-back {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: .82rem;
+  color: #bbb;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color .15s;
+}
+
+.link-back:hover { color: var(--verde); }

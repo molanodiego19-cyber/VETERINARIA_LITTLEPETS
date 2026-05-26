@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agendar Cita — LittlePets</title>
+  <link rel="stylesheet" href="{% static 'css/formularios.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div class="form-card">
+
+  <div class="form-logo">🐾 Little<span>Pets</span></div>
+  <div class="form-logo">Crear<span>Especialidad</span></div>
+
+  
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn-form verde">Crear Especialidad</button>
+  </form>
+
+  <p class="form-back">
+    <a href="{% url 'index' %}">← Volver al inicio</a>
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends 'usuarios/base_veterinario.html' %}
+
+{% block title %}Vacunación{% endblock %}
+
+{% block content %}
+
+<div style="max-width:600px;margin:auto;padding:20px;">
+
+    <!-- HEADER -->
+    <div style="
+        background:#2d6a4f;
+        color:#fff;
+        padding:18px;
+        border-radius:12px;
+        margin-bottom:20px;
+    ">
+        <h2 style="margin:0;">💉 Registrar Vacunación</h2>
+        <p style="margin:5px 0 0;">
+            {{ cita.mascota.nombre }} - {{ cita.mascota.especie.nombre }}
+        </p>
+    </div>
+
+    <!-- FORM -->
+    <form method="post" style="
+        background:#fff;
+        padding:20px;
+        border-radius:12px;
+        border:1px solid #eee;
+    ">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div style="margin-bottom:15px;">
+            {{ form.vacuna.label_tag }}
+            {{ form.vacuna }}
+        </div>
+
+        <div style="margin-bottom:15px;">
+            {{ form.numero_dosis.label_tag }}
+            {{ form.numero_dosis }}
+        </div>
+
+        <div style="margin-bottom:15px;">
+            {{ form.fecha_proxima.label_tag }}
+            {{ form.fecha_proxima }}
+        </div>
+
+        <div style="margin-bottom:15px;">
+            {{ form.observaciones.label_tag }}
+            {{ form.observaciones }}
+        </div>
+
+        <button type="submit" style="
+            background:#2d6a4f;
+            color:#fff;
+            padding:10px 16px;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+            width:100%;
+        ">
+            💉 Guardar Vacunación
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

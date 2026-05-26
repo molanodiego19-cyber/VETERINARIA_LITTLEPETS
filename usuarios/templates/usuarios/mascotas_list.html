@@ -1,0 +1,211 @@
+{% extends 'usuarios/base_panel.html' %}
+{% load static %}
+
+{% block page_name %}Mis Mascotas{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= HEADER ================= */
+.page-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1.8rem;
+}
+
+.page-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem;
+  font-weight:900;
+  color:#2d6a4f;
+  margin-bottom:.15rem;
+}
+
+.page-sub {
+  font-size:.75rem;
+  font-weight:600;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:#bbb;
+}
+
+/* ================= BOTÓN PRINCIPAL ================= */
+.btn-verde {
+  display:inline-block;
+  padding:.65rem 1.4rem;
+  border-radius:50px;
+  font-family:'DM Sans',sans-serif;
+  font-size:.85rem;
+  font-weight:700;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  background:#2d6a4f;
+  color:#fff;
+  transition:all .2s;
+}
+
+.btn-verde:hover {
+  background:#52b788;
+  transform:translateY(-1px);
+}
+
+/* ================= GRID ================= */
+.grid-mascotas {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1.3rem;
+  margin-top:1rem;
+}
+
+/* ================= CARD ================= */
+.card-mascota {
+  background:#fff;
+  border:1.5px solid #f0e8d8;
+  border-radius:18px;
+  overflow:hidden;
+  text-decoration:none;
+  color:#1c2b22;
+  transition:all .25s ease;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.card-mascota:hover {
+  transform:translateY(-4px);
+  box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+/* ================= IMAGEN ================= */
+.card-mascota img {
+  width:100%;
+  height:150px;
+  object-fit:cover;
+}
+
+/* ================= INFO ================= */
+.card-mascota .info {
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.card-mascota .info h5 {
+  font-size:.95rem;
+  font-weight:800;
+  color:#2d6a4f;
+  margin-bottom:4px;
+}
+
+.card-mascota .info p {
+  font-size:.78rem;
+  color:#555;
+  margin:0;
+}
+
+/* ================= BOTÓN HISTORIAL ================= */
+.btn-historial {
+  display:block;
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:12px;
+  background: linear-gradient(135deg, #1d3557, #457b9d);
+  color:#fff;
+  font-size:.78rem;
+  font-weight:700;
+  text-align:center;
+  text-decoration:none;
+  transition:all .2s ease;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.btn-historial:hover {
+  transform:translateY(-2px);
+  background: linear-gradient(135deg, #457b9d, #1d3557);
+}
+
+/* ================= EMPTY ================= */
+.empty {
+  color:#bbb;
+  font-size:.9rem;
+  text-align:center;
+  margin-top:30px;
+}
+
+.btn-servicios {
+  display:block;
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:12px;
+  background: linear-gradient(135deg, #6a1b9a, #9c27b0);
+  color:#fff;
+  font-size:.78rem;
+  font-weight:700;
+  text-align:center;
+  text-decoration:none;
+  transition:all .2s ease;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.btn-servicios:hover {
+  transform:translateY(-2px);
+  background: linear-gradient(135deg, #9c27b0, #6a1b9a);
+}
+</style>
+
+<!-- ================= HEADER ================= -->
+<div class="page-header">
+  <div>
+    <p class="page-sub">Mascotas</p>
+    <h1 class="page-title">Mis Mascotas</h1>
+  </div>
+
+  <a href="{% url 'usuarios:mascota_crear' %}" class="btn-verde">
+    + Nueva Mascota
+  </a>
+</div>
+
+<!-- ================= GRID ================= -->
+<div class="grid-mascotas">
+
+  {% for mascota in object_list %}
+  <div class="card-mascota">
+
+    <a href="{% url 'usuarios:mascota_detalle' mascota.id %}">
+      {% if mascota.foto %}
+        <img src="{{ mascota.foto.url }}" alt="{{ mascota.nombre }}">
+      {% else %}
+        <img src="{% static 'img/default-pet.svg' %}" alt="Sin foto">
+      {% endif %}
+    </a>
+
+    <div class="info">
+      <h5>{{ mascota.nombre }}</h5>
+      <p>Especie: {{ mascota.especie }}</p>
+      <p>Raza: {{ mascota.raza }}</p>
+      <p>Color: {{ mascota.color }}</p>
+      <p>Peso: {{ mascota.peso_kg }} kg</p>
+      <p>Estado: {{ mascota.estado }}</p>
+
+      <!-- BOTÓN HISTORIAL -->
+      <a href="{% url 'citas:historia_mascota' mascota.id %}" class="btn-historial">
+        Ver historial clínico
+      </a>
+      <a href="{% url 'citas:historial_servicios_mascota' mascota.id %}" 
+   class="btn-servicios">
+   Ver historial de servicios
+</a>
+
+    </div>
+  </div>
+
+  {% empty %}
+    <p class="empty">No tienes mascotas registradas</p>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

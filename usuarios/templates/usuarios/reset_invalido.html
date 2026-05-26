@@ -1,0 +1,300 @@
+{% block content %}
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Poppins:wght@300;400;500;600&display=swap');
+
+body{
+    background: linear-gradient(135deg,#eefaf3,#f9fffc);
+    font-family: 'Poppins', sans-serif;
+}
+
+.error-wrapper{
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+}
+
+.error-card{
+    width: 100%;
+    max-width: 950px;
+
+    background: white;
+
+    border-radius: 28px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,.08);
+}
+
+/* LEFT */
+
+.error-left{
+    width: 45%;
+
+    background: linear-gradient(
+        160deg,
+        #c0392b,
+        #e74c3c
+    );
+
+    color: white;
+
+    padding: 60px 45px;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.error-left::before{
+    content: "";
+
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.06);
+
+    top: -70px;
+    right: -70px;
+}
+
+.error-left::after{
+    content: "";
+
+    position: absolute;
+
+    width: 170px;
+    height: 170px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.05);
+
+    bottom: -50px;
+    left: -50px;
+}
+
+.logo-box{
+    width: 85px;
+    height: 85px;
+
+    border-radius: 24px;
+
+    background: rgba(255,255,255,.12);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 30px;
+
+    backdrop-filter: blur(5px);
+}
+
+.logo-box i{
+    font-size: 38px;
+}
+
+.brand-title{
+    font-family: 'Nunito', sans-serif;
+    font-size: 38px;
+    font-weight: 800;
+
+    margin-bottom: 15px;
+}
+
+.brand-title span{
+    color: #ffd2cc;
+}
+
+.error-left p{
+    line-height: 1.8;
+    color: rgba(255,255,255,.88);
+    font-size: 15px;
+}
+
+/* RIGHT */
+
+.error-right{
+    width: 55%;
+
+    padding: 65px 55px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.error-icon{
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: #fff2f0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.error-icon i{
+    font-size: 42px;
+    color: #e74c3c;
+}
+
+.error-title{
+    font-family: 'Nunito', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+
+    color: #1d2e25;
+
+    margin-bottom: 15px;
+}
+
+.error-text{
+    color: #6d7f75;
+
+    line-height: 1.8;
+
+    margin-bottom: 35px;
+
+    font-size: 15px;
+}
+
+.back-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 15px 22px;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        #2f8f67,
+        #49b37f
+    );
+
+    color: white;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: .25s;
+
+    width: fit-content;
+}
+
+.back-btn:hover{
+    transform: translateY(-2px);
+
+    box-shadow: 0 12px 25px rgba(73,179,127,.28);
+
+    color: white;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .error-card{
+        flex-direction: column;
+    }
+
+    .error-left,
+    .error-right{
+        width: 100%;
+    }
+
+    .error-left{
+        padding: 45px 35px;
+    }
+
+    .error-right{
+        padding: 45px 30px;
+    }
+
+}
+
+</style>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<div class="error-wrapper">
+
+    <div class="error-card">
+
+        <!-- LEFT -->
+
+        <div class="error-left">
+
+            <div class="logo-box">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+
+            <h1 class="brand-title">
+                Little<span>Pets</span>
+            </h1>
+
+            <p>
+                La seguridad de nuestros usuarios y mascotas es muy importante.
+                Algunos enlaces de recuperación tienen un tiempo límite de validez
+                para proteger tu información.
+            </p>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div class="error-right">
+
+            <div class="error-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <h2 class="error-title">
+                Enlace inválido
+            </h2>
+
+            <p class="error-text">
+                El enlace de recuperación ya expiró o no es válido.
+                Solicita nuevamente un enlace para poder restablecer tu contraseña.
+            </p>
+
+            <a href="{% url 'usuarios:recuperar_password' %}" class="back-btn">
+
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+
+                Solicitar nuevo enlace
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

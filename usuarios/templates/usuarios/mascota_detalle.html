@@ -1,0 +1,64 @@
+{% extends 'usuarios/base_panel.html' %}
+{% load static %}
+
+{% block page_name %}Detalle Mascota{% endblock %}
+
+{% block content %}
+<style>
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#000000; margin-bottom:.15rem; }
+  .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
+  .form-card { background:#fff; border-radius:20px; padding:2.5rem; width:100%; max-width:520px; box-shadow:0 4px 16px rgba(0,0,0,.06); border:1px solid #f0e8d8; display:flex; flex-direction:column; align-items:center; gap:1rem; }
+  .info-box { background:#f0faf5; border-left:3px solid #12f38a; border-radius:8px; padding:.7rem 1rem; font-size:.88rem; color:#2d6a4f; margin-bottom:.8rem; width:100%; }
+  .info-box strong { font-weight:700; }
+  .foto-mascota { width:110px; height:110px; border-radius:50%; object-fit:cover; border:3px solid #d8f3dc; display:block; margin:0 auto .8rem; }
+  .acciones { display:flex; gap:.4rem; align-items:center; }
+  .btn-sm { font-family:'DM Sans',sans-serif; font-size:.72rem; font-weight:700; padding:4px 12px; border-radius:50px; text-decoration:none; border:none; cursor:pointer; transition:all .15s; display:inline-block; line-height:1.6; }
+  .btn-editar { background:#f0faf5; color:#2d6a4f; }
+  .btn-editar:hover { background:#52b788; color:#fff; }
+  .btn-eliminar { background:#fde8e8; color:#6b3a2a; }
+  .btn-eliminar:hover { background:#6b3a2a; color:#fff; }
+  .link-back { display:inline-block; margin-top:1rem; font-size:.82rem; color:#bbb; text-decoration:none; font-weight:600; }
+  .link-back:hover { color:#2d6a4f; }
+</style>
+
+<div class="page-header">
+  <div>
+    
+    <p class="page-sub">Mascotas</p>
+    <h1 class="page-title">{{ object.nombre }}</h1>
+  </div>
+  <div class="acciones">
+    <a href="{% url 'usuarios:mascota_editar' object.id %}" class="btn-sm btn-editar">Editar</a>
+    <form action="{% url 'usuarios:eliminar_mascota' object.id %}" 
+        method="post" 
+        style="display:inline;"
+        onsubmit="return confirm('¿Seguro que quieres eliminar esta mascota? 🐾');">
+    
+    {% csrf_token %}
+    
+    <button type="submit" class="btn-sm btn-eliminar">
+      Eliminar
+    </button>
+  </form>
+  </div>
+</div>
+
+<div class="form-card">
+  {% if object.foto %}
+    <img src="{{ object.foto.url }}" class="foto-mascota">
+  {% else %}
+    <img src="{% static 'img/default-pet.svg' %}" class="foto-mascota">
+  {% endif %}
+  <div style="width:100%;">
+    <div class="info-box"><strong>Especie:</strong> {{ object.especie }}</div>
+    <div class="info-box"><strong>Raza:</strong> {{ object.raza }}</div>
+    <div class="info-box"><strong>Color:</strong> {{ object.color }}</div>
+    <div class="info-box"><strong>Sexo:</strong> {{ object.sexo }}</div>
+    <div class="info-box"><strong>Peso (Kg):</strong> {{ object.peso_kg }}</div>
+    <div class="info-box"><strong>Fecha de nacimiento:</strong> {{ object.fecha_nacimiento }}</div>
+  </div>
+</div>
+
+<a href="{% url 'usuarios:mascotas' %}" class="link-back">← Volver a mis mascotas</a>
+{% endblock %}

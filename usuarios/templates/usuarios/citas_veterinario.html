@@ -1,0 +1,180 @@
+{% extends 'usuarios/base_veterinario.html' %}
+{% load static %}
+
+{% block title %}Mis Citas - Veterinario{% endblock %}
+
+{% block extra_styles %}
+<style>
+/* ----------------- HEADER ----------------- */
+.page-header { margin-bottom: 24px; }
+.page-header h2 { font-size: 1.5rem; font-weight: 800; color: #1a1a1a; }
+.page-header p  { font-size: 0.85rem; color: #888; margin-top: 4px; }
+
+/* ----------------- GRID DE CITAS ----------------- */
+.citas-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+
+/* ----------------- CARD ----------------- */
+.cita-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    flex: 1 1 300px;
+    max-width: 420px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.cita-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+/* ----------------- CARD HEADER ----------------- */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f0ebe0;
+}
+.mascota-info { display: flex; align-items: center; gap: 10px; }
+.mascota-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #fde8c8; display: flex; align-items: center;
+    justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+}
+.mascota-nombre  { font-weight: 800; font-size: 1rem; color: #1a1a1a; }
+.mascota-especie { font-size: 0.75rem; color: #888; margin-top: 1px; }
+
+/* ----------------- ESTADOS ----------------- */
+.badge-estado {
+    font-size: 0.68rem; font-weight: 700;
+    padding: 4px 11px; border-radius: 20px;
+}
+.badge-pendiente  { background: #fff3cd; color: #856404; }
+.badge-finalizada { background: #d1ecda; color: #2d6a4f; }
+
+/* ----------------- CARD BODY ----------------- */
+.card-body { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
+.cita-date-badge {
+    background: #e9f5ee; border-radius: 12px; padding: 8px 14px;
+    text-align: center; min-width: 56px; flex-shrink: 0;
+}
+.cita-date-badge .day   { font-size: 1.3rem; font-weight: 800; color: #3a7d5c; line-height: 1; }
+.cita-date-badge .month { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #52a878; margin-top: 2px; }
+
+.cita-detalles { display: flex; flex-direction: column; gap: 5px; }
+.detalle-row { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: #555; }
+
+/* ----------------- CARD FOOTER ----------------- */
+.card-footer { padding-top: 14px; border-top: 1px solid #f0ebe0; }
+.btn-consulta {
+    display: block; width: 100%; text-align: center;
+    background: #2d6a4f; color: #fff;
+    font-size: 0.82rem; font-weight: 700;
+    padding: 9px 0; border-radius: 10px;
+    text-decoration: none; transition: background 0.2s;
+}
+.btn-consulta:hover { background: #52b788; color: #fff; }
+.btn-consulta.done {
+    background: #f0ebe0; color: #aaa;
+    pointer-events: none; cursor: not-allowed;
+}
+
+/* ----------------- EMPTY STATE ----------------- */
+.empty-state {
+    text-align: center; padding: 60px 20px; color: #ccc;
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); width: 100%;
+}
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.88rem; }
+
+.btn-historia {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #1d3557;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 9px 0;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-top: 8px;
+}
+
+.btn-historia:hover {
+    background: #457b9d;
+    color: #fff;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>📅 Mis Citas</h2>
+    <p>Gestiona y realiza consultas de tus citas asignadas</p>
+</div>
+
+<div class="citas-grid">
+    {% if citas %}
+        {% for cita in citas %}
+        <div class="cita-card">
+            <div class="card-header">
+                <div class="mascota-info">
+                    <div class="mascota-avatar">
+                        {% if cita.mascota.especie == "Perro" %}🐶
+                        {% elif cita.mascota.especie == "Gato" %}🐱
+                        {% elif cita.mascota.especie == "Ave" %}🐦
+                        {% elif cita.mascota.especie == "Conejo" %}🐰
+                        {% else %}🐾{% endif %}
+                    </div>
+                    <div>
+                        <div class="mascota-nombre">{{ cita.mascota.nombre }}</div>
+                        <div class="mascota-especie">{{ cita.mascota.especie }}</div>
+                    </div>
+                </div>
+                <span class="badge-estado {% if cita.estado == 'finalizada' %}badge-finalizada{% else %}badge-pendiente{% endif %}">
+                    {{ cita.estado|capfirst }}
+                </span>
+            </div>
+
+            <div class="card-body">
+                <div class="cita-date-badge">
+                    <div class="day">{{ cita.fecha|date:"d" }}</div>
+                    <div class="month">{{ cita.fecha|date:"M" }}</div>
+                </div>
+                <div class="cita-detalles">
+                    <div class="detalle-row">⏰ {{ cita.hora|time:"H:i" }} hrs</div>
+                    <div class="detalle-row">🩺 {{ cita.servicio.nombre }}</div>
+                    <div class="detalle-row">👤 {{ cita.mascota.propietario.nombre }}{{ cita.mascota.propietario.apellido }}</div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                {% if cita.estado != 'finalizada' and cita.estado != 'cancelada' %}
+    <a href="{% url 'citas:iniciar_consulta' cita.id %}" class="btn-consulta">
+        ▶️ Iniciar Consulta
+    </a>
+{% else %}
+    <span class="btn-consulta done">
+        {% if cita.estado == 'cancelada' %}
+            ❌ Consulta Cancelada
+        {% else %}
+            ✅ Consulta Finalizada
+        {% endif %}
+    </span>
+{% endif %}
+                <a href="{% url 'citas:historia_mascota' cita.mascota.id %}" class="btn-historia">
+                    📋 Ver historia clínica
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📅</div>
+            <p>No tienes citas registradas</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

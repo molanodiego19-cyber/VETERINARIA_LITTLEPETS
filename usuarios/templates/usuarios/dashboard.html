@@ -1,0 +1,27 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block content %}
+<h3>Bienvenido {{ propietario.nombre }}</h3>
+
+<h5 class="mt-4">Mis Mascotas</h5>
+<ul class="list-group">
+    {% for mascota in mascotas %}
+        <li class="list-group-item">
+            {{ mascota.nombre }} - {{ mascota.especie }}
+        </li>
+    {% empty %}
+        <li class="list-group-item">No tienes mascotas</li>
+    {% endfor %}
+</ul>
+
+<h5 class="mt-4">Próximas Citas</h5>
+<ul class="list-group">
+    {% for cita in citas %}
+        <li class="list-group-item">
+            {{ cita.fecha }} - {{ cita.mascota.nombre }}
+        </li>
+    {% empty %}
+        <li class="list-group-item">Sin citas</li>
+    {% endfor %}
+</ul>
+{% endblock %}

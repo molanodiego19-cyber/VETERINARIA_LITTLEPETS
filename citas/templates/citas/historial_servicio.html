@@ -1,0 +1,45 @@
+{% extends 'usuarios/base_veterinario.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">🛁 Registrar Servicio (Baño / Estética)</h2>
+
+    <div class="card shadow p-4">
+
+        <!-- 🔹 Info de la cita -->
+        <div class="mb-3">
+            <strong>Mascota:</strong> {{ cita.mascota.nombre }} <br>
+            <strong>Servicio:</strong> {{ cita.servicio.nombre }} <br>
+            <strong>Fecha:</strong> {{ cita.fecha }} {{ cita.hora }}
+        </div>
+
+        <hr>
+
+        <!-- 🔹 Formulario -->
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_observaciones" class="form-label">
+                    Observaciones del servicio
+                </label>
+                {{ form.observaciones }}
+            </div>
+
+            <!-- 🔹 Botones -->
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'citas:listar' %}" class="btn btn-secondary">
+                    ⬅ Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    💾 Guardar Servicio
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

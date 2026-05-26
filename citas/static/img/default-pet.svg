@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="50" fill="#fde8e2"/>
+  <!-- orejas -->
+  <ellipse cx="30" cy="28" rx="10" ry="14" fill="#b84a30" transform="rotate(-15 30 28)"/>
+  <ellipse cx="70" cy="28" rx="10" ry="14" fill="#b84a30" transform="rotate(15 70 28)"/>
+  <!-- cara -->
+  <circle cx="50" cy="52" r="26" fill="#d4836a"/>
+  <!-- hocico -->
+  <ellipse cx="50" cy="62" rx="12" ry="8" fill="#c06b55"/>
+  <!-- nariz -->
+  <ellipse cx="50" cy="57" rx="5" ry="3.5" fill="#6b3a2a"/>
+  <!-- ojos -->
+  <circle cx="40" cy="47" r="4" fill="#1c2b22"/>
+  <circle cx="60" cy="47" r="4" fill="#1c2b22"/>
+  <circle cx="41.5" cy="45.5" r="1.2" fill="#fff"/>
+  <circle cx="61.5" cy="45.5" r="1.2" fill="#fff"/>
+</svg>

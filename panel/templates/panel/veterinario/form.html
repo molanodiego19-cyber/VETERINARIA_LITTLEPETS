@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-card">
+  <div class="page-title">
+    {% if object %}Editar Veterinario{% else %}Nuevo Veterinario{% endif %}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+
+      {% if field.errors %}
+      <small style="color:var(--marron);font-size:.75rem">
+        {{ field.errors|join:", " }}
+      </small>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">Guardar</button>
+      <a class="btn-marron" href="{% url 'panel:panel_veterinario_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const especialidad = document.getElementById("id_especialidad");
+    const servicios = document.getElementById("id_servicios");
+
+    if (!especialidad || !servicios) return;
+
+    function cargarServicios(especialidadId) {
+
+        // limpiar siempre
+        servicios.innerHTML = "";
+
+        if (!especialidadId) return;
+
+        fetch("{% url 'panel:cargar_servicios' %}?especialidad_id=" + especialidadId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error en la respuesta del servidor");
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                if (data.length === 0) {
+                    let option = document.createElement("option");
+                    option.text = "No hay servicios disponibles";
+                    option.disabled = true;
+                    servicios.appendChild(option);
+                    return;
+                } 
+
+                data.forEach(servicio => {
+                    let option = document.createElement("option");
+                    option.value = servicio.id;
+                    option.text = servicio.nombre;
+                    servicios.appendChild(option);
+                });
+
+            })
+            .catch(error => {
+                console.error("Error cargando servicios:", error);
+            });
+    }
+
+    // 🔥 cuando cambia especialidad
+    especialidad.addEventListener("change", function () {
+        cargarServicios(this.value);
+    });
+
+    // 🔥 cuando editas (carga automática)
+    if (especialidad.value) {
+        cargarServicios(especialidad.value);
+    }
+
+});
+</script>
+
+{% endblock %}
+

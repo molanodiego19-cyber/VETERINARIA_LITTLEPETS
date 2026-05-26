@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .acciones{
+
+    display:flex;
+
+    gap:.6rem;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+  }
+
+  .btn-sm{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:.55rem 1rem;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    transition:.2s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.35rem;
+
+  }
+
+  .btn-editar{
+
+    background:#dceef6;
+
+    color:#245d87;
+
+  }
+
+  .btn-editar:hover{
+
+    background:#c7e3ef;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar{
+
+    background:#fde5e5;
+
+    color:#a12727;
+
+  }
+
+  .btn-eliminar:hover{
+
+    background:#f8d0d0;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar button{
+
+    background:none;
+
+    border:none;
+
+    color:inherit;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:.78rem;
+
+  }
+
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Mascotas</div>
+    <div class="page-sub">Gestión de mascotas</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_mascota_create' %}">+ Nueva Mascota</a>
+</div>
+
+<!-- FILTROS MASCOTAS -->
+<form method="get" style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+    align-items:flex-end;
+    margin-bottom:20px;
+    background:#f5f5f5;
+    padding:10px;
+    border-radius:8px;
+">
+
+    <!-- Nombre -->
+    <div style="display:flex; flex-direction:column;">
+        <label>Nombre</label>
+        <input type="text" name="nombre" placeholder="Buscar mascota"
+               value="{{ request.GET.nombre }}"
+               style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;">
+    </div>
+
+    <!-- Especie -->
+    <div style="display:flex; flex-direction:column;">
+        <label>Especie</label>
+        <select name="especie" style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;">
+            <option value="">Todas</option>
+            {% for esp in especies %}
+            <option value="{{ esp.id }}"
+                {% if request.GET.especie == esp.id|stringformat:"s" %}selected{% endif %}>
+                {{ esp.nombre }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Sexo -->
+    <div style="display:flex; flex-direction:column;">
+        <label>Sexo</label>
+        <select name="sexo" style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;">
+            <option value="">Todos</option>
+            <option value="macho" {% if request.GET.sexo == "macho" %}selected{% endif %}>Macho</option>
+            <option value="hembra" {% if request.GET.sexo == "hembra" %}selected{% endif %}>Hembra</option>
+        </select>
+    </div>
+
+    <!-- Estado -->
+    <div style="display:flex; flex-direction:column;">
+        <label>Estado</label>
+        <select name="estado" style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;">
+            <option value="">Todos</option>
+            <option value="activo" {% if request.GET.estado == "activo" %}selected{% endif %}>Activo</option>
+            <option value="inactivo" {% if request.GET.estado == "inactivo" %}selected{% endif %}>Inactivo</option>
+        </select>
+    </div>
+
+    <!-- Botones -->
+    <div style="display:flex; gap:10px; align-items:center;">
+
+        <!-- Filtrar -->
+        <button type="submit"
+            style="padding:6px 12px; background:#0992aa; color:white; border:none; border-radius:4px;">
+            Filtrar
+        </button>
+
+        <!-- Limpiar -->
+        <a href="{% url 'panel:panel_mascota_list' %}"
+           style="padding:6px 12px; background:#ccc; color:black; text-decoration:none; border-radius:4px;">
+            Limpiar
+        </a>
+
+        <!-- PDF -->
+        <a href="{% url 'panel:reporte_mascotas_pdf' %}?{{ request.GET.urlencode }}"
+           style="padding:6px 12px; background:#E53935; color:white; border-radius:4px; text-decoration:none;">
+            Descargar PDF
+        </a>
+
+    </div>
+
+</form>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Especie</th>
+        <th>Raza</th>
+        <th>Dueño</th>
+        <th>Estado</th>
+        <th>Sexo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for mascota in mascotas %}
+      <tr>
+        <td><strong>{{ mascota.nombre }}</strong></td>
+        <td>{{ mascota.especie }}</td>
+        <td>{{ mascota.raza }}</td>
+        <td>{{ mascota.propietario }}</td>
+        <td>
+       {% if mascota.estado == 'activo' %}
+       <span style="color:green;font-weight:bold;">Activo</span>
+       {% else %}
+       <span style="color:red;font-weight:bold;">Inactivo</span>
+       {% endif %}
+</td>
+        <td>{{ mascota.sexo }}</td>
+        
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_mascota_edit' mascota.pk %}">Editar</a>
+            <form class="btn-sm btn-eliminar" method="post" action="{% url 'panel:panel_mascota_delete' mascota.pk %}">
+            {% csrf_token %}
+             <button type="submit">Eliminar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="empty-msg">No hay mascotas registradas aún.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

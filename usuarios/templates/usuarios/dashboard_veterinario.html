@@ -1,0 +1,483 @@
+{% extends 'usuarios/base_veterinario.html' %}
+
+{% block title %}Dashboard Veterinario{% endblock %}
+
+{% block extra_styles %}
+<style>
+/* ── Hero banner ── */
+.welcome-banner {
+    background: linear-gradient(135deg, #3a7d5c 0%, #52a878 60%, #6dc492 100%);
+    border-radius: 16px;
+    padding: 36px 40px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+}
+.welcome-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+}
+.welcome-banner h2 { font-size:1.8rem; font-weight:800; margin:0 0 6px; }
+.welcome-banner p  { margin:0; font-size:.95rem; opacity:.88; }
+.banner-icon       { font-size:3.5rem; opacity:.85; }
+
+/* ── Stat cards ── */
+.stat-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    transition: transform .2s, box-shadow .2s;
+}
+.stat-card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.1); }
+.stat-icon   { font-size:2rem; }
+.stat-number { font-size:2.2rem; font-weight:800; color:#2d6a4f; line-height:1; }
+.stat-label  { font-size:.72rem; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:#999; }
+
+/* ── Section panels ── */
+.section-panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px 26px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    height: 100%;
+}
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+.section-title { font-size:1rem; font-weight:800; color:#222; display:flex; align-items:center; gap:8px; }
+.btn-ver-todas {
+    font-size:.78rem; font-weight:700; color:#3a7d5c;
+    background:#e9f5ee; border:none; border-radius:20px;
+    padding:5px 14px; text-decoration:none; transition:background .2s;
+}
+.btn-ver-todas:hover { background:#d1ecda; color:#2d6a4f; text-decoration:none; }
+
+/* ── Pet list item ── */
+.pet-item { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid #f0ebe0; }
+.pet-item:last-child { border-bottom:none; }
+.pet-avatar {
+    width:42px; height:42px; border-radius:50%;
+    background:#fde8c8; display:flex; align-items:center;
+    justify-content:center; font-size:1.3rem; flex-shrink:0;
+}
+.pet-name    { font-weight:700; font-size:.95rem; color:#222; }
+.pet-species { font-size:.82rem; color:#888; }
+
+/* ── Appointment item ── */
+.cita-item { display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid #f0ebe0; }
+.cita-item:last-child { border-bottom:none; }
+.cita-date-badge {
+    background:#e9f5ee; border-radius:10px; padding:6px 12px;
+    text-align:center; min-width:54px; flex-shrink:0;
+}
+.cita-date-badge .day   { font-size:1.15rem; font-weight:800; color:#3a7d5c; line-height:1; }
+.cita-date-badge .month { font-size:.68rem;  font-weight:700; text-transform:uppercase; color:#52a878; }
+.cita-mascota { font-weight:700; font-size:.92rem; color:#222; }
+.cita-hora    { font-size:.8rem; color:#888; }
+
+/* ── Empty state ── */
+.empty-state { text-align:center; padding:30px 0 10px; color:#bbb; }
+.empty-state .empty-icon { font-size:2.8rem; margin-bottom:10px; }
+.empty-state p { font-size:.88rem; margin:0; }
+
+/* Bootstrap-like row/col helpers (si no tienes Bootstrap) */
+.row { display:flex; flex-wrap:wrap; margin:-8px; }
+.row.g-3 { gap:16px; margin:0; }
+.row.g-4 { gap:20px; margin:0; }
+.col-6   { flex:0 0 calc(50% - 8px); }
+.col-12  { flex:0 0 100%; }
+.mb-4    { margin-bottom:24px !important; }
+@media(min-width:768px){
+    .col-md-3 { flex:0 0 calc(25% - 12px); }
+    .col-md-6 { flex:0 0 calc(50% - 10px); }
+}
+
+.btn-consulta {
+    display: inline-block;
+    background: #2d6a4f;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-decoration: none;
+}
+
+.btn-consulta:hover {
+    background: #52b788;
+}
+
+.btn-consulta.disabled {
+    background: #ddd;
+    color: #999;
+    pointer-events: none;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+<div class="welcome-banner mb-4">
+    <div style="position:relative; z-index:1;">
+        <h2>¡Hola, {{ veterinario.nombre }}! 👋</h2>
+        <p>
+            Bienvenido a tu panel de Little Pets.
+            Aquí puedes gestionar tus mascotas y citas.
+        </p>
+    </div>
+
+    <div class="banner-icon" style="position:relative; z-index:1;">
+        🐾
+    </div>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <span class="stat-icon">🐶</span>
+            <span class="stat-number">
+                {{ mascotas|length }}
+            </span>
+            <span class="stat-label">
+                Mascotas asignadas
+            </span>
+        </div>
+    </div>
+
+    <div class="col-6 col-md-3">
+        <div class="stat-card">
+            <span class="stat-icon">📅</span>
+            <span class="stat-number">
+                {{ citas|length }}
+            </span>
+            <span class="stat-label">
+                Próximas citas
+            </span>
+        </div>
+    </div>
+
+</div>
+
+<!-- Main Sections -->
+<div class="row g-4">
+    <!-- Mascotas -->
+    <div class="col-12 col-md-6">
+        <div class="section-panel">
+            <div class="section-header">
+                <span class="section-title">
+                    🐾 Mascotas Asignadas
+                </span>
+            </div>
+
+            {% for mascota in mascotas %}
+
+            <div class="pet-item">
+
+                <div class="pet-avatar">
+                    {% if mascota.especie.nombre == "Perro" %}
+                       🐶
+                    {% elif mascota.especie.nombre == "Gato" %}
+                        🐱
+                    {% elif mascota.especie.nombre == "Ave" %}
+                        🐦
+                    {% elif mascota.especie.nombre == "Conejo" %}
+                        🐰
+                    {% else %}
+                        🐾
+                    {% endif %}
+                </div>
+
+                <div>
+                    <div class="pet-name">
+                        {{ mascota.nombre }}
+                    </div>
+                    <div class="pet-species">
+                        {{ mascota.especie.nombre }}
+                    </div>
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-state">
+                <div class="empty-icon">🐾</div>
+                <p>No tienes mascotas asignadas</p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- Citas -->
+<!-- Citas -->
+<div class="col-12 col-md-6">
+    <div class="section-panel">
+
+        <div class="section-header">
+            <span class="section-title">
+                📅 Próximas Citas
+            </span>
+            <a href="{% url 'usuarios:citas_veterinario' %}" class="btn-ver-todas">
+                Ver todas
+            </a>
+        </div>
+
+        {% for cita in citas %}
+
+        <div class="cita-item" style="
+            background:#fff;
+            border-radius:18px;
+            padding:18px;
+            margin-bottom:18px;
+            border:1px solid #edf2f7;
+            box-shadow:0 4px 12px rgba(0,0,0,.05);
+            align-items:flex-start;
+            gap:18px;
+            transition:.2s;
+        ">
+
+            <!-- FECHA -->
+            <div class="cita-date-badge" style="
+                min-width:70px;
+                border-radius:16px;
+                padding:12px 10px;
+                background:linear-gradient(135deg,#52a878,#2d6a4f);
+                color:#fff;
+                box-shadow:0 4px 10px rgba(82,168,120,.3);
+            ">
+
+                <div class="day" style="
+                    color:#fff;
+                    font-size:1.4rem;
+                ">
+                    {{ cita.fecha|date:"d" }}
+                </div>
+
+                <div class="month" style="
+                    color:#eafff2;
+                    font-size:.72rem;
+                    letter-spacing:1px;
+                ">
+                    {{ cita.fecha|date:"M" }}
+                </div>
+            </div>
+
+            <!-- INFO -->
+            <div style="flex:1;">
+
+                <!-- mascota -->
+                <div style="
+                    font-size:1.05rem;
+                    font-weight:800;
+                    color:#1f2937;
+                    margin-bottom:8px;
+                ">
+                    🐾 {{ cita.mascota.nombre }}
+                    {{ cita.mascota.propietario.nombre }}
+{{ cita.mascota.propietario.apellido }}
+                </div>
+
+                <!-- servicio -->
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:8px;
+                    margin-bottom:7px;
+                    color:#4b5563;
+                    font-size:.9rem;
+                ">
+                    🩺
+                    <span>
+                        Servicio:
+                        <strong style="color:#2d6a4f;">
+                            {{ cita.servicio.nombre }}
+                        </strong>
+                    </span>
+                </div>
+
+                <!-- hora -->
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:8px;
+                    margin-bottom:10px;
+                    color:#4b5563;
+                    font-size:.9rem;
+                ">
+                    ⏰
+                    <span>
+                        {{ cita.hora|time:"H:i" }} hrs
+                    </span>
+                </div>
+
+                <!-- estado -->
+                <div>
+
+                    {% if cita.estado == 'pendiente' %}
+                        <span style="
+                            background:#fff3cd;
+                            color:#856404;
+                            padding:6px 12px;
+                            border-radius:30px;
+                            font-size:.75rem;
+                            font-weight:700;
+                            display:inline-block;
+                        ">
+                            🟡 Pendiente
+                        </span>
+
+                    {% elif cita.estado == 'confirmada' %}
+                        <span style="
+                            background:#dbeafe;
+                            color:#1e40af;
+                            padding:6px 12px;
+                            border-radius:30px;
+                            font-size:.75rem;
+                            font-weight:700;
+                            display:inline-block;
+                        ">
+                            🔵 Confirmada
+                        </span>
+
+                    {% elif cita.estado == 'en_proceso' %}
+                        <span style="
+                            background:#dcfce7;
+                            color:#166534;
+                            padding:6px 12px;
+                            border-radius:30px;
+                            font-size:.75rem;
+                            font-weight:700;
+                            display:inline-block;
+                        ">
+                            🟢 En proceso
+                        </span>
+
+                    {% elif cita.estado == 'cancelada' %}
+                        <span style="
+                            background:#fee2e2;
+                            color:#991b1b;
+                            padding:6px 12px;
+                            border-radius:30px;
+                            font-size:.75rem;
+                            font-weight:700;
+                            display:inline-block;
+                        ">
+                            ❌ Cancelada
+                        </span>
+
+                    {% elif cita.estado == 'finalizada' %}
+                        <span style="
+                            background:#e5e7eb;
+                            color:#374151;
+                            padding:6px 12px;
+                            border-radius:30px;
+                            font-size:.75rem;
+                            font-weight:700;
+                            display:inline-block;
+                        ">
+                            ✅ Finalizada
+                        </span>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <!-- BOTÓN -->
+            <div style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                height:100%;
+            ">
+
+                {% if cita.estado != 'cancelada' and cita.estado != 'finalizada' %}
+
+                    <a href="{% url 'citas:iniciar_consulta' cita.id %}"
+                       style="
+                            background:linear-gradient(135deg,#52a878,#2d6a4f);
+                            color:#fff;
+                            text-decoration:none;
+                            padding:10px 16px;
+                            border-radius:12px;
+                            font-size:.85rem;
+                            font-weight:700;
+                            box-shadow:0 4px 10px rgba(82,168,120,.3);
+                            transition:.2s;
+                            white-space:nowrap;
+                       ">
+
+                        Realizar consulta
+
+                    </a>
+
+                {% else %}
+
+                    <span style="
+                        background:#e5e7eb;
+                        color:#6b7280;
+                        padding:10px 16px;
+                        border-radius:12px;
+                        font-size:.85rem;
+                        font-weight:700;
+                        white-space:nowrap;
+                    ">
+                        No disponible
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="empty-state" style="
+            background:#fff;
+            border-radius:16px;
+            padding:40px 20px;
+            box-shadow:0 4px 12px rgba(0,0,0,.05);
+        ">
+
+            <div class="empty-icon" style="
+                font-size:3rem;
+                margin-bottom:10px;
+            ">
+                📅
+            </div>
+
+            <p style="
+                color:#6b7280;
+                font-size:.95rem;
+            ">
+                No tienes citas pendientes
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+</div> 
+
+{% endblock %}

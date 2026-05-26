@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="confirm-card">
+  <div class="confirm-icon">🐾</div>
+  <div class="page-title">¿Eliminar categoría?</div>
+  <p>Esta acción eliminará la categoría <strong>{{ object.nombre_categoria }}</strong>. No se puede deshacer.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-actions">
+      <button type="submit" class="btn-marron">Sí, eliminar</button>
+      <a class="btn-verde" href="{% url 'panel:panel_categoriaservicio_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

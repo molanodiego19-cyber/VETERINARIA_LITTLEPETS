@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .acciones{
+
+    display:flex;
+
+    gap:.6rem;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+  }
+
+  .btn-sm{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:.55rem 1rem;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    transition:.2s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.35rem;
+
+  }
+
+  .btn-editar{
+
+    background:#dceef6;
+
+    color:#245d87;
+
+  }
+
+  .btn-editar:hover{
+
+    background:#c7e3ef;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar{
+
+    background:#fde5e5;
+
+    color:#a12727;
+
+  }
+
+  .btn-eliminar:hover{
+
+    background:#f8d0d0;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar button{
+
+    background:none;
+
+    border:none;
+
+    color:inherit;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:.78rem;
+
+  }
+
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Veterinarios</div>
+    <div class="page-sub">Gestión de profesionales</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_veterinario_create' %}">+ Nuevo Veterinario</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Licencia</th>
+        <th>Especialidad</th>
+        <th>Días laborales</th> >
+        <th>Correo</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for v in veterinarios %}
+      <tr>
+        <td><strong>{{ v.nombre }}</strong></td>
+        <td>{{ v.num_licencia }}</td>
+        <td>{{ v.especialidad }}</td>
+
+        <!-- MOSTRAR DÍAS -->
+        <td>
+          {% if v.dias_laborales %}
+            {% for dia in v.dias_laborales %}
+              <span style="background:#e3f2fd; padding:4px 8px; margin:2px; border-radius:5px; display:inline-block;">
+                {{ dia|title }}
+              </span>
+            {% endfor %}
+          {% else %}
+            <span style="color:gray;">Sin días</span>
+          {% endif %}
+        </td>
+
+        <td>{{ v.usuario.correo }}</td>
+        
+        <td>
+          {% if v.usuario.estado == 'activo' %}
+            <span style="color:green;font-weight:bold;">Activo</span>
+          {% else %}
+            <span style="color:red;font-weight:bold;">Inactivo</span>
+          {% endif %}
+        </td>
+
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_veterinario_edit' v.pk %}">Editar</a>
+            <form class="btn-sm btn-eliminar" method="post" action="{% url 'panel:panel_veterinario_delete' v.pk %}">
+            {% csrf_token %}
+             <button type="submit">Eliminar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+
+      {% empty %}
+      <tr>
+        <td colspan="7" class="empty-msg">No hay veterinarios registrados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

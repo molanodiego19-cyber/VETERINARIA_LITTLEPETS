@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.filters-wrap{
+    background:white;
+    padding:1rem;
+    border-radius:14px;
+    margin-bottom:1.5rem;
+    border:1px solid #eee;
+}
+
+.filters-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1rem;
+    align-items:end;
+}
+
+.filters-grid label{
+    display:block;
+    font-size:.75rem;
+    font-weight:bold;
+    margin-bottom:.3rem;
+    color:#666;
+}
+
+.filters-grid select,
+.filters-grid input{
+    width:100%;
+    padding:.7rem;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.filter-buttons{
+    display:flex;
+    gap:.5rem;
+}
+
+.btn-filtrar{
+    background:#198754;
+    color:white;
+    border:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.btn-limpiar{
+    background:#dc3545;
+    color:white;
+    text-decoration:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+}
+
+.report-actions{
+    display:flex;
+    gap:1rem;
+    margin-bottom:1rem;
+}
+
+.btn-pdf{
+    background:#dc3545;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.btn-excel{
+    background:#198754;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Citas</div>
+    <div class="page-sub">
+      Visualización general de citas registradas
+    </div>
+  </div>
+</div>
+
+
+<form method="get" class="filters-wrap">
+
+  <div class="filters-grid">
+
+    <!-- ESTADO -->
+    <div>
+      <label>Estado</label>
+
+      <select name="estado">
+
+        <option value="">Todos</option>
+
+        {% for value, label in estados %}
+
+          <option 
+            value="{{ value }}"
+            {% if request.GET.estado == value %}
+              selected
+            {% endif %}
+          >
+            {{ label }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- FECHA -->
+    <div>
+      <label>Fecha</label>
+
+      <input
+        type="date"
+        name="fecha"
+        value="{{ request.GET.fecha }}"
+      >
+    </div>
+
+    <!-- SERVICIO -->
+    <div>
+      <label>Servicio</label>
+
+      <select name="servicio">
+
+        <option value="">Todos</option>
+
+        {% for s in servicios %}
+
+          <option
+            value="{{ s.id }}"
+            {% if request.GET.servicio == s.id|stringformat:"s" %}
+              selected
+            {% endif %}
+          >
+            {{ s.nombre }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- VETERINARIO -->
+    <div>
+      <label>Veterinario</label>
+
+      <select name="veterinario">
+
+        <option value="">Todos</option>
+
+        {% for v in veterinarios %}
+
+          <option
+            value="{{ v.id }}"
+            {% if request.GET.veterinario == v.id|stringformat:"s" %}
+              selected
+            {% endif %}
+          >
+            {{ v }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="filter-buttons">
+
+      <button type="submit" class="btn-filtrar">
+        Filtrar
+      </button>
+
+      <a href="{% url 'panel:panel_cita_list' %}" class="btn-limpiar">
+        Limpiar
+      </a>
+
+    </div>
+
+  </div>
+
+</form>
+<div class="report-actions">      <!-- EXPORTACIONES -->
+
+  <a
+    href="{% url 'panel:reporte_citas_pdf' %}?{{ request.GET.urlencode }}"
+    class="btn-pdf"
+  >
+    Descargar PDF
+  </a>
+
+  <a
+    href="{% url 'panel:reporte_citas_excel' %}?{{ request.GET.urlencode }}"
+    class="btn-excel"
+  >
+    Descargar Excel
+  </a>
+
+</div>
+
+
+<div class="table-wrap">
+
+  <table>
+
+    <thead>
+      <tr>
+
+        <th>ID</th>
+        <th>Propietario</th>
+        <th>Mascota</th>
+        <th>Veterinario</th>
+        <th>Servicio</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Recordatorio</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {% for c in citas %}
+
+      <tr>
+
+        <td>
+          <strong>#{{ c.id }}</strong>
+        </td>
+
+        <td>
+          {{ c.dueño }}
+        </td>
+
+        <td>
+          {{ c.mascota.nombre }}
+        </td>
+
+        <td>
+
+          {% if c.veterinario %}
+            {{ c.veterinario }}
+          {% else %}
+            <span style="color:#999;">
+              Sin asignar
+            </span>
+          {% endif %}
+
+        </td>
+
+        <td>
+          {{ c.servicio.nombre }}
+        </td>
+
+        <td>
+          {{ c.fecha }}
+        </td>
+
+        <td>
+          {{ c.hora }}
+        </td>
+
+        <td>
+
+          {% if c.estado == 'pendiente' %}
+
+            <span style="color:orange;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'confirmada' %}
+
+            <span style="color:lightblue;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'cancelada' %}
+
+            <span style="color:red;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'finalizada' %}
+
+            <span style="color:green;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'en_proceso' %}
+
+            <span style="color:#6f42c1;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% else %}
+
+            <span style="color:#666;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% endif %}
+
+        </td>
+
+        <td>
+
+          {% if c.recordatorio_enviado %}
+
+            <span style="color:green;font-weight:bold;">
+              Enviado
+            </span>
+
+          {% else %}
+
+            <span style="color:red;font-weight:bold;">
+              Pendiente
+            </span>
+
+          {% endif %}
+
+        </td>
+
+      </tr>
+
+      {% empty %}
+
+      <tr>
+        <td colspan="9" class="empty-msg">
+          No existen citas registradas.
+        </td>
+      </tr>
+
+      {% endfor %}
+
+    </tbody>
+
+  </table>
+
+</div>
+
+{% endblock %}

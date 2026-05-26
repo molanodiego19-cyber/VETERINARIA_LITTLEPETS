@@ -1,0 +1,50 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block page_name %}Historial Clínico{% endblock %}
+
+{% block content %}
+<style>
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#2d6a4f; margin-bottom:.15rem; }
+  .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
+  .table-wrap { background:#fff; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,.06); overflow:hidden; border:1px solid #f0e8d8; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { padding:11px 18px; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#2d6a4f; background:#f0faf5; text-align:left; border-bottom:1.5px solid #d8f0e6; }
+  tbody tr { border-bottom:1px solid #f5f0e8; transition:background .12s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:#fdf8f0; }
+  tbody td { padding:12px 18px; font-size:.88rem; color:#555; vertical-align:middle; }
+  tbody td strong { color:#6b3a2a; font-weight:600; }
+  .empty-msg { text-align:center; color:#ccc; padding:2.5rem !important; font-size:.88rem; }
+</style>
+
+<div class="page-header">
+  <div>
+    <p class="page-sub">Mascotas</p>
+    <h1 class="page-title">Historial Clínico</h1>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Mascota</th>
+        <th>Fecha</th>
+        <th>Diagnóstico</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in object_list %}
+      <tr>
+        <td><strong>{{ h.mascota.nombre }}</strong></td>
+        <td>{{ h.fecha }}</td>
+        <td>{{ h.descripcion }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="empty-msg">No hay registros en el historial</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

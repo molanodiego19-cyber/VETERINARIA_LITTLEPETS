@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Reporte de Mascotas</h1>
+
+<p>
+    Filtros:
+    Especie: {{ especie|default:"Todos" }} |
+    Estado: {{ estado|default:"Todos" }} |
+    Sexo: {{ sexo|default:"Todos" }}
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Propietario</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Sexo</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in mascotas %}
+        <tr>
+            <td>{{ m.nombre }}</td>
+            <td>{{ m.propietario }}</td>
+            <td>{{ m.especie }}</td>
+            <td>{{ m.raza }}</td>
+            <td>{{ m.sexo }}</td>
+            <td>{{ m.estado }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

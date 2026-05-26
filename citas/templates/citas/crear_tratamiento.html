@@ -1,0 +1,41 @@
+{% extends 'usuarios/base_veterinario.html' %}
+
+{% block content %}
+
+<div class="form-card">
+  <div class="page-title">
+    💊 Crear Tratamiento - {{ consulta.cita.mascota.nombre }}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+
+        {% if field.errors %}
+          <small style="color:red;">{{ field.errors }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">
+        Guardar Tratamiento
+      </button>
+
+      <button type="submit"
+    name="accion"
+    value="cancelar"
+    class="btn-marron"
+    formnovalidate>
+    ❌ Cancelar Consulta
+  </button>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Categorías de Servicios</div>
+    <div class="page-sub">Gestión de categorías</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_categoriaservicio_create' %}">+ Nueva Categoría</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for categoria in categorias %}
+      <tr>
+        <td class="id-cell">{{ categoria.id }}</td>
+        <td><strong>{{ categoria.nombre_categoria }}</strong></td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_categoriaservicio_edit' categoria.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_categoriaservicio_delete' categoria.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="empty-msg">No hay categorías registradas aún.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

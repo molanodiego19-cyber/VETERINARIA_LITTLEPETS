@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Reporte Detalle de Facturas</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Factura</th>
+                <th>Servicio</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Total</th>
+                <th>Fecha Pago</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for d in detalles %}
+
+            <tr>
+
+                <!-- FACTURA -->
+                <td>
+                    {{ d.factura.numero_factura }}
+                </td>
+
+                <!-- SERVICIO -->
+                <td>
+
+                    {% if d.servicio %}
+                        {{ d.servicio.nombre }}
+                    {% else %}
+                        {{ d.descripcion }}
+                    {% endif %}
+
+                </td>
+
+                <!-- CANTIDAD -->
+                <td class="text-center">
+                    {{ d.cantidad }}
+                </td>
+
+                <!-- PRECIO -->
+                <td class="text-right">
+                    ${{ d.precio_unitario }}
+                </td>
+
+                <!-- TOTAL -->
+                <td class="text-right">
+                    ${{ d.total }}
+                </td>
+
+                <!-- FECHA -->
+                <td>
+
+                    {% if d.fechahora_pago %}
+                        {{ d.fechahora_pago|date:"d/m/Y H:i" }}
+                    {% else %}
+                        ---
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="6" class="text-center">
+                    No hay datos
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</body>
+</html>

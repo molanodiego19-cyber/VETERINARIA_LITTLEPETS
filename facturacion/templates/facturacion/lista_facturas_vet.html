@@ -1,0 +1,38 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block page_name %}Lista de Facturas{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 20px;">📄 Facturas</h2>
+
+<table style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;">
+    <thead>
+        <tr style="background-color: #4CAF50; color: white; text-align: left;">
+            <th style="padding: 12px; border: 1px solid #ddd;">Número</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Dueño</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Total</th>
+            <th style="padding: 12px; border: 1px solid #ddd;">Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in facturas %}
+        <tr style="border: 1px solid #ddd; background-color: {% cycle '#f9f9f9' '#ffffff' %};">
+            <td style="padding: 12px; border: 1px solid #ddd;">{{ f.invoice_number }}</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">{{ f.dueño }}</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">${{ f.total|floatformat:2 }}</td>
+            <td style="padding: 12px; border: 1px solid #ddd;">{{ f.fecha_emision|date:"d/m/Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="padding: 12px; text-align: center; color: gray;">No hay facturas registradas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+table tr:hover {
+    background-color: #f1f1f1;
+}
+</style>
+{% endblock %}

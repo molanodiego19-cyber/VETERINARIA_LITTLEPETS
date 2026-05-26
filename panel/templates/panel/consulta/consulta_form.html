@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-card">
+  <div class="page-title">
+    {% if object %}Editar Consulta{% else %}Nueva Consulta{% endif %}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+
+      {% if field.help_text %}
+        <small style="color:#bbb;font-size:.75rem">
+          {{ field.help_text }}
+        </small>
+      {% endif %}
+
+      {% if field.errors %}
+        <small style="color:var(--marron);font-size:.75rem">
+          {{ field.errors|join:", " }}
+        </small>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">Guardar</button>
+      <a class="btn-marron" href="{% url 'panel:panel_consulta_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Servicios usados en citas finalizadas</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Servicio</th>
+            <th>Cantidad Total</th>
+            <th>Ingresos Generados 💰</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in servicios %}
+        <tr>
+            <td>{{ s.servicio__nombre }}</td>
+            <td>{{ s.total_cantidad }}</td>
+            <td>${{ s.total_ingresos }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No hay datos</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

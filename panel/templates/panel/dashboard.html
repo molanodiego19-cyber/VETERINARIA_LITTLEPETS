@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Administrador | Little Pets{% endblock %}
+{% block page_name %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dash { animation: fadeUp .4s ease both; }
+
+  /* ======================================================
+     HEADER & GENERAL
+  ====================================================== */
+  .dash-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    animation: fadeUp .35s ease both;
+  }
+
+  .dash-greeting {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--verde);
+    line-height: 1.1;
+  }
+
+  .dash-greeting span { color: var(--dorado); }
+  .dash-sub { font-size: .78rem; color: #aaa; font-weight: 500; margin-top: .25rem; letter-spacing: .03em; }
+  .dash-date { font-size: .75rem; color: #bbb; font-weight: 500; text-align: right; letter-spacing: .03em; }
+
+  /* ======================================================
+     STATS CARDS (TARJETAS GLOBALES PRINCIPALES)
+  ====================================================== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--blanco);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 14px rgba(0,0,0,.05);
+    border: 1.5px solid #f0ede6;
+    position: relative;
+    overflow: hidden;
+    transition: .2s;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  }
+
+  .stat-card::before { content: ''; position: absolute; left: 0; top: 0; width: 5px; height: 100%; }
+  .card-mascotas::before { background: #52b788; }
+  .card-citas::before { background: #f4b942; }
+  .card-finalizadas::before { background: #4a8fa8; }
+  .card-pendientes::before { background: #ef4444; }
+
+  .stat-top { display: flex; align-items: center; gap: 1rem; }
+  .stat-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+  
+  .card-mascotas .stat-icon { background: #d8f3dc; }
+  .card-citas .stat-icon { background: #fff1cc; }
+  .card-finalizadas .stat-icon { background: #dceef6; }
+  .card-pendientes .stat-icon { background: #ffe2e2; }
+
+  .stat-info h3 { font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #aaa; margin-bottom: .3rem; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--verde); }
+
+  /* ======================================================
+     BUSINESS METRICS GRID
+  ====================================================== */
+  .admin-business-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+    margin-bottom: 2rem;
+  }
+  .biz-card { background: var(--blanco); border: 1.5px solid #f0ede6; border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,.04); }
+  .biz-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; color: #8ab8a0; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
+  .biz-value { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--verde); }
+  .biz-sub { font-size: 0.75rem; color: #777; margin-top: 0.2rem; }
+
+  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .9rem; margin-top: 2rem; }
+  .section-label { font-size: .75rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--verde); display: flex; align-items: center; gap: .5rem; }
+  .section-label::before { content: ''; width: 10px; height: 3px; background: var(--verde-claro); border-radius: 4px; }
+  .section-link { text-decoration: none; color: var(--verde-claro); font-size: .75rem; font-weight: 700; }
+
+  /* ======================================================
+     TABLAS GENERALES
+  ====================================================== */
+  .table-wrap { background: var(--blanco); border-radius: 16px; overflow: hidden; border: 1.5px solid #f0ede6; box-shadow: 0 2px 12px rgba(0,0,0,.04); margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; }
+  thead { background: #f8fdf9; }
+  thead th { padding: 14px 18px; text-align: left; font-size: .68rem; font-weight: 800; color: #8ab8a0; letter-spacing: .08em; text-transform: uppercase; }
+  tbody td { padding: 14px 18px; border-bottom: 1px solid #f5f1eb; font-size: .85rem; color: var(--gris); }
+  tbody tr:hover { background: #fdfaf5; }
+  .id-cell { color: #bbb; font-size: .72rem; font-weight: 700; }
+
+  /* BADGES DE ESTADO */
+  .badge { padding: 5px 11px; border-radius: 50px; font-size: .65rem; font-weight: 700; letter-spacing: .04em; display: inline-block; }
+  .badge-finalizada { background: #d9f4e7; color: #186a43; }
+  .badge-pendiente { background: #fff4d6; color: #9a6700; }
+  .badge-cancelada { background: #fde5e5; color: #a12727; }
+  .badge-completada { background: #dcebfa; color: #245d87; }
+
+  .empty-row td { text-align: center; padding: 2.5rem; color: #bbb; font-style: italic; font-size: 0.85rem; }
+
+  @media(max-width: 1024px) { .stats-grid, .admin-business-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media(max-width: 640px) { .stats-grid, .admin-business-grid { grid-template-columns: 1fr; } .dash-header { flex-direction: column; align-items: flex-start; gap: .5rem; } }
+</style>
+
+<div class="dash">
+
+  <div class="dash-header">
+    <div>
+      <div class="dash-greeting">Panel Little <span>Pets</span></div>
+      <div class="dash-sub">Resumen macro del sistema, finanzas y control de operaciones analíticas</div>
+    </div>
+    <div class="dash-date" id="fecha-hoy"></div>
+  </div>
+
+  <div class="stats-grid">
+    
+    <div class="stat-card card-mascotas">
+      <div class="stat-top">
+        <div class="stat-icon">🐾</div>
+        <div class="stat-info">
+          <h3>Total Mascotas</h3>
+          <div class="stat-num">{{ total_mascotas }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card card-citas">
+      <div class="stat-top">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+          <h3>Total Citas</h3>
+          <div class="stat-num">{{ total_citas }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card card-finalizadas">
+      <div class="stat-top">
+        <div class="stat-icon">🩺</div>
+        <div class="stat-info">
+          <h3>Histórico Finalizadas</h3>
+          <div class="stat-num">{{ total_finalizadas }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card card-pendientes">
+      <div class="stat-top">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+          <h3>Total Pendientes</h3>
+          <div class="stat-num">{{ total_pendientes }}</div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="section-head">
+    <div class="section-label">Indicadores de Rendimiento Financiero</div>
+  </div>
+  
+  <div class="admin-business-grid">
+    <div class="biz-card">
+      <div class="biz-title">Ingresos Mensuales</div>
+      <div class="biz-value">${{ ingresos_mes }}</div>
+      <div class="biz-sub">Cierre de caja hoy: <strong>${{ ingresos_dia }}</strong></div>
+    </div>
+
+    <div class="biz-card">
+      <div class="biz-title">Nuevos Clientes</div>
+      <div class="biz-value" style="color: #6f42c1;">+{{ nuevos_clientes }}</div>
+      <div class="biz-sub">Registrados en los últimos 30 días</div>
+    </div>
+
+    <div class="biz-card">
+      <div class="biz-title">Tasa de No-Show</div>
+      <div class="biz-value text-danger">{{ tasa_no_show }}%</div>
+      <div class="biz-sub">Porcentaje histórico de cancelaciones</div>
+    </div>
+  </div>
+
+<div class="section-head">
+  <div class="section-label">
+    Monitoreo Operativo (Citas de Hoy)
+  </div>
+</div>
+
+<div class="admin-business-grid" style="margin-bottom: 2rem;">
+
+  <!-- =========================================
+       TOTAL AGENDADAS
+  ========================================== -->
+  <div class="biz-card" style="border-left: 4px solid #4a8fa8;">
+
+    <div class="biz-title" style="color: #4a8fa8;">
+      Total Agendadas
+    </div>
+
+    <div class="biz-value" style="color: #4a8fa8;">
+      {{ citas_stats.agendadas }}
+    </div>
+
+    <div class="biz-sub">
+      Total de citas registradas para hoy
+    </div>
+
+  </div>
+
+  <!-- =========================================
+       CITAS ACTIVAS
+  ========================================== -->
+  <div class="biz-card" style="border-left: 4px solid #52b788;">
+
+    <div class="biz-title" style="color: #186a43;">
+      Citas Activas
+    </div>
+
+    <div class="biz-value" style="color: #186a43;">
+      {{ citas_stats.activas }}
+    </div>
+
+    <div class="biz-sub">
+      Citas vigentes no canceladas
+    </div>
+
+  </div>
+
+  <!-- =========================================
+       CANCELADAS
+  ========================================== -->
+  <div class="biz-card" style="border-left: 4px solid #ef4444;">
+
+    <div class="biz-title" style="color: #b42318;">
+      Citas Canceladas
+    </div>
+
+    <div class="biz-value" style="color: #b42318;">
+      {{ citas_stats.canceladas }}
+    </div>
+
+    <div class="biz-sub">
+      Cancelaciones registradas hoy
+    </div>
+
+  </div>
+
+</div>  <div class="section-head">
+    <div class="section-label">Top 5 Servicios más Demandados</div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre del Servicio</th>
+          <th style="text-align: right;">Volumen de Citas Históricas</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for servicio in servicios_populares %}
+        <tr>
+          <td><strong>{{ servicio.nombre }}</strong></td>
+          <td style="text-align: right;">
+            <span class="badge badge-completada">{{ servicio.cuanto }} Solicitudes</span>
+          </td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="2">No se registra actividad en servicios todavía.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-head">
+    <div class="section-label">Últimas Mascotas Incorporadas</div>
+    <a class="section-link" href="#">Ver Catálogo Completo →</a>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Paciente</th>
+          <th>Propietario / Responsable</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mascota in ultimas_mascotas %}
+        <tr>
+          <td class="id-cell">#{{ mascota.id }}</td>
+          <td><strong>{{ mascota.nombre }}</strong></td>
+          <td>{{ mascota.propietario }}</td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="3">No existen mascotas registradas en el sistema.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-head">
+    <div class="section-label">Registro General de Citas Finalizadas</div>
+    <a class="section-link" href="#">Ver Agenda Completa →</a>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Mascota</th>
+          <th>Servicio</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cita in citas_finalizadas %}
+        <tr>
+          <td class="id-cell">#{{ cita.id }}</td>
+          <td><strong>{{ cita.mascota.nombre }}</strong></td>
+          <td>{{ cita.servicio.nombre }}</td>
+          <td>{{ cita.fecha }}</td>
+          <td>{{ cita.hora }}</td>
+          <td>
+            {% if cita.estado == 'Finalizada' %} <span class="badge badge-finalizada">{{ cita.estado }}</span>
+            {% elif cita.estado == 'Pendiente' %} <span class="badge badge-pendiente">{{ cita.estado }}</span>
+            {% elif cita.estado == 'Cancelada' %} <span class="badge badge-cancelada">{{ cita.estado }}</span>
+            {% else %} <span class="badge badge-completada">{{ cita.estado }}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr class="empty-row"><td colspan="6">No se encontraron registros de citas finalizadas en el sistema.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  const fecha = new Date();
+  const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const strFecha = fecha.toLocaleDateString('es-CO', opciones);
+  document.getElementById('fecha-hoy').textContent = strFecha.charAt(0).toUpperCase() + strFecha.slice(1);
+</script>
+{% endblock %}
