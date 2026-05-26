@@ -85,11 +85,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'veterinaria',
-        'USER': 'root',
-        'PASSWORD': '123456789',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get('railway'),
+        'USER': os.environ.get('root'),
+        'PASSWORD': os.environ.get('xBjEhuXfGweqEvWewyEvCiYBwbzcteYb'),
+        'HOST': os.environ.get('mysql.railway.internal'),
+        'PORT': os.environ.get('3306'),
     }
 }
 
