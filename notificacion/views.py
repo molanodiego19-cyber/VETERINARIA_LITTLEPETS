@@ -70,11 +70,8 @@ def crear_notificacion(
         cuerpo_mensaje=cuerpo
     )
 
-    print("✅ Notificación guardada")
-
-    # 🔥 enviar automáticamente
-    if plantilla.canal == 'email':
-        enviar_email(notificacion)
+    # SOLO guardar
+    print("📩 Notificación pendiente")
 
     return notificacion
 

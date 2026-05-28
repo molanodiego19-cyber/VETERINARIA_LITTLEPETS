@@ -81,7 +81,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'veterinaria',
             'USER': 'root',
-            'PASSWORD': 'root',
+            'PASSWORD': '',
             'HOST': 'localhost',
             'PORT': '3306',
         }

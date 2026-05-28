@@ -5,6 +5,24 @@ from mascota.models import Mascota
 from django.utils import timezone
 from datetime import datetime, timedelta
 
+# notificacion/tasks.py
+
+from notificacion.models import Notificacion
+from notificacion.views import enviar_email
+
+def procesar_correos_pendientes():
+
+    pendientes = Notificacion.objects.filter(
+        estado='pendiente',
+        canal='email'
+    )
+
+    for n in pendientes:
+
+        enviar_email(n)
+
+    print("✅ Correos pendientes procesados")
+    
 def enviar_recordatorios():
 
     ahora = timezone.now()
