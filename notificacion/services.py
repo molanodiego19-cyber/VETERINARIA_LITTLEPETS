@@ -56,6 +56,12 @@ def enviar_email(notificacion):
     )
 
     email.attach_alternative(html_template, "text/html")
-    email.send()
+    try:
+        email.send()
+        notificacion.marcar_enviada()
+        print("✅ Email enviado")
+    except Exception as e:
+        print("❌ ERROR EMAIL:", e)
+        notificacion.marcar_error(str(e))
 
     notificacion.marcar_enviada()
