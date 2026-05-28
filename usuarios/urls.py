@@ -63,6 +63,10 @@ urlpatterns = [
     path('contraseña/', views_panel.cambiar_password, name='contraseña'),
     path('contraseñavet/', views_panel.cambiar_password_veterinario, name='contraseña_vet'),
 
+    # CARGA MASIVA
+
+path('carga-masiva-propietarios/',views_panel.carga_masiva_propietarios,name='carga_masiva_propietarios'),
+path('descargar-plantilla-propietarios/',views_panel.descargar_plantilla_propietarios,name='descargar_plantilla_propietarios'),
 
 
     # -------------------------

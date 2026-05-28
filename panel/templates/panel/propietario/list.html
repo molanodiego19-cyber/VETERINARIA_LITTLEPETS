@@ -446,6 +446,13 @@
     Descargar Excel
   </a>
 
+  <a
+    href="{% url 'usuarios:carga_masiva_propietarios' %}?{{ request.GET.urlencode }}"
+    class="btn-reporte btn-excel"
+  >
+    Carga Masiva
+  </a> 
+
 </div>
 
 <!-- =====================================================

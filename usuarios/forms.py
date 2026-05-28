@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from citas.models import Servicio
 import re
 from django.utils import timezone
+from django import forms
 
 # -------------------------
 # USUARIO
@@ -751,3 +752,10 @@ class CambiarPasswordForm(forms.Form):
         self.usuario.save()
 
         return self.usuario
+
+class CsvUploadForm(forms.Form):
+
+    csv_file = forms.FileField(
+        label="Archivo CSV",
+        help_text="Debe contener columnas válidas"
+    )

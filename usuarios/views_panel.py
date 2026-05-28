@@ -1,47 +1,48 @@
-from django.views.generic import TemplateView, UpdateView, ListView, CreateView, DeleteView
-from django.urls import reverse_lazy
-from django.shortcuts import redirect, get_object_or_404, render
+from datetime import timedelta
+from io import TextIOWrapper
+import csv
+import re
+
 from django.contrib import messages
-from .models import Propietario, Veterinario
-from mascota.models import Mascota, Raza
-from citas.models import Cita, HistoriaClinica,Servicio
-from .forms_panel import *
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.db.models import Q
-from django.views.generic import DetailView
-from .forms_panel import CambiarPasswordForm
 from django.http import JsonResponse
-from django.views.generic import TemplateView, UpdateView, ListView, CreateView, DeleteView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, get_object_or_404, render
-from django.contrib import messages
-from .models import Propietario, Usuario
-from mascota.models import Mascota
-from citas.models import Cita, HistoriaClinica
+from django.utils import timezone
+from django.views.generic import (
+    TemplateView,
+    UpdateView,
+    ListView,
+    CreateView,
+    DeleteView,
+    DetailView
+)
+
+from usuarios.models import (
+    Usuario,
+    Propietario,
+    Veterinario
+)
+
+from mascota.models import (
+    Mascota,
+    Raza
+)
+
+from citas.models import (
+    Cita,
+    HistoriaClinica,
+    Servicio
+)
+
+from .forms import (
+    PropietarioUpdateForm,
+    CambiarPasswordForm
+)
+
 from .forms_panel import *
-from django.views.generic import DetailView
-from .forms_panel import CambiarPasswordForm
-from django.shortcuts import render, redirect
-from .forms import PropietarioUpdateForm
-from django.utils import timezone
-from datetime import timedelta
-
-
-from datetime import timedelta
-from django.contrib import messages
-from django.shortcuts import redirect, render
-from django.utils import timezone
-from .forms import CambiarPasswordForm
-
-
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.utils import timezone
-from datetime import timedelta
-from .forms import CambiarPasswordForm
-
-
-from django.utils import timezone
-from datetime import timedelta
 
 def cambiar_password(request):
 
@@ -470,3 +471,226 @@ def reactivar_usuario(request, usuario_id):
     messages.success(request, 'Usuario reactivado correctamente')
 
     return redirect('usuarios:usuarios_suspendidos')
+
+def carga_masiva_propietarios(request):
+
+    # VALIDAR SESION
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('usuarios:login')
+
+    try:
+
+        usuario_admin = Usuario.objects.get(
+            id=usuario_id
+        )
+
+    except Usuario.DoesNotExist:
+
+        messages.error(
+            request,
+            'Usuario no encontrado'
+        )
+
+        return redirect('usuarios:login')
+
+    # VALIDAR ROL
+    if usuario_admin.rol != Usuario.Rol.ADMIN:
+
+        messages.error(
+            request,
+            'No tienes permisos'
+        )
+
+        return redirect(
+            'panel:panel_dashboard'
+        )
+
+    # POST
+    if request.method == 'POST':
+
+        archivo = request.FILES.get('archivo')
+
+        # VALIDAR ARCHIVO
+        if not archivo:
+
+            messages.error(
+                request,
+                'Debes subir un archivo CSV'
+            )
+
+            return redirect(
+                'usuarios:carga_masiva_propietarios'
+            )
+
+        # VALIDAR EXTENSION
+        if not archivo.name.endswith('.csv'):
+
+            messages.error(
+                request,
+                'Solo se permiten archivos CSV'
+            )
+
+            return redirect(
+                'usuarios:carga_masiva_propietarios'
+            )
+
+        try:
+
+            archivo_csv = TextIOWrapper(
+                archivo.file,
+                encoding='utf-8'
+            )
+
+            lector = csv.DictReader(
+                archivo_csv
+            )
+
+            creados = 0
+            errores = []
+
+            for numero_fila, fila in enumerate(lector, start=2):
+
+                try:
+
+                    correo = fila.get(
+                        'correo',
+                        ''
+                    ).strip()
+
+                    # VALIDAR CORREO VACIO
+                    if not correo:
+
+                        errores.append(
+                            f'Fila {numero_fila}: correo vacío'
+                        )
+
+                        continue
+
+                    # VALIDAR DUPLICADO
+                    if Usuario.objects.filter(
+                        correo=correo
+                    ).exists():
+
+                        errores.append(
+                            f'Fila {numero_fila}: el correo "{correo}" ya existe'
+                        )
+
+                        continue
+
+                    # CREAR USUARIO
+                    usuario = Usuario.objects.create(
+                        correo=correo,
+                        password=make_password(
+                            fila.get('password', '')
+                        ),
+                        rol='propietario',
+                        estado='activo'
+                    )
+
+                    # CREAR PROPIETARIO
+                    Propietario.objects.create(
+                        usuario=usuario,
+                        nombre=fila.get('nombre', '').strip(),
+                        apellido=fila.get('apellido', '').strip(),
+                        telefono=fila.get('telefono', '').strip(),
+                        tipo_documento=fila.get('tipo_documento', '').strip(),
+                        documento=fila.get('documento', '').strip(),
+                        ciudad=fila.get('ciudad', '').strip(),
+                        direccion=fila.get('direccion', '').strip()
+                    )
+
+                    creados += 1
+
+                except Exception as e:
+
+                    errores.append(
+                        f'Fila {numero_fila}: {str(e)}'
+                    )
+
+            # MENSAJE EXITOSO
+            messages.success(
+                request,
+                f'Se crearon correctamente {creados} propietarios'
+            )
+
+            # MENSAJES DE ERROR
+            if errores:
+
+                messages.warning(
+                    request,
+                    f'Se encontraron {len(errores)} errores'
+                )
+
+                for error in errores:
+
+                    messages.error(
+                        request,
+                        error
+                    )
+
+            return redirect(
+                'usuarios:carga_masiva_propietarios'
+            )
+
+        except Exception as e:
+
+            messages.error(
+                request,
+                f'Error general: {str(e)}'
+            )
+
+            return redirect(
+                'usuarios:carga_masiva_propietarios'
+            )
+
+    return render(
+        request,
+        'panel/propietario/carga_masiva_propietario.html'
+    )
+
+from django.http import HttpResponse
+import csv
+
+
+def descargar_plantilla_propietarios(request):
+
+    response = HttpResponse(
+        content_type='text/csv'
+    )
+
+    response[
+        'Content-Disposition'
+    ] = 'attachment; filename="plantilla_propietarios.csv"'
+
+
+    writer = csv.writer(response)
+
+    # ENCABEZADOS
+    writer.writerow([
+        'correo',
+        'password',
+        'nombre',
+        'apellido',
+        'telefono',
+        'tipo_documento',
+        'documento',
+        'ciudad',
+        'direccion'
+    ])
+
+    # FILA DE EJEMPLO
+    writer.writerow([
+        'usuario@gmail.com',
+        '123456',
+        'Juan',
+        'Perez',
+        '3001234567',
+        'CC',
+        '123456789',
+        'Bogota',
+        'Calle 123'
+    ])
+
+    return response
