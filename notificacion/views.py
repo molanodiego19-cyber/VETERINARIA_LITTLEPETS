@@ -9,18 +9,34 @@ from django.shortcuts import get_object_or_404
 @csrf_exempt
 def run_scheduler(request):
 
-    if request.method != "GET":
-        return JsonResponse({"error": "GET only"}, status=400)
+    print("🔥 ENTRÓ A RUN SCHEDULER")  # <- CLAVE
 
-    # IMPORT LOCAL (evita circular import)
-    from notificacion.tasks import (
-        enviar_recordatorios,
-        procesar_correos_pendientes,
-        enviar_vacunas_pendientes
-    )
+    try:
+        from notificacion.tasks import (
+            enviar_recordatorios,
+            procesar_correos_pendientes,
+            enviar_vacunas_pendientes
+        )
 
-    enviar_recordatorios()
-    procesar_correos_pendientes()
-    enviar_vacunas_pendientes()
+        print("✔ imports OK")
 
-    return JsonResponse({"ok": True})
+        enviar_recordatorios()
+        print("✔ recordatorios OK")
+
+        procesar_correos_pendientes()
+        print("✔ correos OK")
+
+        enviar_vacunas_pendientes()
+        print("✔ vacunas OK")
+
+        return JsonResponse({"ok": True})
+
+    except Exception as e:
+        import traceback
+        print("❌ ERROR EN SCHEDULER")
+        print(traceback.format_exc())
+
+        return JsonResponse({
+            "ok": False,
+            "error": str(e)
+        }, status=500)
