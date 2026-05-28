@@ -6,21 +6,17 @@ from .tasks import (
     procesar_correos_pendientes
 )
 
-# 🔥 crear scheduler primero
 scheduler = BackgroundScheduler()
 
 
 def iniciar_scheduler():
 
-    # 🔥 evitar duplicados
-    if scheduler.get_jobs():
-        print("⚠️ Scheduler ya estaba iniciado")
+    # evitar duplicados
+    if scheduler.running:
+        print("⚠️ Scheduler ya está corriendo")
         return
 
-    # =====================================================
     # RECORDATORIOS
-    # =====================================================
-
     scheduler.add_job(
         enviar_recordatorios,
         'interval',
@@ -29,10 +25,7 @@ def iniciar_scheduler():
         replace_existing=True
     )
 
-    # =====================================================
-    # VACUNAS PENDIENTES
-    # =====================================================
-
+    # VACUNAS
     scheduler.add_job(
         enviar_vacunas_pendientes,
         'interval',
@@ -41,10 +34,7 @@ def iniciar_scheduler():
         replace_existing=True
     )
 
-    # =====================================================
-    # CORREOS PENDIENTES
-    # =====================================================
-
+    # EMAILS PENDIENTES
     scheduler.add_job(
         procesar_correos_pendientes,
         'interval',
@@ -53,7 +43,6 @@ def iniciar_scheduler():
         replace_existing=True
     )
 
-    # 🔥 iniciar scheduler
     scheduler.start()
 
     print("✅ Scheduler iniciado correctamente")

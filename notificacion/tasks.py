@@ -1,14 +1,11 @@
-# notificacion/tasks.py
 from citas.models import Cita
-from notificacion.views import crear_notificacion    
 from mascota.models import Mascota
 from django.utils import timezone
-from datetime import datetime, timedelta
-
-# notificacion/tasks.py
+from datetime import datetime
 
 from notificacion.models import Notificacion
-from notificacion.views import enviar_email
+from notificacion.services import crear_notificacion, enviar_email
+
 
 def procesar_correos_pendientes():
 
@@ -18,18 +15,16 @@ def procesar_correos_pendientes():
     )
 
     for n in pendientes:
-
         enviar_email(n)
 
     print("✅ Correos pendientes procesados")
-    
+
+
 def enviar_recordatorios():
 
     ahora = timezone.now()
 
-    citas = Cita.objects.filter(
-        estado='pendiente'
-    )
+    citas = Cita.objects.filter(estado='pendiente')
 
     for cita in citas:
 
@@ -42,17 +37,14 @@ def enviar_recordatorios():
         enviar = False
         tipo = None
 
-        # 🔴 CASO 3 PRIORIDAD FINAL (30 min antes)
         if 0.4 <= horas <= 0.6:
             enviar = True
             tipo = "30m"
 
-        # 🟡 CASO 2
         elif 1.5 <= horas <= 2.5:
             enviar = True
             tipo = "2h"
 
-        # 🟢 CASO 1
         elif 23 <= horas <= 25:
             enviar = True
             tipo = "12h"
@@ -79,6 +71,7 @@ def enviar_recordatorios():
         )
 
     print("✅ Recordatorios enviados")
+
 
 def enviar_vacunas_pendientes():
 

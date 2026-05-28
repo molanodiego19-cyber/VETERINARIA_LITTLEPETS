@@ -1,10 +1,18 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+import os
+import django
+import time
 
-from notificacion.services import enviar_email
-from notificacion.models import Notificacion
-from django.shortcuts import get_object_or_404
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'veterinaria.settings')
+django.setup()
 
+from notificacion.scheduler import iniciar_scheduler
+
+iniciar_scheduler()
+
+print("🔥 Scheduler activo")
+
+while True:
+    time.sleep(60)
 
 @csrf_exempt
 def run_scheduler(request):
@@ -23,4 +31,7 @@ def run_scheduler(request):
     procesar_correos_pendientes()
     enviar_vacunas_pendientes()
 
-    return JsonResponse({"ok": True})
+    return JsonResponse({
+        "ok": True,
+        "mensaje": "Scheduler ejecutado"
+    })

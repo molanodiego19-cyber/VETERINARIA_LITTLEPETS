@@ -8,7 +8,7 @@ from datetime import date
 from django.views.decorators.cache import never_cache
 from datetime import datetime
 from django.utils import timezone
-from notificacion.views import crear_notificacion
+from notificacion.services import crear_notificacion
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import re

@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, ListView, UpdateView
 from mascota.models import Mascota
-from notificacion.views import crear_notificacion
+from notificacion.services import crear_notificacion
 from usuarios.models import Usuario, Veterinario
 from .forms import *
 from .models import *
