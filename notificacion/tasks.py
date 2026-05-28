@@ -15,7 +15,10 @@ def procesar_correos_pendientes():
     )
 
     for n in pendientes:
-        enviar_email(n)
+        try:
+            enviar_email(n)
+        except Exception as e:
+            print("❌ Error enviando email:", e)
 
     print("✅ Correos pendientes procesados")
 

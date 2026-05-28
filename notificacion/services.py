@@ -40,25 +40,25 @@ def crear_notificacion(usuario, plantilla_nombre, cita=None, contexto=None):
 
 def enviar_email(notificacion):
 
-    html_template = f"""
-    <html>
-    <body>
-        {notificacion.cuerpo_mensaje}
-    </body>
-    </html>
-    """
-
-    email = EmailMultiAlternatives(
-        subject=notificacion.asunto,
-        body=notificacion.cuerpo_mensaje,
-        from_email=settings.EMAIL_HOST_USER,
-        to=[notificacion.usuario.correo]
-    )
-
-    email.attach_alternative(html_template, "text/html")
-
     try:
+        html_template = f"""
+        <html>
+        <body>
+            {notificacion.cuerpo_mensaje}
+        </body>
+        </html>
+        """
+
+        email = EmailMultiAlternatives(
+            subject=notificacion.asunto,
+            body=notificacion.cuerpo_mensaje,
+            from_email=settings.EMAIL_HOST_USER,
+            to=[notificacion.usuario.correo]
+        )
+
+        email.attach_alternative(html_template, "text/html")
         email.send()
+
         notificacion.marcar_enviada()
         print("✅ Email enviado")
 
