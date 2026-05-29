@@ -40,3 +40,18 @@ def run_scheduler(request):
             "ok": False,
             "error": str(e)
         }, status=500)
+        
+from django.http import HttpResponse
+from django.core.mail import send_mail
+
+def test_email(request):
+
+    send_mail(
+        "Prueba",
+        "Hola desde Render",
+        "littlepetscolombia@gmail.com",
+        ["molanodiego19@gmail.com"],
+        fail_silently=False
+    )
+
+    return HttpResponse("Correo enviado")

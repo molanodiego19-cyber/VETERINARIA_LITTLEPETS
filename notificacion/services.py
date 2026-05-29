@@ -87,6 +87,7 @@ def enviar_email(notificacion):
         print("✅ Email enviado")
 
     except Exception as e:
+        import traceback
 
         print("❌ ERROR EMAIL:", str(e))
         print(traceback.format_exc())

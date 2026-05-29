@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import run_scheduler
+from . import views
 
 urlpatterns = [
-    path('run-scheduler/', run_scheduler, name='run_scheduler'),
+    path('run-scheduler/', views.run_scheduler, name='run_scheduler'),
+    path('test-email/', views.test_email, name='test_email'),
 ]
