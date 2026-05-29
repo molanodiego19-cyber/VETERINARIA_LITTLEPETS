@@ -6,7 +6,9 @@ from notificacion.tasks import (
     procesar_correos_pendientes,
     enviar_vacunas_pendientes
 )
+from django.conf import settings
 
+print("EMAIL_HOST_USER SETTINGS:", settings.EMAIL_HOST_USER)
 @csrf_exempt
 def run_scheduler(request):
 
