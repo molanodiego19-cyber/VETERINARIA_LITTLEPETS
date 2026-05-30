@@ -175,20 +175,14 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 EMAIL_TIMEOUT = 30
 
-# CELERY + UPSTASH REDIS
-CELERY_BROKER_URL = os.getenv("REDIS_URL")
+import os
 
-# Upstash suele fallar como result backend
-CELERY_RESULT_BACKEND = None
+SECRET_KEY = os.getenv("SECRET_KEY")
 
-CELERY_IGNORE_RESULT = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-
-CELERY_TIMEZONE = 'America/Bogota'
-CELERY_ENABLE_UTC = True
-
-CELERY_BROKER_USE_SSL = {
-"ssl_cert_reqs": None
-}
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
