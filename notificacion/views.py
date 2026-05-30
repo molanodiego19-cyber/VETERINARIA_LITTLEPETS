@@ -55,3 +55,16 @@ def test_email(request):
     )
 
     return HttpResponse("Correo enviado")
+
+from django.http import HttpResponse
+from django.conf import settings
+
+def smtp_info(request):
+    return HttpResponse(
+        f"""
+HOST: {settings.EMAIL_HOST}<br>
+PORT: {settings.EMAIL_PORT}<br>
+TLS: {settings.EMAIL_USE_TLS}<br>
+USER: {settings.EMAIL_HOST_USER}
+"""
+    )
