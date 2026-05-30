@@ -6,41 +6,28 @@ from notificacion.models import Notificacion
 from django.shortcuts import get_object_or_404
 
 
-@csrf_exempt
+import threading
+from django.http import JsonResponse
+
 def run_scheduler(request):
 
-    print("🔥 ENTRÓ A RUN SCHEDULER")  # <- CLAVE
-
-    try:
+    def job():
         from notificacion.tasks import (
             enviar_recordatorios,
             procesar_correos_pendientes,
             enviar_vacunas_pendientes
         )
 
-        print("✔ imports OK")
-
         enviar_recordatorios()
-        print("✔ recordatorios OK")
-
         procesar_correos_pendientes()
-        print("✔ correos OK")
-
         enviar_vacunas_pendientes()
-        print("✔ vacunas OK")
 
-        return JsonResponse({"ok": True})
+    threading.Thread(target=job).start()
 
-    except Exception as e:
-        import traceback
-        print("❌ ERROR EN SCHEDULER")
-        print(traceback.format_exc())
-
-        return JsonResponse({
-            "ok": False,
-            "error": str(e)
-        }, status=500)
-        
+    return JsonResponse({
+        "ok": True,
+        "msg": "Scheduler en background"
+    })
 from django.http import HttpResponse
 from django.core.mail import send_mail
 
