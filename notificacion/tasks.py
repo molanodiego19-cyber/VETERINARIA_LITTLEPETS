@@ -7,6 +7,9 @@ from notificacion.models import Notificacion
 from notificacion.services import crear_notificacion, enviar_email
 
 
+# =========================
+# CORREOS PENDIENTES
+# =========================
 def procesar_correos_pendientes():
 
     pendientes = Notificacion.objects.filter(
@@ -23,10 +26,12 @@ def procesar_correos_pendientes():
     print("✅ Correos pendientes procesados")
 
 
+# =========================
+# RECORDATORIOS DE CITAS
+# =========================
 def enviar_recordatorios():
 
     ahora = timezone.now()
-
     citas = Cita.objects.filter(estado='pendiente')
 
     for cita in citas:
@@ -76,6 +81,9 @@ def enviar_recordatorios():
     print("✅ Recordatorios enviados")
 
 
+# =========================
+# VACUNAS
+# =========================
 def enviar_vacunas_pendientes():
 
     mascotas = Mascota.objects.all()
@@ -96,4 +104,4 @@ def enviar_vacunas_pendientes():
             contexto=contexto
         )
 
-    print("✅ Vacunas pendientes enviadas")
+    print("✅ Vacunas enviadas")

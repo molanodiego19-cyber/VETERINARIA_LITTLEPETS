@@ -1,14 +1,12 @@
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-
-from notificacion.services import enviar_email
-from notificacion.models import Notificacion
-from django.shortcuts import get_object_or_404
-
-
 import threading
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
+from django.core.mail import send_mail
 
+
+# =========================
+# RUN SCHEDULER (ASYNC)
+# =========================
 def run_scheduler(request):
 
     def job():
@@ -26,24 +24,20 @@ def run_scheduler(request):
 
     return JsonResponse({
         "ok": True,
-        "msg": "Scheduler en background"
+        "msg": "Scheduler ejecutado en background"
     })
-from django.http import HttpResponse
-from django.core.mail import send_mail
 
-from django.http import HttpResponse
-from django.core.mail import get_connection
 
-from django.core.mail import send_mail
-from django.http import HttpResponse
-
+# =========================
+# TEST EMAIL (CORRECTO)
+# =========================
 def test_email(request):
 
     try:
         send_mail(
             subject="Test Brevo",
-            message="Email de prueba",
-            from_email=None,
+            message="Email de prueba desde Django",
+            from_email=settings.EMAIL_HOST_USER,
             recipient_list=["tu_correo@gmail.com"],
             fail_silently=False,
         )
@@ -53,9 +47,10 @@ def test_email(request):
     except Exception as e:
         return HttpResponse(f"❌ ERROR: {str(e)}")
 
-from django.http import HttpResponse
-from django.conf import settings
 
+# =========================
+# INFO SMTP
+# =========================
 def smtp_info(request):
     return HttpResponse(
         f"""

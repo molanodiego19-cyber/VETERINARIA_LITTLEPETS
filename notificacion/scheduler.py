@@ -11,12 +11,10 @@ scheduler = BackgroundScheduler()
 
 def iniciar_scheduler():
 
-    # evitar duplicados
     if scheduler.running:
         print("⚠️ Scheduler ya está corriendo")
         return
 
-    # RECORDATORIOS
     scheduler.add_job(
         enviar_recordatorios,
         'interval',
@@ -25,7 +23,6 @@ def iniciar_scheduler():
         replace_existing=True
     )
 
-    # VACUNAS
     scheduler.add_job(
         enviar_vacunas_pendientes,
         'interval',
@@ -34,7 +31,6 @@ def iniciar_scheduler():
         replace_existing=True
     )
 
-    # EMAILS PENDIENTES
     scheduler.add_job(
         procesar_correos_pendientes,
         'interval',
