@@ -144,4 +144,4 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = "littlepetscolombia@gmail.com"
 
-EMAIL_TIMEOUT = 30
+EMAIL_TIMEOUT = 10

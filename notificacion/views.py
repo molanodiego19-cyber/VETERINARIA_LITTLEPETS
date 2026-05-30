@@ -34,13 +34,21 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.core.mail import get_connection
 
+from django.core.mail import send_mail
+from django.http import HttpResponse
+
 def test_email(request):
 
     try:
-        connection = get_connection()
-        connection.open()
+        send_mail(
+            subject="Test Brevo",
+            message="Email de prueba",
+            from_email=None,
+            recipient_list=["tu_correo@gmail.com"],
+            fail_silently=False,
+        )
 
-        return HttpResponse("✅ Conexión SMTP exitosa")
+        return HttpResponse("✅ Email enviado correctamente")
 
     except Exception as e:
         return HttpResponse(f"❌ ERROR: {str(e)}")
