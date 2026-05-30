@@ -131,25 +131,17 @@ MEDIA_ROOT = os.path.join(
 # LOGIN
 LOGIN_URL = '/usuarios/login/'
 
-# EMAIL
-EMAIL_BACKEND = (
-    'django.core.mail.backends.smtp.EmailBackend'
-)
-
-import os
-
-print("EMAIL_HOST_USER ENV:", os.getenv("EMAIL_HOST_USER"))
-print("EMAIL_HOST_PASSWORD ENV:", os.getenv("EMAIL_HOST_PASSWORD"))
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 465
+EMAIL_PORT = 587
+
 EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = 'littlepetscolombia@gmail.com'
 
-EMAIL_TIMEOUT = 10
+EMAIL_TIMEOUT = 30
