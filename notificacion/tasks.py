@@ -1,15 +1,17 @@
+from celery import shared_task
 from citas.models import Cita
 from mascota.models import Mascota
 from django.utils import timezone
 from datetime import datetime
 
 from notificacion.models import Notificacion
-from notificacion.services import crear_notificacion, enviar_email
+from notificacion.services import (
+    crear_notificacion,
+    enviar_email
+)
 
 
-# =========================
-# CORREOS PENDIENTES
-# =========================
+@shared_task
 def procesar_correos_pendientes():
 
     pendientes = Notificacion.objects.filter(
@@ -17,91 +19,119 @@ def procesar_correos_pendientes():
         canal='email'
     )
 
+    print(f"📨 Correos pendientes: {pendientes.count()}")
+
     for n in pendientes:
+
         try:
             enviar_email(n)
+
         except Exception as e:
-            print("❌ Error enviando email:", e)
+            print(
+                f"❌ Error enviando correo ID {n.id}: {e}"
+            )
 
     print("✅ Correos pendientes procesados")
 
 
-# =========================
-# RECORDATORIOS DE CITAS
-# =========================
+@shared_task
 def enviar_recordatorios():
 
     ahora = timezone.now()
-    citas = Cita.objects.filter(estado='pendiente')
+
+    citas = Cita.objects.filter(
+        estado='pendiente'
+    )
+
+    print(f"📅 Citas encontradas: {citas.count()}")
 
     for cita in citas:
 
-        cita_dt = timezone.make_aware(
-            datetime.combine(cita.fecha, cita.hora)
-        )
+        try:
 
-        horas = (cita_dt - ahora).total_seconds() / 3600
+            cita_dt = timezone.make_aware(
+                datetime.combine(
+                    cita.fecha,
+                    cita.hora
+                )
+            )
 
-        enviar = False
-        tipo = None
+            horas = (
+                cita_dt - ahora
+            ).total_seconds() / 3600
 
-        if 0.4 <= horas <= 0.6:
-            enviar = True
-            tipo = "30m"
+            tipo = None
 
-        elif 1.5 <= horas <= 2.5:
-            enviar = True
-            tipo = "2h"
+            if 0.4 <= horas <= 0.6:
+                tipo = "30m"
 
-        elif 23 <= horas <= 25:
-            enviar = True
-            tipo = "12h"
+            elif 1.5 <= horas <= 2.5:
+                tipo = "2h"
 
-        if not enviar:
-            continue
+            elif 23 <= horas <= 25:
+                tipo = "12h"
 
-        usuario = cita.dueño.usuario
+            if not tipo:
+                continue
 
-        contexto = {
-            'nombre': cita.dueño.nombre,
-            'mascota': cita.mascota.nombre,
-            'fecha': cita.fecha,
-            'hora': cita.hora,
-            'servicio': cita.servicio.nombre,
-            'tipo_recordatorio': tipo
-        }
+            crear_notificacion(
+                usuario=cita.dueño.usuario,
+                plantilla_nombre='recordatorio_cita',
+                cita=cita,
+                contexto={
+                    'nombre': cita.dueño.nombre,
+                    'mascota': cita.mascota.nombre,
+                    'fecha': cita.fecha,
+                    'hora': cita.hora,
+                    'servicio': cita.servicio.nombre,
+                    'tipo_recordatorio': tipo
+                }
+            )
 
-        crear_notificacion(
-            usuario=usuario,
-            plantilla_nombre='recordatorio_cita',
-            cita=cita,
-            contexto=contexto
-        )
+            print(
+                f"✅ Recordatorio creado para cita {cita.id}"
+            )
 
-    print("✅ Recordatorios enviados")
+        except Exception as e:
+
+            print(
+                f"❌ Error cita {cita.id}: {e}"
+            )
+
+    print("✅ Recordatorios procesados")
 
 
-# =========================
-# VACUNAS
-# =========================
+@shared_task
 def enviar_vacunas_pendientes():
 
     mascotas = Mascota.objects.all()
 
+    print(
+        f"💉 Mascotas encontradas: {mascotas.count()}"
+    )
+
     for mascota in mascotas:
 
-        usuario = mascota.propietario.usuario
+        try:
 
-        contexto = {
-            'nombre': mascota.propietario.nombre,
-            'mascota': mascota.nombre,
-            'fecha': timezone.now().date(),
-        }
+            crear_notificacion(
+                usuario=mascota.propietario.usuario,
+                plantilla_nombre='vacuna_pendiente',
+                contexto={
+                    'nombre': mascota.propietario.nombre,
+                    'mascota': mascota.nombre,
+                    'fecha': timezone.now().date(),
+                }
+            )
 
-        crear_notificacion(
-            usuario=usuario,
-            plantilla_nombre='vacuna_pendiente',
-            contexto=contexto
-        )
+            print(
+                f"✅ Vacuna pendiente creada para {mascota.nombre}"
+            )
 
-    print("✅ Vacunas enviadas")
+        except Exception as e:
+
+            print(
+                f"❌ Error mascota {mascota.id}: {e}"
+            )
+
+    print("✅ Vacunas pendientes procesadas")
