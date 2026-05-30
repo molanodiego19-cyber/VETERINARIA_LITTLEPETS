@@ -44,17 +44,19 @@ def run_scheduler(request):
 from django.http import HttpResponse
 from django.core.mail import send_mail
 
+from django.http import HttpResponse
+from django.core.mail import get_connection
+
 def test_email(request):
 
-    send_mail(
-        "Prueba",
-        "Hola desde Render",
-        "littlepetscolombia@gmail.com",
-        ["molanodiego19@gmail.com"],
-        fail_silently=False
-    )
+    try:
+        connection = get_connection()
+        connection.open()
 
-    return HttpResponse("Correo enviado")
+        return HttpResponse("✅ Conexión SMTP exitosa")
+
+    except Exception as e:
+        return HttpResponse(f"❌ ERROR: {str(e)}")
 
 from django.http import HttpResponse
 from django.conf import settings
