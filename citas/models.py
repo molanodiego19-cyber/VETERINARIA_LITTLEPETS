@@ -3,7 +3,7 @@ from django.core.validators import (MinValueValidator,MaxValueValidator)
 from django.core.exceptions import ValidationError
 from datetime import datetime, timedelta
 from django.db.models import Q
-
+from .models import *
 # CLASE CITA
 class Cita(models.Model):
 
@@ -20,6 +20,7 @@ class Cita(models.Model):
     mascota = models.ForeignKey('mascota.Mascota', on_delete=models.CASCADE, related_name='citas')
     veterinario = models.ForeignKey('usuarios.Veterinario',on_delete=models.CASCADE, related_name='citas', null=True, blank=True)
     servicio = models.ForeignKey('citas.Servicio', on_delete=models.CASCADE, related_name='citas')
+    vacuna = models.ForeignKey('Vacuna', on_delete=models.SET_NULL, null=True,blank=True)
     fecha = models.DateField()
     hora = models.TimeField()
     motivo_consulta = models.CharField(max_length=200)
@@ -411,58 +412,42 @@ class HistorialServicio(models.Model):
 # CLASE VACUNA
 class Vacuna(models.Model):
 
+    class Estado(models.TextChoices):
+        ACTIVO = 'activo', 'Activo'
+        INACTIVO = 'inactivo', 'Inactivo'
+
     nombre = models.CharField(max_length=50)
-    fabricante = models.CharField(max_length=50)
-    especie_objetivo = models.ForeignKey('mascota.Especie', on_delete=models.CASCADE)
-    enfermedades = models.TextField()
+    especie = models.ForeignKey('mascota.Especie', on_delete=models.CASCADE)
+    enfermedad_objetivo = models.CharField(max_length=50)
+    precio_adquisicion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    precio_venta = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    laboratorio = models.CharField(max_length=100)
     dosis_total = models.IntegerField()
-    intervalo_dosis = models.IntegerField()
-    refuerzo_meses = models.IntegerField()
-    edad_minima_dias = models.IntegerField()
-    requiere_frio = models.BooleanField()
-    lote = models.CharField(max_length=80, blank=True, null=True)
-    fecha_vencimiento = models.DateField(blank=True, null=True)
-    activo = models.BooleanField()
-    fecha_creacion = models.DateTimeField()
+    lote = models.CharField(max_length=100,)
+    estado = models.CharField(max_length=10, choices=Estado.choices, default=Estado.ACTIVO)
 
     def __str__(self):
         return (
             f"{self.nombre} - "
-            f"{self.fabricante}"
+            f"{self.laboratorio}"
         )
     
 # CLASE VACUNACION
 class Vacunacion(models.Model):
 
-    cita = models.ForeignKey(
-        Cita,
-        on_delete=models.CASCADE,
-        related_name='vacunaciones'
-    )
-
-    vacuna = models.ForeignKey(
-        Vacuna,
-        on_delete=models.CASCADE
-    )
-
+    cita = models.ForeignKey(Cita,on_delete=models.CASCADE,related_name='vacunaciones')
+    vacuna = models.ForeignKey(Vacuna,on_delete=models.CASCADE)
     fecha_aplicacion = models.DateField(auto_now_add=True)
-
     numero_dosis = models.IntegerField()
+    proxima_dosis= models.DateField(blank=True,null=True)
+    peso_actual = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    observaciones = models.TextField(blank=True,null=True)
 
-    fecha_proxima = models.DateField(
-        blank=True,
-        null=True
-    )
 
-    observaciones = models.TextField(
-        blank=True,
-        null=True
-    )
 
-    fecha_creacion = models.DateTimeField(
-        auto_now_add=True
-    )
-
+#===============================================================================
+# HISTORIA CLINICA 
+#==========================================================
     def crear_historia_clinica(self):
 
         return HistoriaClinica.objects.create(
@@ -484,8 +469,8 @@ class Vacunacion(models.Model):
             recomendaciones=self.observaciones,
 
             notas=(
-                f"Próxima dosis: {self.fecha_proxima}"
-                if self.fecha_proxima else ""
+                f"Próxima dosis: {self.proxima_dosis}"
+                if self.proxima_dosis else ""
             )
         )
 

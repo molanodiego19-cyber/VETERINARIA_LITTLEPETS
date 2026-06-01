@@ -446,13 +446,6 @@
     Descargar Excel
   </a>
 
-  <a
-    href="{% url 'usuarios:carga_masiva_propietarios' %}?{{ request.GET.urlencode }}"
-    class="btn-reporte btn-excel"
-  >
-    Carga Masiva
-  </a> 
-
 </div>
 
 <!-- =====================================================
@@ -539,8 +532,9 @@
 
               {% csrf_token %}
 
-              <button type="submit">
-                Eliminar
+              <button type="submit"
+              onclick="return confirm('¿Estás seguro de que quieres inactivar este propietario?')">
+                Inactivar
               </button>
 
             </form>

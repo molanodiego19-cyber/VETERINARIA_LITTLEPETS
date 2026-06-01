@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Recepcionistas</div>
+    <div class="page-sub">Gestión de recepción</div>
+  </div>
+
+  <a class="btn-verde"
+     href="{% url 'panel:panel_recepcionista_create' %}">
+    + Nuevo Recepcionista
+  </a>
+</div>
+
+<!-- ================= FILTROS ================= -->
+<form method="get" class="filters-wrap">
+
+  <input type="text"
+         name="nombre"
+         placeholder="Buscar nombre"
+         value="{{ request.GET.nombre }}">
+
+  <input type="text"
+         name="documento"
+         placeholder="Documento"
+         value="{{ request.GET.documento }}">
+
+  <select name="estado">
+    <option value="">Todos los estados</option>
+
+    {% for value,label in estados %}
+      <option value="{{ value }}"
+        {% if request.GET.estado == value %}selected{% endif %}>
+        {{ label }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <button class="btn-filter btn-buscar" type="submit">
+    Filtrar
+  </button>
+
+  <a href="{% url 'panel:panel_recepcionista_list' %}"
+     class="btn-filter btn-limpiar">
+    Limpiar
+  </a>
+
+</form>
+
+<!-- ================= REPORTES ================= -->
+<div class="reportes-wrap">
+
+  <a href="{% url 'panel:reporte_recepcionistas_pdf' %}?{{ request.GET.urlencode }}"
+     class="btn-reporte btn-pdf">
+    PDF
+  </a>
+
+  <a href="{% url 'panel:reporte_recepcionistas_excel' %}?{{ request.GET.urlencode }}"
+     class="btn-reporte btn-excel">
+    Excel
+  </a>
+
+</div>
+
+<!-- ================= TABLA ================= -->
+<div class="table-wrap">
+
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Documento</th>
+      <th>Ciudad</th>
+      <th>Dirección</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% for r in recepcionistas %}
+    <tr>
+
+      <td><strong>{{ r.nombre }}</strong></td>
+      <td>{{ r.documento }}</td>
+      <td>{{ r.ciudad }}</td>
+      <td>{{ r.direccion }}</td>
+
+      <td>
+        {% if r.usuario and r.usuario.estado == 'activo' %}
+          <span style="color:green;font-weight:bold;">Activo</span>
+        {% else %}
+          <span style="color:red;font-weight:bold;">Inactivo</span>
+        {% endif %}
+      </td>
+
+      <td>
+        <div class="acciones">
+
+          <a class="btn-sm btn-editar"
+             href="{% url 'panel:panel_recepcionista_edit' r.pk %}">
+            Editar
+          </a>
+
+          <form method="post"
+                action="{% url 'panel:panel_recepcionista_delete' r.pk %}"
+                class="btn-sm btn-eliminar">
+
+            {% csrf_token %}
+
+            <button type="submit"
+                    onclick="return confirm('¿Inactivar recepcionista?')">
+              Inactivar
+            </button>
+
+          </form>
+
+        </div>
+      </td>
+
+    </tr>
+
+    {% empty %}
+    <tr>
+      <td colspan="6" class="empty-msg">
+        No hay recepcionistas registrados.
+      </td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+</div>
+
+{% endblock %}

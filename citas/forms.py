@@ -47,6 +47,7 @@ class CitaForm(forms.ModelForm):
             'hora',
             'mascota',
             'servicio',
+            'vacuna',
             'motivo_consulta'
         ]
 
@@ -65,6 +66,8 @@ class CitaForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
+        self.fields['vacuna'].required = False
+        self.fields['vacuna'].empty_label = "-- Seleccione la vacuna --"
         self.fields['mascota'].queryset = Mascota.objects.none()
 
         if request:
@@ -101,6 +104,7 @@ class CitaForm(forms.ModelForm):
         fecha = cleaned_data.get('fecha')
         hora = cleaned_data.get('hora')
         servicio = cleaned_data.get('servicio')
+        vacuna = cleaned_data.get('vacuna')
 
         # VALIDAR FECHA/HORA PASADA
         if fecha and hora:
@@ -163,6 +167,128 @@ class CitaForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+#=========================================================
+# FORM PARA REAGENDAR CITA
+#========================================================
+class ReagendarCitaForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Cita
+
+        fields = [
+            'mascota',
+            'servicio',
+            'fecha',
+            'hora',
+            'motivo_consulta'
+        ]
+
+        widgets = {
+
+            'fecha': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'form-control'
+                }
+            ),
+
+            'hora': forms.TimeInput(
+                attrs={
+                    'type': 'time',
+                    'class': 'form-control'
+                }
+            ),
+
+            'motivo_consulta': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 3
+                }
+            ),
+        }
+
+    # ==========================================
+    # BLOQUEAR CAMPOS
+    # ==========================================
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(*args, **kwargs)
+
+        self.fields['mascota'].disabled = True
+        self.fields['servicio'].disabled = True
+
+    # ==========================================
+    # VALIDACIONES
+    # ==========================================
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        fecha = cleaned_data.get('fecha')
+        hora = cleaned_data.get('hora')
+        servicio = cleaned_data.get('servicio')
+
+        # --------------------------------------
+        # VALIDAR FECHA PASADA
+        # --------------------------------------
+
+        if fecha and hora:
+
+            fecha_hora = datetime.combine(
+                fecha,
+                hora
+            )
+
+            fecha_hora = timezone.make_aware(
+                fecha_hora
+            )
+
+            if fecha_hora < timezone.now():
+
+                raise forms.ValidationError(
+                    "❌ No puedes reagendar citas en el pasado"
+                )
+
+        # --------------------------------------
+        # VALIDAR DISPONIBILIDAD
+        # --------------------------------------
+
+        veterinarios = Veterinario.objects.filter(
+            disponible=True,
+            servicios=servicio
+        )
+
+        disponible = False
+
+        for vet in veterinarios:
+
+            if veterinario_disponible(
+                vet,
+                fecha,
+                hora,
+                servicio
+            ):
+
+                disponible = True
+                break
+
+        if not disponible:
+
+            raise forms.ValidationError(
+                "⚠️ No hay veterinarios disponibles en ese horario"
+            )
+
+        return cleaned_data
+
+
+
+
+
 
 
 # =========================================================
@@ -543,34 +669,52 @@ class VacunaForm(forms.ModelForm):
     class Meta:
 
         model = Vacuna
-
-        fields = [
-            'nombre',
-            'fabricante',
-            'especie_objetivo',
-            'enfermedades',
-            'dosis_total',
-            'intervalo_dosis',
-            'refuerzo_meses',
-            'edad_minima_dias',
-            'requiere_frio',
-            'lote',
-            'fecha_vencimiento',
-            'activo'
-        ]
+        fields = '__all__'
 
         widgets = {
 
-            'enfermedades': forms.Textarea(attrs={
-                'rows': 3
+            'nombre': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+
+            'especie': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+
+            'enfermedad_objetivo': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+
+            'precio_adquisicion': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'step': '0.01'
+            }),
+
+            'precio_venta': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'step': '0.01'
+            }),
+
+            'laboratorio': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+
+            'dosis_total': forms.NumberInput(attrs={
+                'class': 'form-control'
+            }),
+
+            'lote': forms.TextInput(attrs={
+                'class': 'form-control'
+            }),
+
+            'activo': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
             }),
         }
-
 
 # =========================================================
 # VACUNACION
 # =========================================================
-
 class VacunacionForm(forms.ModelForm):
 
     class Meta:
@@ -580,17 +724,33 @@ class VacunacionForm(forms.ModelForm):
         fields = [
             'vacuna',
             'numero_dosis',
-            'fecha_proxima',
+            'proxima_dosis',
+            'peso_actual',
             'observaciones'
         ]
 
         widgets = {
 
-            'fecha_proxima': forms.DateInput(attrs={
-                'type': 'date'
+            'vacuna': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+
+            'numero_dosis': forms.NumberInput(attrs={
+                'class': 'form-control'
+            }),
+
+            'proxima_dosis': forms.DateInput(attrs={
+                'type': 'date',
+                'class': 'form-control'
+            }),
+
+            'peso_actual': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'step': '0.01'
             }),
 
             'observaciones': forms.Textarea(attrs={
+                'class': 'form-control',
                 'rows': 3
             }),
         }

@@ -17,3 +17,4 @@ from .especialidad import *
 from .veterinario import *
 from .propietario import *
 from .cita import *
+from .recepcionista import *

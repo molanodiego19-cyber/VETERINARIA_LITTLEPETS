@@ -6,7 +6,6 @@
     <div class="page-title">Vacunación</div>
     <div class="page-sub">Registro de vacunas aplicadas</div>
   </div>
-  <a class="btn-verde" href="{% url 'panel:panel_vacunacion_create' %}">+ Nueva Vacunación</a>
 </div>
 
 <div class="table-wrap">
@@ -14,27 +13,32 @@
     <thead>
       <tr>
         <th>Mascota</th>
-        <th>Vacuna</th>
+        <th>Propietario</th>
         <th>Veterinario</th>
+        <th>Vacuna</th>
         <th>Fecha</th>
         <th>Dosis</th>
-        <th>Próxima</th>
+        <th>Próxima Dosis</th>
+        <th>Peso actual</th>
+        <th>Observaciones</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       {% for v in vacunaciones %}
       <tr>
-        <td><strong>{{ v.mascota }}</strong></td>
+        <td><strong>{{ v.cita.mascota.propietario }}</strong></td>
+        <td><strong>{{ v.cita.propietario }}</strong></td>
+        <td>{{ v.cita.veterinario }}</td>
         <td>{{ v.vacuna }}</td>
-        <td>{{ v.veterinario }}</td>
         <td>{{ v.fecha_aplicacion }}</td>
         <td>{{ v.numero_dosis }}</td>
         <td>{{ v.fecha_proxima }}</td>
+        <td>{{ v.peso_actual }}</td>
+        <td>{{ v.observaciones }}</td>
         <td>
           <div class="acciones">
             <a class="btn-sm btn-editar" href="{% url 'panel:panel_vacunacion_edit' v.pk %}">Editar</a>
-            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_vacunacion_delete' v.pk %}">Eliminar</a>
           </div>
         </td>
       </tr>

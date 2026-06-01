@@ -375,6 +375,11 @@
      <span class="icon">🐾</span> Propietarios
   </a>
 
+  <a href="{% url 'panel:panel_recepcionista_list' %}" 
+     class="sidebar-link{% if u == 'panel_recepcionista_list' %} active{% endif %}">
+     <span class="icon">⏱️</span> Recepcionista
+  </a>
+
   <a href="{% url 'panel:panel_veterinario_list' %}" 
      class="sidebar-link{% if u == 'panel_veterinario_list' %} active{% endif %}">
      <span class="icon">🩺</span> Veterinarios

@@ -183,8 +183,11 @@
     <div class="biz-card">
       <div class="biz-title">Ingresos Mensuales</div>
       <div class="biz-value">${{ ingresos_mes }}</div>
-      <div class="biz-sub">Cierre de caja hoy: <strong>${{ ingresos_dia }}</strong></div>
-    </div>
+  <div class="biz-sub">
+    Cierre de caja hoy:
+    <strong>${{ ingresos_dia|floatformat:0 }}</strong>
+   </div>    
+</div>
 
     <div class="biz-card">
       <div class="biz-title">Nuevos Clientes</div>
@@ -300,6 +303,8 @@
         <tr>
           <th>ID</th>
           <th>Paciente</th>
+          <th>Especie</th>
+          <th>Sexo</th>
           <th>Propietario / Responsable</th>
         </tr>
       </thead>
@@ -308,6 +313,8 @@
         <tr>
           <td class="id-cell">#{{ mascota.id }}</td>
           <td><strong>{{ mascota.nombre }}</strong></td>
+          <td>{{ mascota.especie }}</td>
+          <td>{{ mascota.sexo }}</td>
           <td>{{ mascota.propietario }}</td>
         </tr>
         {% empty %}

@@ -264,11 +264,12 @@
         <td>
   {% if cita.estado == 'pendiente' or cita.estado == 'confirmada' %}
     <div class="acciones">
-      <a href="{% url 'citas:editar' cita.id %}" class="btn-sm btn-editar">
-        Posponer
+      <a href="{% url 'citas:reagendar' cita.id %}" class="btn-sm btn-editar">
+        Reagendar
       </a>
 
-      <a href="{% url 'citas:cancelar' cita.id %}" class="btn-sm btn-eliminar">
+      <a href="{% url 'citas:cancelar' cita.id %}" class="btn-sm btn-eliminar"
+      onclick="return confirm('¿Estás seguro de que quieres cancelar esta cita?')">
         Cancelar
       </a>
     </div>

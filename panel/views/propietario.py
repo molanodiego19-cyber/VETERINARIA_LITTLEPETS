@@ -6,21 +6,13 @@ from usuarios.forms import (
     PropietarioCompletoForm,
     PropietarioUpdateForm
 )
-
 from django.views import View
 from django.shortcuts import (
     render,
     redirect,
     get_object_or_404
 )
-
-# =====================================================
-# REPORTES
-# =====================================================
-
 from django.http import HttpResponse
-
-# PDF
 from reportlab.platypus import (
     SimpleDocTemplate,
     Table,
@@ -28,13 +20,9 @@ from reportlab.platypus import (
     Paragraph,
     Spacer
 )
-
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-
-# EXCEL
 import openpyxl
-
 # =====================================================
 # FILTRO REUTILIZABLE
 # =====================================================
@@ -45,64 +33,37 @@ def filtrar_propietarios(request):
         'usuario'
     ).all().order_by('-id')
 
-    # ==========================================
-    # FILTRO NOMBRE
-    # ==========================================
-
     nombre = request.GET.get('nombre')
 
     if nombre:
-
         propietarios = propietarios.filter(
             nombre__icontains=nombre
         )
 
-    # ==========================================
-    # FILTRO DOCUMENTO
-    # ==========================================
-
     documento = request.GET.get('documento')
 
     if documento:
-
         propietarios = propietarios.filter(
             documento__icontains=documento
         )
 
-
-    # ==========================================
-    # FILTRO TELEFONO
-    # ==========================================
-
     telefono = request.GET.get('telefono')
 
     if telefono:
-
         propietarios = propietarios.filter(
             telefono__icontains=telefono
         )
 
-
-    # ==========================================
-    # FILTRO CIUDAD
-    # ==========================================
-
     ciudad = request.GET.get('ciudad')
 
     if ciudad:
-
         propietarios = propietarios.filter(
             ciudad__icontains=ciudad
         )
 
-    # ==========================================
-    # FILTRO ESTADO
-    # ==========================================
-
     estado = request.GET.get('estado')
 
     if estado:
-
         propietarios = propietarios.filter(
             usuario__estado=estado
         )
@@ -117,16 +78,21 @@ def filtrar_propietarios(request):
 class PropietarioListView(ListView):
 
     model = Propietario
-
-    template_name = 'panel/propietario/list.html'
-
     context_object_name = 'propietarios'
-
     paginate_by = 10
 
-    # ==========================================
-    # QUERYSET
-    # ==========================================
+    def get_template_names(self):
+
+        rol = self.request.session.get('usuario_rol')
+
+        if rol == 'recepcionista':
+            return [
+                'panel/propietario/list_recepcionista.html'
+            ]
+
+        return [
+            'panel/propietario/list.html'
+        ]
 
     def get_queryset(self):
 
@@ -134,18 +100,21 @@ class PropietarioListView(ListView):
             self.request
         )
 
-    # ==========================================
-    # CONTEXTO
-    # ==========================================
-
     def get_context_data(self, **kwargs):
 
-        context = super().get_context_data(**kwargs)
+        context = super().get_context_data(
+            **kwargs
+        )
 
         context['estados'] = [
-            ('Activo', 'Activo'),
-            ('Inactivo', 'Inactivo')
+            ('activo', 'Activo'),
+            ('inactivo', 'Inactivo')
         ]
+
+        context['es_recepcionista'] = (
+            self.request.session.get('usuario_rol')
+            == 'recepcionista'
+        )
 
         return context
 
@@ -157,14 +126,39 @@ class PropietarioListView(ListView):
 class PropietarioCreateView(CreateView):
 
     model = Propietario
-
     form_class = PropietarioCompletoForm
-
-    template_name = 'panel/propietario/form.html'
-
     success_url = reverse_lazy(
         'panel:panel_propietario_list'
     )
+
+    def get_template_names(self):
+
+        rol = self.request.session.get(
+            'usuario_rol'
+        )
+
+        if rol == 'recepcionista':
+            return [
+                'panel/propietario/form_recepcionista.html'
+            ]
+
+        return [
+            'panel/propietario/form.html'
+        ]
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(
+            **kwargs
+        )
+
+        context['es_recepcionista'] = (
+            self.request.session.get(
+                'usuario_rol'
+            ) == 'recepcionista'
+        )
+
+        return context
 
 
 # =====================================================
@@ -198,13 +192,11 @@ class PropietarioDeleteView(View):
         )
 
         propietario.usuario.estado = 'Inactivo'
-
         propietario.usuario.save()
 
         return redirect(
             'panel:panel_propietario_list'
         )
-
 
 # =====================================================
 # REPORTE PDF

@@ -7,6 +7,7 @@ from mascota.models import Mascota
 from citas.models import Cita, Servicio
 from usuarios.models import Propietario
 from facturacion.models import Factura
+from decimal import Decimal
 
 # =========================================================
 # VALIDACIÓN MANUAL DE SESIÓN
@@ -69,9 +70,14 @@ def dashboard(request):
     # =====================================================
     # INGRESOS
     # =====================================================
-    ingresos_dia = Factura.objects.filter(fecha_creacion=hoy).aggregate(total=Sum('total'))['total'] or 0
+    ingresos_dia = Factura.objects.filter(fecha_creacion__gte=hoy).aggregate(total=Sum('total'))['total']
+
+    if ingresos_dia is None:
+        ingresos_dia = Decimal('0.00')    
     ingresos_mes = Factura.objects.filter(fecha_creacion__gte=inicio_mes).aggregate(total=Sum('total'))['total'] or 0
 
+    print("INGRESOS DIA:", ingresos_dia)
+    print(type(ingresos_dia))
     # =====================================================
     # SERVICIOS POPULARES
     # =====================================================
@@ -82,8 +88,8 @@ def dashboard(request):
     # =====================================================
     # TASA NO SHOW
     # =====================================================
-    total_historico = Cita.objects.exclude(estado='Pendiente').count()
-    inasistencias = Cita.objects.filter(estado='Cancelada').count()
+    total_historico = Cita.objects.exclude(estado='pendiente').count()
+    inasistencias = Cita.objects.filter(estado='cancelada').count()
     tasa_no_show = ((inasistencias / total_historico) * 100) if total_historico > 0 else 0
 
     # =====================================================
@@ -93,7 +99,7 @@ def dashboard(request):
 
     # Data de Tablas requerida por tu HTML
     ultimas_mascotas = Mascota.objects.order_by('-id')[:5]
-    citas_finalizadas = Cita.objects.filter(estado='Finalizada').order_by('-fecha', '-hora')[:5]
+    citas_finalizadas = Cita.objects.filter(estado='finalizada').order_by('-fecha', '-hora')[:5]
 
     context = {
         # Globales para tarjetas
@@ -179,3 +185,4 @@ def perfil_veterinario(request):
 
 # NOTA: Debes aplicar esta misma homologación de variables de contexto 
 # para perfil_estilista y perfil_recepcionista si van a apuntar al mismo template.
+

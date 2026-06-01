@@ -13,6 +13,7 @@ from .forms import *
 from .models import *
 from .utils import generar_horarios_disponibles, veterinario_disponible
 
+
 def index(request):
     return render(request, 'index.html')
 
@@ -25,6 +26,43 @@ def crear_objeto(request, form_class, template):
     else:
         form = form_class()
     return render(request, template, {'form': form})
+
+#---------------------------------------------------------------
+# VACUNAS AGENDADAS
+#------------------------------------------------------------
+def vacunas_agendadas(request):
+
+
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('login')
+    
+    citas_vacunas = Cita.objects.filter(
+        servicio__nombre__icontains='Vacuna'
+    ).select_related(
+        'mascota',
+        'servicio',
+        'vacuna'
+    ).order_by('fecha', 'hora')
+
+    context = {
+        'citas_vacunas': citas_vacunas
+    }
+
+    return render(
+        request,
+        'citas/vacunas_agendadas.html', context
+
+    )
+
+
+
+
+
+
+
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------
@@ -200,7 +238,7 @@ def filtrar_citas(request):
         citas = Cita.objects.filter(veterinario=usuario.veterinario)
 
     else:
-        return Cita.objects.none()
+        return Cita.objects.none().order_by('fecha', 'hora')
 
     # =========================
     # FILTROS
@@ -231,6 +269,19 @@ class CitaCreateView(CreateView):
     form_class = CitaForm
     template_name = 'citas/cita_form.html'
     success_url = reverse_lazy('citas:listar')
+
+    def get_template_names(self):
+
+        rol = self.request.session.get('usuario_rol')
+
+        if rol == Usuario.Rol.RECEPCIONISTA:
+            return [
+                'citas/cita_form_recepcionista.html'
+            ]
+
+        return [
+            'citas/cita_form.html'
+        ]
 
     def form_valid(self, form):
         # -------------------------------
@@ -364,10 +415,6 @@ class CitasListView(ListView):
 
     context_object_name = 'citas'
 
-    ordering = ['-fecha', '-hora']
-
-
-
     # 🔐 PROTECCIÓN
     def dispatch(self, request, *args, **kwargs):
         if not request.session.get('usuario_id'):
@@ -381,7 +428,9 @@ class CitasListView(ListView):
 
     def get_queryset(self):
 
-        return filtrar_citas(self.request)
+        citas_filtradas = filtrar_citas(self.request)
+
+        return citas_filtradas.exclude(servicio__nombre__icontains='Vacuna')
 
     # ==========================================
     # CONTEXTO
@@ -447,7 +496,7 @@ def reporte_citas_pdf(request):
         'Estado'
     ]]
 
-    citas = filtrar_citas(request)
+    citas = filtrar_citas(request).exclude(servicio__nombre__icontains='Vacuna')
 
     for c in citas:
 
@@ -551,17 +600,6 @@ def reporte_citas_excel(request):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 #-------------CANCELAR CITAS-------------------------------------
 def cancelar_cita(request, pk):
 
@@ -604,10 +642,23 @@ def cancelar_cita(request, pk):
 
 #------------------REAGENDAR---------------------------------
 class CitaUpdateView(UpdateView):
+
     model = Cita
-    form_class = CitaForm
-    template_name = 'citas/cita_form.html'
+
+    form_class = ReagendarCitaForm
+
+    template_name = 'citas/reagendar_cita.html'
+
     success_url = reverse_lazy('citas:listar')
+
+    def form_valid(self, form):
+
+        messages.success(
+            self.request,
+            "✅ La cita fue reagendada correctamente"
+        )
+
+        return super().form_valid(form)
 
 #--------------HORARIO DISPONIBLE----------------------------
 def horarios_disponibles(request):

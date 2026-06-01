@@ -62,6 +62,11 @@ class FacturaListView(ListView):
             qs = qs.filter(
                 cita__mascota__propietario__usuario=usuario
             )
+        
+        # RECEPCIONISTA
+        elif usuario.rol == 'recepcionista':
+
+            self.base_template = 'usuarios/base_recepcionista.html'
 
         # VETERINARIO
         elif usuario.rol == 'veterinario':

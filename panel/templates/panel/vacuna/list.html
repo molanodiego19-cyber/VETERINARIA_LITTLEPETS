@@ -14,10 +14,13 @@
     <thead>
       <tr>
         <th>Nombre</th>
-        <th>Fabricante</th>
         <th>Especie</th>
+        <th>Enfermedad</th>
+        <th>Precio Adquisición</th>
+        <th>Precio Venta</th>
+        <th>Laboratorio</th>
         <th>Dosis</th>
-        <th>Refuerzo</th>
+        <th>Lote</th>
         <th>Estado</th>
         <th>Acciones</th>
       </tr>
@@ -26,16 +29,29 @@
       {% for v in vacunas %}
       <tr>
         <td><strong>{{ v.nombre }}</strong></td>
-        <td>{{ v.fabricante }}</td>
-        <td>{{ v.especie_objetivo }}</td>
+        <td>{{ v.especie }}</td>
+        <td>{{ v.enfermedad_objetivo }}</td>
+        <td>{{ v.precio_adquisicion }}</td>
+        <td>{{ v.precio_venta }}</td>
+        <td>{{ v.laboratorio }}</td>
         <td>{{ v.dosis_total }}</td>
-        <td>{{ v.refuerzo_meses }} meses</td>
+        <td>{{ v.lote }}</td>
         <td>
-          {% if v.activo %}
-            <span class="badge badge-success">Activa</span>
+
+          {% if v.estado == 'activo' %}
+
+            <span style="color:green;font-weight:bold;">
+              Activo
+            </span>
+
           {% else %}
-            <span class="badge badge-default">Inactiva</span>
+
+            <span style="color:red;font-weight:bold;">
+              Inactivo
+            </span>
+
           {% endif %}
+
         </td>
         <td>
           <div class="acciones">

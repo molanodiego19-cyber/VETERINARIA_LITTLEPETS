@@ -1,48 +1,66 @@
-from datetime import timedelta
-from io import TextIOWrapper
-import csv
-import re
-
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
-from django.db.models import Q
-from django.http import JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import TemplateView, UpdateView, ListView, CreateView, DeleteView
 from django.urls import reverse_lazy
-from django.utils import timezone
-from django.views.generic import (
-    TemplateView,
-    UpdateView,
-    ListView,
-    CreateView,
-    DeleteView,
-    DetailView
-)
-
-from usuarios.models import (
-    Usuario,
-    Propietario,
-    Veterinario
-)
-
-from mascota.models import (
-    Mascota,
-    Raza
-)
-
-from citas.models import (
-    Cita,
-    HistoriaClinica,
-    Servicio
-)
-
-from .forms import (
-    PropietarioUpdateForm,
-    CambiarPasswordForm
-)
-
+from django.shortcuts import redirect, get_object_or_404, render
+from django.contrib import messages
+from .models import Propietario, Veterinario
+from mascota.models import Mascota, Raza
+from citas.models import Cita, HistoriaClinica,Servicio
 from .forms_panel import *
+from django.db.models import Q
+from django.views.generic import DetailView
+from .forms_panel import CambiarPasswordForm
+from django.http import JsonResponse
+from django.views.generic import TemplateView, UpdateView, ListView, CreateView, DeleteView
+from django.urls import reverse_lazy
+from django.shortcuts import redirect, get_object_or_404, render
+from django.contrib import messages
+from .models import Propietario, Usuario
+from mascota.models import Mascota
+from citas.models import Cita, HistoriaClinica
+from .forms_panel import *
+from django.views.generic import DetailView
+from .forms_panel import CambiarPasswordForm
+from django.shortcuts import render, redirect
+from .forms import PropietarioUpdateForm
+from django.utils import timezone
+from datetime import timedelta
+from datetime import timedelta
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.utils import timezone
+from .forms import CambiarPasswordForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from datetime import timedelta
+from .forms import CambiarPasswordForm
+from django.utils import timezone
+from datetime import timedelta
+from usuarios.models import Recepcionista
+from django.contrib.auth.hashers import make_password
+
+from django.utils import timezone
+from datetime import timedelta
+
+from datetime import timedelta
+from django.utils import timezone
+
+from datetime import timedelta
+from django.utils import timezone
+
+def calcular_bloqueo_password(usuario):
+    if not usuario.fecha_cambio_password:
+        return 0
+
+    limite = usuario.fecha_cambio_password + timedelta(days=30)
+    ahora = timezone.now()
+
+    if ahora >= limite:
+        return 0
+
+    dias = (limite - ahora).days
+
+    return dias + 1 if (limite - ahora).seconds > 0 else dias
 
 def cambiar_password(request):
 
@@ -53,100 +71,99 @@ def cambiar_password(request):
 
     usuario = propietario.usuario
 
-    puede_cambiar = True
-    dias_restantes = 0
-
-    if usuario.fecha_cambio_password:
-
-        diferencia = timezone.now() - usuario.fecha_cambio_password
-
-        if diferencia < timedelta(days=30):
-
-            puede_cambiar = False
-            dias_restantes =   - diferencia.days
+    dias_restantes = calcular_bloqueo_password(usuario)
+    puede_cambiar = dias_restantes == 0
 
     if request.method == 'POST':
 
         if not puede_cambiar:
-
-            messages.error(
-                request,
-                f"Debes esperar {dias_restantes} días para volver a cambiar la contraseña."
-            )
-
+            messages.error(request, f"Debes esperar {dias_restantes} días")
             return redirect('usuarios:cambiar_password')
 
         form = CambiarPasswordForm(usuario, request.POST)
 
         if form.is_valid():
-
             form.save()
+            usuario.fecha_cambio_password = timezone.now()
+            usuario.save()
 
-            messages.success(
-                request,
-                "Contraseña actualizada correctamente"
-            )
-
+            messages.success(request, "Contraseña actualizada correctamente")
             return redirect('usuarios:perfil')
 
     else:
-
         form = CambiarPasswordForm(usuario)
 
     return render(request, 'usuarios/cambiar_password.html', {
-
         'form': form,
-        'puede_cambiar': puede_cambiar,
-        'dias_restantes': dias_restantes
+        'dias_restantes': dias_restantes,
+        'puede_cambiar': puede_cambiar
+    })
 
+
+def cambiar_password_recepcionista(request):
+
+    recepcionista = obtener_recepcionista(request)
+
+    if not recepcionista:
+        return redirect('usuarios:login')
+
+    usuario = recepcionista.usuario
+
+    dias_restantes = calcular_bloqueo_password(usuario)
+    puede_cambiar = dias_restantes == 0
+
+    if request.method == 'POST':
+
+        if not puede_cambiar:
+            messages.error(request, f"❌ Debes esperar {dias_restantes} días")
+            return redirect('usuarios:contraseña_recepcionista')
+
+        form = CambiarPasswordForm(usuario, request.POST)
+
+        if form.is_valid():
+            form.save()  # 👈 usa SOLO el form
+            usuario.fecha_cambio_password = timezone.now()
+            usuario.save()
+
+            messages.success(request, "✅ Contraseña actualizada correctamente")
+            return redirect('usuarios:perfil_recepcionista')
+
+    else:
+        form = CambiarPasswordForm(usuario)
+
+    return render(request, 'usuarios/cambiar_password_recepcionista.html', {
+        'form': form,
+        'dias_restantes': dias_restantes,
+        'puede_cambiar': puede_cambiar
     })
 
 def cambiar_password_veterinario(request):
+
     veterinario = obtener_veterinario(request)
 
     if not veterinario:
         return redirect('usuarios:login')
 
     usuario = veterinario.usuario
-    dias_restantes = 0
 
-    if usuario.fecha_cambio_password:
-        diferencia = timezone.now() - usuario.fecha_cambio_password
-
-        if diferencia < timedelta(days=30):
-            dias_restantes = 30 - diferencia.days
+    dias_restantes = calcular_bloqueo_password(usuario)
 
     if request.method == 'POST':
 
         if dias_restantes > 0:
-            messages.error(
-                request,
-                f"❌ Debes esperar {dias_restantes} días para volver a cambiar la contraseña."
-            )
+            messages.error(request, f"❌ Debes esperar {dias_restantes} días")
             return redirect('usuarios:cambiar_password_veterinario')
 
         form = CambiarPasswordForm(usuario, request.POST)
 
         if form.is_valid():
 
-            usuario.password = make_password(
-                form.cleaned_data['nueva_password']
-            )
-
+            usuario.password = make_password(form.cleaned_data['nueva_password'])
             usuario.fecha_cambio_password = timezone.now()
             usuario.save()
 
-            messages.success(
-                request,
-                "✅ Contraseña actualizada correctamente"
-            )
-
+            messages.success(request, "✅ Contraseña actualizada correctamente")
             return redirect('usuarios:perfil_veterinario')
-
-        messages.error(
-            request,
-            "❌ Error al cambiar la contraseña"
-        )
 
     else:
         form = CambiarPasswordForm(usuario)
@@ -167,6 +184,18 @@ def obtener_propietario(request):
 
     return Propietario.objects.filter(usuario__id=usuario_id).first()
 
+def obtener_recepcionista(request):
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return None
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        return getattr(usuario, 'recepcionista', None)
+    except Usuario.DoesNotExist:
+        return None
+    
 def obtener_veterinario(request):
     usuario_id = request.session.get('usuario_id')
     if not usuario_id:
@@ -195,6 +224,43 @@ class PanelPropietarioView(TemplateView):
         context['citas'] = Cita.objects.filter(mascota__propietario=propietario).order_by('fecha', 'hora')
         return context
 
+class PanelRecepcionistaView(TemplateView):
+    template_name = 'usuarios/dashboard_recepcionista.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if 'usuario_id' not in request.session:
+            return redirect('usuarios:login')
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        recepcionista = obtener_recepcionista(self.request)
+
+        context['recepcionista'] = recepcionista
+
+        hoy = timezone.now().date()
+
+        if recepcionista:
+
+            context['citas_hoy'] = Cita.objects.filter(fecha=hoy)
+
+            context['proximas_citas'] = Cita.objects.filter(
+                fecha__gt=hoy
+            ).order_by('fecha', 'hora')[:5]
+
+            context['propietarios'] = Propietario.objects.all()[:5]
+
+            context['mascotas_recientes'] = Mascota.objects.order_by('-id')[:5]
+
+        else:
+            context['citas_hoy'] = []
+            context['proximas_citas'] = []
+            context['propietarios'] = []
+            context['mascotas_recientes'] = []
+
+        return context
+    
 class PanelVeterinarioView(TemplateView):
     template_name = 'usuarios/dashboard_veterinario.html'
 
@@ -264,6 +330,30 @@ def perfil_propietario(request):
         'form': form,
         'editar': editar
     })
+from .forms import RecepcionistaForm
+def perfil_recepcionista(request):
+
+    recepcionista = obtener_recepcionista(request)
+
+    if not recepcionista:
+        return redirect('usuarios:login')
+
+    if request.method == 'POST':
+        form = RecepcionistaForm(request.POST, request.FILES, instance=recepcionista)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado correctamente")
+            return redirect('usuarios:perfil_recepcionista')
+
+    else:
+        form = RecepcionistaForm(instance=recepcionista)
+
+    return render(request, 'usuarios/perfil_recepcionista.html', {
+        'recepcionista': recepcionista,
+        'form': form,
+        'editar': request.GET.get('editar')
+    })
 
 def perfil_veterinario(request):
     veterinario = obtener_veterinario(request)
@@ -292,15 +382,54 @@ def perfil_veterinario(request):
 # ---------------- MASCOTAS ----------------
 class MascotaListView(ListView):
     model = Mascota
-    template_name = 'usuarios/mascotas_list.html'
+
+    def get_template_names(self):
+
+        usuario_id = self.request.session.get('usuario_id')
+
+        if usuario_id:
+            from usuarios.models import Usuario
+
+            try:
+                usuario = Usuario.objects.get(id=usuario_id)
+
+                # Recepcionista
+                if hasattr(usuario, 'recepcionista'):
+                    return ['panel/mascota/mascota_recepcionista.html']
+
+            except Usuario.DoesNotExist:
+                pass
+
+        # Propietario por defecto
+        return ['usuarios/mascotas_list.html']
 
     def get_queryset(self):
+
+        usuario_id = self.request.session.get('usuario_id')
+
+        if usuario_id:
+            from usuarios.models import Usuario
+
+            try:
+                usuario = Usuario.objects.get(id=usuario_id)
+
+                # Recepcionista ve todas las mascotas
+                if hasattr(usuario, 'recepcionista'):
+                    return Mascota.objects.all().order_by('nombre')
+
+            except Usuario.DoesNotExist:
+                pass
+
+        # Propietario solo ve las suyas
         propietario = obtener_propietario(self.request)
 
         if not propietario:
             return Mascota.objects.none()
 
-        return Mascota.objects.filter(propietario=propietario,estado='activo')
+        return Mascota.objects.filter(
+            propietario=propietario,
+            estado='activo'
+        )
     
 
 #-------------OBTENER RAZAS------------------
@@ -472,225 +601,41 @@ def reactivar_usuario(request, usuario_id):
 
     return redirect('usuarios:usuarios_suspendidos')
 
-def carga_masiva_propietarios(request):
+def citas_recepcionista(request):
 
-    # VALIDAR SESION
-    usuario_id = request.session.get('usuario_id')
+    recepcionista = obtener_recepcionista(request)
 
-    if not usuario_id:
+    if not recepcionista:
         return redirect('usuarios:login')
 
-    try:
+    citas = Cita.objects.all().order_by('fecha', 'hora')
 
-        usuario_admin = Usuario.objects.get(
-            id=usuario_id
-        )
+    return render(request, 'usuarios/citas_recepcionista.html', {
+        'citas': citas,
+        'recepcionista': recepcionista
+    })
 
-    except Usuario.DoesNotExist:
+def cambiar_estado_cita(request, cita_id):
 
-        messages.error(
-            request,
-            'Usuario no encontrado'
-        )
+    recepcionista = obtener_recepcionista(request)
 
+    if not recepcionista:
         return redirect('usuarios:login')
 
-    # VALIDAR ROL
-    if usuario_admin.rol != Usuario.Rol.ADMIN:
+    cita = get_object_or_404(Cita, id=cita_id)
 
-        messages.error(
-            request,
-            'No tienes permisos'
-        )
-
-        return redirect(
-            'panel:panel_dashboard'
-        )
-
-    # POST
     if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado')
 
-        archivo = request.FILES.get('archivo')
+        if nuevo_estado in ['pendiente', 'en_espera', 'atendido', 'cancelado']:
 
-        # VALIDAR ARCHIVO
-        if not archivo:
+            cita.estado = nuevo_estado
+            cita.save()
 
-            messages.error(
-                request,
-                'Debes subir un archivo CSV'
-            )
+            messages.success(request, "Estado de la cita actualizado correctamente")
 
-            return redirect(
-                'usuarios:carga_masiva_propietarios'
-            )
+        return redirect('citas:recepcionista')
 
-        # VALIDAR EXTENSION
-        if not archivo.name.endswith('.csv'):
-
-            messages.error(
-                request,
-                'Solo se permiten archivos CSV'
-            )
-
-            return redirect(
-                'usuarios:carga_masiva_propietarios'
-            )
-
-        try:
-
-            archivo_csv = TextIOWrapper(
-                archivo.file,
-                encoding='utf-8'
-            )
-
-            lector = csv.DictReader(
-                archivo_csv
-            )
-
-            creados = 0
-            errores = []
-
-            for numero_fila, fila in enumerate(lector, start=2):
-
-                try:
-
-                    correo = fila.get(
-                        'correo',
-                        ''
-                    ).strip()
-
-                    # VALIDAR CORREO VACIO
-                    if not correo:
-
-                        errores.append(
-                            f'Fila {numero_fila}: correo vacío'
-                        )
-
-                        continue
-
-                    # VALIDAR DUPLICADO
-                    if Usuario.objects.filter(
-                        correo=correo
-                    ).exists():
-
-                        errores.append(
-                            f'Fila {numero_fila}: el correo "{correo}" ya existe'
-                        )
-
-                        continue
-
-                    # CREAR USUARIO
-                    usuario = Usuario.objects.create(
-                        correo=correo,
-                        password=make_password(
-                            fila.get('password', '')
-                        ),
-                        rol='propietario',
-                        estado='activo'
-                    )
-
-                    # CREAR PROPIETARIO
-                    Propietario.objects.create(
-                        usuario=usuario,
-                        nombre=fila.get('nombre', '').strip(),
-                        apellido=fila.get('apellido', '').strip(),
-                        telefono=fila.get('telefono', '').strip(),
-                        tipo_documento=fila.get('tipo_documento', '').strip(),
-                        documento=fila.get('documento', '').strip(),
-                        ciudad=fila.get('ciudad', '').strip(),
-                        direccion=fila.get('direccion', '').strip()
-                    )
-
-                    creados += 1
-
-                except Exception as e:
-
-                    errores.append(
-                        f'Fila {numero_fila}: {str(e)}'
-                    )
-
-            # MENSAJE EXITOSO
-            messages.success(
-                request,
-                f'Se crearon correctamente {creados} propietarios'
-            )
-
-            # MENSAJES DE ERROR
-            if errores:
-
-                messages.warning(
-                    request,
-                    f'Se encontraron {len(errores)} errores'
-                )
-
-                for error in errores:
-
-                    messages.error(
-                        request,
-                        error
-                    )
-
-            return redirect(
-                'usuarios:carga_masiva_propietarios'
-            )
-
-        except Exception as e:
-
-            messages.error(
-                request,
-                f'Error general: {str(e)}'
-            )
-
-            return redirect(
-                'usuarios:carga_masiva_propietarios'
-            )
-
-    return render(
-        request,
-        'panel/propietario/carga_masiva_propietario.html'
-    )
-
-from django.http import HttpResponse
-import csv
-
-
-def descargar_plantilla_propietarios(request):
-
-    response = HttpResponse(
-        content_type='text/csv'
-    )
-
-    response[
-        'Content-Disposition'
-    ] = 'attachment; filename="plantilla_propietarios.csv"'
-
-
-    writer = csv.writer(response)
-
-    # ENCABEZADOS
-    writer.writerow([
-        'correo',
-        'password',
-        'nombre',
-        'apellido',
-        'telefono',
-        'tipo_documento',
-        'documento',
-        'ciudad',
-        'direccion'
-    ])
-
-    # FILA DE EJEMPLO
-    writer.writerow([
-        'usuario@gmail.com',
-        '123456',
-        'Juan',
-        'Perez',
-        '3001234567',
-        'CC',
-        '123456789',
-        'Bogota',
-        'Calle 123'
-    ])
-
-    return response
+    return render(request, 'usuarios/cambiar_estado_cita.html', {
+        'cita': cita
+    })

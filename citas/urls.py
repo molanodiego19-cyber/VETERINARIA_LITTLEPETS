@@ -2,8 +2,6 @@ from django.urls import path
 from . import views
 from .views import *
 
-
-
 app_name = 'citas'
 
 urlpatterns = [
@@ -13,7 +11,7 @@ urlpatterns = [
     path('listar', CitasListView.as_view(), name='listar'),
     path('crear/', CitaCreateView.as_view(), name='crear'),
     path('cancelar/<int:pk>/', cancelar_cita, name='cancelar'),
-    path('editar/<int:pk>/', CitaUpdateView.as_view(), name='editar'),
+    path('reagendar/<int:pk>/', CitaUpdateView.as_view(), name='reagendar'),
 
     path('historial-servicio/<int:cita_id>/',views.crear_historial_servicio,name='crear_historial_servicio'),
 
@@ -72,4 +70,10 @@ path(
     name='reporte_citas_excel'
 ),
 
+#-----------------------------
+# VACUNACION
+#---------------------------------------
+path(
+    'vacunas/agendadas/',views.vacunas_agendadas,name='vacunas_agendadas'
+)
 ]

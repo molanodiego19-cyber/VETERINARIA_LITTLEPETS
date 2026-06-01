@@ -6,7 +6,7 @@ from citas.models import Servicio
 import re
 from django.utils import timezone
 from django import forms
-
+from usuarios.models import Recepcionista
 # -------------------------
 # USUARIO
 # -------------------------
@@ -45,7 +45,87 @@ class AdministradorForm(forms.ModelForm):
             'documento',
             'foto'
         ]
+class RecepcionistaForm(forms.ModelForm):
 
+    correo = forms.EmailField(required=True)
+
+    class Meta:
+        model = Recepcionista
+        fields = [
+            'nombre',
+            'apellido',
+            'telefono',
+            'tipo_documento',
+            'documento',
+            'ciudad',
+            'direccion',
+            'turno',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # precargar correo del usuario
+        if self.instance and self.instance.usuario:
+            self.fields['correo'].initial = self.instance.usuario.correo
+
+    def clean_correo(self):
+        correo = self.cleaned_data.get('correo')
+
+        if Usuario.objects.filter(correo=correo)\
+            .exclude(id=self.instance.usuario.id)\
+            .exists():
+            raise forms.ValidationError("Este correo ya está registrado")
+
+        return correo
+
+    def save(self, commit=True):
+        recepcionista = super().save(commit=False)
+
+        usuario = recepcionista.usuario
+        usuario.correo = self.cleaned_data['correo']
+
+        if commit:
+            usuario.save()
+            recepcionista.save()
+
+        return recepcionista
+
+class RecepcionistaCompletoForm(forms.ModelForm):
+
+    correo = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = Recepcionista
+        fields = [
+            'nombre',
+            'apellido',
+            'telefono',
+            'tipo_documento',
+            'documento',
+            'ciudad',
+            'direccion',
+            'turno'
+        ]
+
+    def save(self, commit=True):
+        with transaction.atomic():
+
+            usuario = Usuario.objects.create(
+                correo=self.cleaned_data['correo'],
+                rol=Usuario.Rol.RECEPCIONISTA,
+                estado=Usuario.Estado.ACTIVO,
+                password=make_password(self.cleaned_data['password'])
+            )
+
+            recepcionista = super().save(commit=False)
+            recepcionista.usuario = usuario
+
+            if commit:
+                recepcionista.save()
+
+            return recepcionista
 
 # -------------------------
 # PROPIETARIO (CREA TODO JUNTO)
@@ -290,12 +370,41 @@ class PropietarioUpdateForm(forms.ModelForm):
             return propietario
 #-------------------------------------
 
+class RecepcionistaUpdateForm(forms.ModelForm):
 
+    correo = forms.EmailField()
+
+    class Meta:
+        model = Recepcionista
+        fields = [
+            'nombre',
+            'apellido',
+            'telefono',
+            'ciudad',
+            'direccion',
+            'turno'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.usuario:
+            self.fields['correo'].initial = self.instance.usuario.correo
+
+    def save(self, commit=True):
+        recepcionista = super().save(commit=False)
+
+        usuario = recepcionista.usuario
+        usuario.correo = self.cleaned_data['correo']
+
+        if commit:
+            usuario.save()
+            recepcionista.save()
+
+        return recepcionista
 # ---------------------------------------------------------------------------------------------
 # VETERINARIO
 # ---------------------------------------------------------------------------------------------
-
-# -------CREAR------------------------
 
 class VeterinarioCompletoForm(forms.ModelForm):
 
@@ -752,10 +861,3 @@ class CambiarPasswordForm(forms.Form):
         self.usuario.save()
 
         return self.usuario
-
-class CsvUploadForm(forms.Form):
-
-    csv_file = forms.FileField(
-        label="Archivo CSV",
-        help_text="Debe contener columnas válidas"
-    )

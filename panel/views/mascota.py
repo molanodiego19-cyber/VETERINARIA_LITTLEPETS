@@ -51,10 +51,41 @@ class MascotaListView(ListView):
 
 
 class MascotaCreateView(CreateView):
+
     model = Mascota
     form_class = MascotaForm
-    template_name = 'panel/mascota/mascota_form.html'
-    success_url = reverse_lazy('panel:panel_mascota_list')
+    success_url = reverse_lazy(
+        'panel:panel_mascota_list'
+    )
+
+    def get_template_names(self):
+
+        rol = self.request.session.get(
+            'usuario_rol'
+        )
+
+        if rol == 'recepcionista':
+            return [
+                'panel/mascota/mascota_form_recepcionista.html'
+            ]
+
+        return [
+            'panel/mascota/mascota_form.html'
+        ]
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(
+            **kwargs
+        )
+
+        context['es_recepcionista'] = (
+            self.request.session.get(
+                'usuario_rol'
+            ) == 'recepcionista'
+        )
+
+        return context
 
 
 class MascotaUpdateView(UpdateView):

@@ -7,6 +7,16 @@ urlpatterns = [
     path('', views.dashboard, name='panel_dashboard'),
     path('perfil_propietario/', views.perfil_propietario, name='perfil_propietario'),
     path('perfil_veterinario/', views.perfil_veterinario, name='perfil_veterinario'),
+    
+# RECEPCIONISTA
+    path('recepcionistas/', views.RecepcionistaListView.as_view(),name='panel_recepcionista_list'),
+    path('recepcionistas/crear/',views.RecepcionistaCreateView.as_view(),name='panel_recepcionista_create'),
+    path('recepcionistas/<int:pk>/editar/',views.RecepcionistaUpdateView.as_view(),name='panel_recepcionista_edit'),
+    path('recepcionistas/<int:pk>/eliminar/',views.RecepcionistaDeleteView.as_view(),name='panel_recepcionista_delete'),
+    path('recepcionistas/reporte/pdf/', views.reporte_recepcionistas_pdf, name='reporte_recepcionistas_pdf'),
+    path('recepcionistas/reporte/excel/', views.reporte_recepcionistas_excel, name='reporte_recepcionistas_excel'),
+
+  
 
     # MASCOTAS
     path('mascotas/', views.MascotaListView.as_view(), name='panel_mascota_list'),
@@ -67,7 +77,6 @@ path('vacunas/<int:pk>/eliminar/', views.VacunaDeleteView.as_view(), name='panel
 
 # VACUNACION
 path('vacunacion/', views.VacunacionListView.as_view(), name='panel_vacunacion_list'),
-path('vacunacion/nueva/', views.VacunacionCreateView.as_view(), name='panel_vacunacion_create'),
 path('vacunacion/<int:pk>/editar/', views.VacunacionUpdateView.as_view(), name='panel_vacunacion_edit'),
 path('vacunacion/<int:pk>/eliminar/', views.VacunacionDeleteView.as_view(), name='panel_vacunacion_delete'),
 
@@ -124,13 +133,44 @@ path('servicios/historial/',views.historial_servicio,name='historial_servicio'),
 path('servicio/reporte/pdf/', views.servicio_reporte_pdf, name='servicio_reporte_pdf'),
 path('reporte/mascotas/pdf/', views.reporte_mascotas_pdf, name='reporte_mascotas_pdf'),
 # REPORTES CITAS
-path('citas/reporte/pdf/',views.reporte_citas_pdf,name='reporte_citas_pdf'),
-path('citas/reporte/excel/',views.reporte_citas_excel,name='reporte_citas_excel'),
+path(
+    'citas/reporte/pdf/',
+    views.reporte_citas_pdf,
+    name='reporte_citas_pdf'
+),
+
+path(
+    'citas/reporte/excel/',
+    views.reporte_citas_excel,
+    name='reporte_citas_excel'
+),
 
 # REPORTES PROPIETARIOS
-path('propietarios/reporte/pdf/',views.reporte_propietarios_pdf,name='reporte_propietarios_pdf'),
-path('propietarios/reporte/excel/',views.reporte_propietarios_excel,name='reporte_propietarios_excel'),
+path(
+    'propietarios/reporte/pdf/',
+    views.reporte_propietarios_pdf,
+    name='reporte_propietarios_pdf'
+),
 
+path(
+    'propietarios/reporte/excel/',
+    views.reporte_propietarios_excel,
+    name='reporte_propietarios_excel'
+),
 
+#REPORTES VETERINARIOS
+path(
+    'veterinarios/reporte/pdf/',
+    views.reporte_veterinarios_pdf,
+    name='reporte_veterinarios_pdf'
+),
+
+path(
+    'veterinarios/reporte/excel/',
+    views.reporte_veterinarios_excel,
+    name='reporte_veterinarios_excel'
+),
 
 ]
+
+

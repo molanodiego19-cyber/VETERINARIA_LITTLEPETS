@@ -51,6 +51,10 @@
     <div class="form-group">
       <label>Servicio</label>{{ form.servicio }}
     </div>
+    <div class="form-group" id="contenedor-vacuna" style="display: none;">
+      <label>Vacuna Requerida</label>
+      {{ form.vacuna }}
+    </div>
     <div class="form-group">
       <label>Mascota</label>{{ form.mascota }}
     </div>
@@ -73,18 +77,48 @@
 </div>
 
 <script>
+// IDs automáticos que genera Django: 'id_servicio' e 'id_vacuna'
+const selectServicio = document.getElementById("id_servicio");
+const selectVacuna = document.getElementById("id_vacuna");
+const contenedorVacuna = document.getElementById("contenedor-vacuna");
+
+// Escuchar cambios en el servicio para cargar horarios Y evaluar si es vacuna
+selectServicio.addEventListener("change", function() {
+    cargarHorarios();
+    evaluarServicioVacuna();
+});
+
 document.getElementById("fecha").addEventListener("change", cargarHorarios);
-document.getElementById("id_servicio").addEventListener("change", cargarHorarios);
+
+function evaluarServicioVacuna() {
+    // Obtenemos el texto visible de la opción seleccionada
+    const textoServicio = selectServicio.options[selectServicio.selectedIndex].text.toLowerCase();
+    
+    // Validamos si la palabra "vacuna" o "vacunación" está incluida en el nombre del servicio
+    if (textoServicio.includes("vacuna") || textoServicio.includes("vacunación")) {
+        contenedorVacuna.style.display = "block";
+        selectVacuna.setAttribute("required", "required"); // Se vuelve obligatorio si es vacunación
+    } else {
+        contenedorVacuna.style.display = "none";
+        selectVacuna.removeAttribute("required");
+        selectVacuna.value = ""; // Limpiamos el valor seleccionado
+    }
+}
+
 function cargarHorarios() {
   const fecha = document.getElementById("fecha").value;
-  const servicio = document.getElementById("id_servicio").value;
+  const servicio = selectServicio.value;
   if (!fecha || !servicio) return;
+  
   fetch(`/citas/horarios/?fecha=${fecha}&servicio=${servicio}`)
     .then(res => res.json())
     .then(data => {
       const contenedor = document.getElementById("horarios");
       contenedor.innerHTML = "";
-      if (data.length === 0) { contenedor.innerHTML = "<p style='color:#bbb;font-size:.88rem;'>No hay horarios disponibles</p>"; return; }
+      if (data.length === 0) { 
+        contenedor.innerHTML = "<p style='color:#bbb;font-size:.88rem;'>No hay horarios disponibles</p>"; 
+        return; 
+      }
       data.forEach(item => {
         const btn = document.createElement("button");
         btn.type = "button"; btn.className = "horario-btn"; btn.innerText = item.hora;

@@ -8,7 +8,7 @@ from datetime import date
 from django.views.decorators.cache import never_cache
 from datetime import datetime
 from django.utils import timezone
-from notificacion.services import crear_notificacion
+from notificacion.tasks import crear_notificacion
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import re
@@ -96,6 +96,9 @@ def login_view(request):
 
             elif usuario.rol == Usuario.Rol.VETERINARIO:
                 return redirect('usuarios:panel_veterinario')
+            
+            elif usuario.rol == Usuario.Rol.RECEPCIONISTA:
+                return redirect('usuarios:panel_recepcionista')
 
             return redirect('usuarios:dashboard')
 
@@ -485,6 +488,13 @@ def panel_veterinario(request):
         return redirect('usuarios:login')
 
     return render(request, 'panel/dashboard_veterinario.html')
+
+# ---------------- PANEL RECEPCIONISTA ----------------
+def panel_recepcionista(request):
+    if not usuario_logueado(request):
+        return redirect('usuarios:login')
+
+    return render(request, 'panel/dashboard_recepcionista.html')
 
 
 

@@ -7,6 +7,7 @@ class Usuario(models.Model):
     class Rol(models.TextChoices):
         ADMIN = 'admin', 'Administrador'
         VETERINARIO = 'veterinario', 'Veterinario'
+        RECEPCIONISTA = 'recepcionista', 'Resepcionista'
         PROPIETARIO = 'propietario', 'Propietario'
 
     class Estado(models.TextChoices):
@@ -76,7 +77,33 @@ class Propietario(Persona):
 
     def __str__(self):
         return f"{self.nombre} - {self.documento}"
+    
+class Recepcionista(Persona):
 
+    usuario = models.OneToOneField(
+        Usuario,
+        on_delete=models.CASCADE,
+        related_name='recepcionista'
+    )
+
+    ciudad = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=255)
+    fecha_contratacion = models.DateTimeField(auto_now_add=True)
+
+    turno = models.CharField(
+        max_length=50,
+        choices=[
+            ('mañana', 'Mañana'),
+            ('tarde', 'Tarde'),
+            ('nocturno', 'Nocturno'),
+        ],
+        default='mañana'
+    )
+
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.nombre} - Recepcionista ({self.documento})"
 
 class Veterinario(Persona):
 

@@ -69,47 +69,52 @@ def filtrar_citas(request):
             veterinario_id=veterinario
         )
 
-    return citas
+    return citas.order_by('fecha', 'hora')
 
 
 # =========================================================
 # LISTADO DE CITAS
 # =========================================================
 
+from usuarios.models import Usuario
+
 class CitasListView(ListView):
 
     model = Cita
-
-    template_name = 'panel/cita/list.html'
-
     context_object_name = 'citas'
-
     ordering = ['-fecha', '-hora']
 
-    # ==========================================
-    # QUERYSET FILTRADO
-    # ==========================================
+    def get_template_names(self):
+
+        usuario_id = self.request.session.get('usuario_id')
+
+        if not usuario_id:
+            return ['panel/cita/list.html']
+
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+
+            # Recepcionista
+            if hasattr(usuario, 'recepcionista'):
+                return ['panel/cita/list_recepcionista.html']
+
+        except Usuario.DoesNotExist:
+            pass
+
+        # Administrador por defecto
+        return ['panel/cita/list.html']
 
     def get_queryset(self):
-
         return filtrar_citas(self.request)
 
-    # ==========================================
-    # CONTEXTO
-    # ==========================================
-
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
 
         context['servicios'] = Servicio.objects.all()
-
         context['veterinarios'] = Veterinario.objects.all()
-
         context['estados'] = Cita.ESTADOS
 
         return context
-
 
 # =========================================================
 # REPORTE PDF

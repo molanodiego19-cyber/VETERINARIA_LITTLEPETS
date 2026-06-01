@@ -1,0 +1,189 @@
+{% extends 'usuarios/base_recepcionista.html' %}
+{% load static %}
+
+{% block page_name %}Mi Perfil - Recepcionista{% endblock %}
+
+{% block content %}
+<style>
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#1a6b8a; margin-bottom:.15rem; }
+  .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
+
+  .form-card {
+    background:#fff;
+    border-radius:20px;
+    padding:2.5rem;
+    width:100%;
+    max-width:520px;
+    box-shadow:0 4px 16px rgba(0,0,0,.06);
+    border:1px solid #e6f2f0;
+  }
+
+  .info-box {
+    background:#f0faf9;
+    border-left:3px solid #2a9d8f;
+    border-radius:8px;
+    padding:.7rem 1rem;
+    font-size:.88rem;
+    color:#1a6b8a;
+    margin-bottom:.8rem;
+  }
+
+  .info-box strong { font-weight:700; }
+
+  .form-card p { margin-bottom:.8rem; }
+
+  .form-card p label {
+    display:block;
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:#1a6b8a;
+    margin-bottom:.35rem;
+  }
+
+  .form-card p input,
+  .form-card p select,
+  .form-card p textarea {
+    width:100%;
+    padding:.75rem 1rem;
+    border:1.5px solid #e8e8e8;
+    border-radius:10px;
+    font-family:'DM Sans',sans-serif;
+    font-size:.93rem;
+    color:#555;
+    background:#f8fdfc;
+    outline:none;
+    display:block;
+  }
+
+  .form-card p input:focus,
+  .form-card p select:focus,
+  .form-card p textarea:focus {
+    border-color:#2a9d8f;
+    background:#fff;
+  }
+
+  .form-actions {
+    display:flex;
+    gap:.8rem;
+    margin-top:1.6rem;
+  }
+
+  .btn-verde {
+    display:inline-block;
+    padding:.65rem 1.4rem;
+    border-radius:50px;
+    font-family:'DM Sans',sans-serif;
+    font-size:.85rem;
+    font-weight:700;
+    border:none;
+    cursor:pointer;
+    background:#2a9d8f;
+    color:#fff;
+    transition:.2s;
+    text-decoration:none;
+  }
+
+  .btn-verde:hover { background:#1a6b8a; }
+
+  .btn-marron {
+    display:inline-block;
+    padding:.65rem 1.4rem;
+    border-radius:50px;
+    font-family:'DM Sans',sans-serif;
+    font-size:.85rem;
+    font-weight:700;
+    border:none;
+    cursor:pointer;
+    background:#6b3a2a;
+    color:#fff;
+    transition:.2s;
+    text-decoration:none;
+  }
+
+  .btn-marron:hover { background:#d4a853; color:#6b3a2a; }
+
+  .foto-perfil {
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #d8f3dc;
+    display:block;
+    margin:0 auto .8rem;
+  }
+</style>
+
+<div class="page-header">
+  <div>
+    <p class="page-sub">Cuenta</p>
+    <h1 class="page-title">Mi Perfil</h1>
+  </div>
+
+  {% if not editar %}
+    <a href="?editar=1" class="btn-verde">Editar perfil</a>
+  {% endif %}
+</div>
+
+{% if not editar %}
+
+<div class="form-card" style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+
+  {% if recepcionista.foto %}
+    <img src="{{ recepcionista.foto.url }}" class="foto-perfil">
+  {% else %}
+    <img src="{% static 'img/default-user.svg' %}" class="foto-perfil">
+  {% endif %}
+
+  <div style="width:100%;">
+
+    <div class="info-box">
+      <strong>Nombre:</strong> {{ recepcionista.nombre }} {{ recepcionista.apellido }}
+    </div>
+
+    <div class="info-box">
+      <strong>Correo:</strong> {{ recepcionista.usuario.correo }}
+    </div>
+
+    <div class="info-box">
+      <strong>Teléfono:</strong> {{ recepcionista.telefono|default:"No registrado" }}
+    </div>
+
+    <div class="info-box">
+      <strong>Documento:</strong> {{ recepcionista.documento }}
+    </div>
+
+    <div class="info-box">
+      <strong>Ciudad:</strong> {{ recepcionista.ciudad|default:"No registrada" }}
+    </div>
+
+    <div class="info-box">
+      <strong>Dirección:</strong> {{ recepcionista.direccion|default:"No registrada" }}
+    </div>
+
+    <div class="info-box">
+      <strong>Turno:</strong> {{ recepcionista.turno|default:"No asignado" }}
+    </div>
+
+  </div>
+</div>
+
+{% else %}
+
+<div class="form-card">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">Guardar cambios</button>
+      <a href="{% url 'usuarios:perfil_recepcionista' %}" class="btn-marron">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endif %}
+
+{% endblock %}

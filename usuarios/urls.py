@@ -35,7 +35,9 @@ urlpatterns = [
     # -------------------------
     path('panel-admin/', views.panel_admin, name='panel_admin'),
     path('panel-veterinario/', views_panel.PanelVeterinarioView.as_view(), name='panel_veterinario'),
-
+    path('panel-recepcionista/', views_panel.PanelRecepcionistaView.as_view(), name='panel_recepcionista'),
+path('perfil-recepcionista/', views_panel.perfil_recepcionista, name='perfil_recepcionista'),
+path('contraseña-recepcionista/', views_panel.cambiar_password_recepcionista, name='contraseña_recepcionista'),
     # 👇 ESTE ES EL IMPORTANTE
     path('panel-propietario/', PanelPropietarioView.as_view(), name='dashboard'),
 
@@ -63,10 +65,6 @@ urlpatterns = [
     path('contraseña/', views_panel.cambiar_password, name='contraseña'),
     path('contraseñavet/', views_panel.cambiar_password_veterinario, name='contraseña_vet'),
 
-    # CARGA MASIVA
-
-path('carga-masiva-propietarios/',views_panel.carga_masiva_propietarios,name='carga_masiva_propietarios'),
-path('descargar-plantilla-propietarios/',views_panel.descargar_plantilla_propietarios,name='descargar_plantilla_propietarios'),
 
 
     # -------------------------
