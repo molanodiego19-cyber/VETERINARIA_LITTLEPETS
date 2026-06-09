@@ -1,0 +1,195 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block page_name %}Cobrar Factura{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2>💰 Cobro de Factura</h2>
+
+    <hr>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <h4>Información del Cliente</h4>
+
+            <p>
+                <strong>Propietario:</strong>
+                {{ factura.cita.mascota.propietario }}
+            </p>
+
+            <p>
+                <strong>Mascota:</strong>
+                🐾 {{ factura.cita.mascota.nombre }}
+            </p>
+
+            <p>
+                <strong>Veterinario:</strong>
+                👨‍⚕️ {{ factura.cita.veterinario.nombre }}
+            </p>
+
+            <p>
+                <strong>Fecha:</strong>
+                {{ factura.cita.fecha }}
+            </p>
+
+            <p>
+                <strong>Servicio:</strong>
+                {{ factura.cita.servicio.nombre }}
+            </p>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <h4>Detalle de Factura</h4>
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+                        <th>Servicio</th>
+                        <th>Precio</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for detalle in factura.detalles.all %}
+
+                    <tr>
+
+                        <td>
+                            {{ detalle.descripcion }}
+                        </td>
+
+                        <td>
+                            ${{ detalle.total|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <p>
+                <strong>Subtotal:</strong>
+                ${{ factura.subtotal|floatformat:2 }}
+            </p>
+
+            <p>
+                <strong>Impuestos:</strong>
+                ${{ factura.impuestos|floatformat:2 }}
+            </p>
+
+            <h3>
+                Total:
+                ${{ factura.total|floatformat:2 }}
+            </h3>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Método de pago
+                    </label>
+
+                    <select
+                        name="metodo_pago"
+                        class="form-control"
+                        required
+                    >
+                        <option value="">
+                            Seleccione...
+                        </option>
+
+                        <option value="efectivo">
+                            Efectivo
+                        </option>
+
+                        <option value="tarjeta">
+                            Tarjeta
+                        </option>
+
+                        <option value="transferencia">
+                            Transferencia
+                        </option>
+
+                        <option value="nequi">
+                            Nequi
+                        </option>
+
+                        <option value="daviplata">
+                            Daviplata
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Notas del pago
+                    </label>
+
+                    <textarea
+                        name="notas"
+                        rows="4"
+                        class="form-control"
+                    ></textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+                    ✅ Confirmar Pago
+                </button>
+
+                <a
+                    href="{% url 'facturacion:facturas_pendientes' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancelar
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

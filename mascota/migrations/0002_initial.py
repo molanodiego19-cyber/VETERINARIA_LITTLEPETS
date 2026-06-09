@@ -9,24 +9,30 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('mascota', '0001_initial'),
-        ('usuarios', '0001_initial'),
+        ("mascota", "0001_initial"),
+        ("usuarios", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mascota',
-            name='propietario',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='usuarios.propietario'),
+            model_name="mascota",
+            name="propietario",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="usuarios.propietario"
+            ),
         ),
         migrations.AddField(
-            model_name='raza',
-            name='tipo_especie',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mascota.especie'),
+            model_name="raza",
+            name="tipo_especie",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="mascota.especie"
+            ),
         ),
         migrations.AddField(
-            model_name='mascota',
-            name='raza',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mascota.raza'),
+            model_name="mascota",
+            name="raza",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="mascota.raza"
+            ),
         ),
     ]

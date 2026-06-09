@@ -7,17 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('citas', '0010_remove_vacuna_activo_vacuna_estado'),
+        ("citas", "0010_remove_vacuna_activo_vacuna_estado"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='vacuna',
-            name='fecha_vencimiento',
+            model_name="vacuna",
+            name="fecha_vencimiento",
         ),
         migrations.AddField(
-            model_name='cita',
-            name='vacuna',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='citas.vacuna'),
+            model_name="cita",
+            name="vacuna",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="citas.vacuna",
+            ),
         ),
     ]

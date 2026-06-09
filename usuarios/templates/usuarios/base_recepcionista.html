@@ -104,33 +104,6 @@
                         <span class="icon">👥</span> Ver Propietarios
                     </a>
 
-                    <a href="{% url 'panel:panel_propietario_create' %}" class="sidebar-link">
-                        <span class="icon">➕</span> Registrar Propietario
-                    </a>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- MASCOTAS -->
-        <div class="acc-section sec-mascotas">
-            <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
-                <span class="acc-dot dot-mascotas"></span>
-                <span class="acc-label">Mascotas</span>
-                <span class="acc-arrow">▼</span>
-            </button>
-
-            <div class="acc-panel">
-                <div class="acc-inner">
-
-                    <a href="{% url 'usuarios:mascotas' %}" class="sidebar-link">
-                        <span class="icon">🐾</span> Ver Mascotas
-                    </a>
-
-                    <a href="{% url 'panel:panel_mascota_create' %}" class="sidebar-link">
-                        <span class="icon">➕</span> Registrar Mascota
-                    </a>
-
                 </div>
             </div>
         </div>
@@ -150,6 +123,10 @@
                         <span class="icon">🧾</span> Ver Facturas
                     </a>
 
+                    <a href="{% url 'facturacion:factura_pendiente' %}" class="sidebar-link">
+                        <span class="icon">🧾</span> Facturas Pendientes
+                    </a>
+
                 </div>
             </div>
         </div>
@@ -165,7 +142,7 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-    Little Pets &copy; 2025 · Recepción
+    Little Pets &copy; 2026 · Recepción
 </footer>
 
 <!-- Overlay mobile -->

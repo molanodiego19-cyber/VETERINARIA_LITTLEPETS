@@ -1,10 +1,10 @@
+# flake8: noqa
 from .dashboard import *
 from .mascota import *
 from .consultas import *
 from .historiaclinica import *
 from .categoriaservicio import *
 from .servicio import *
-from .consultaservicio import *
 from .factura import *
 from .detalle_factura import *
 from .especie import *

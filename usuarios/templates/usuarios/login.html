@@ -12,6 +12,7 @@
 <!-- ══ Panel izquierdo: slider Ken Burns ══ -->
 <div class="left-panel">
     <div class="slider">
+        
 
         <div class="slider-slide active" id="slide-0">
                 <img src="{% static 'img/vete2.jpg' %}" alt="perro cachorro">
@@ -120,11 +121,13 @@
 <!-- ══ Panel derecho: formulario de login ══ -->
 <div class="right-panel">
     <div class="login-card">
-
         <div class="login-header">
             <div class="step-pill">Acceso seguro</div>
             <h1>Iniciar sesión</h1>
             <p>Ingresa tus credenciales para continuar</p>
+            <a href="{% url 'citas:index' %}" class="btn-home">
+        🏠 Volver al inicio
+    </a>
         </div>
 
         <div class="login-body">

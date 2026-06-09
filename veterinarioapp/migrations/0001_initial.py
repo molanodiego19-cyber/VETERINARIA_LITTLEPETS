@@ -9,48 +9,119 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('usuarios', '0001_initial'),
+        ("usuarios", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Especialidad',
+            name="Especialidad",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=100, unique=True)),
-                ('descripcion', models.CharField(blank=True, max_length=200, null=True)),
-                ('activo', models.BooleanField(default=True)),
-                ('fecha_creado', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=100, unique=True)),
+                (
+                    "descripcion",
+                    models.CharField(blank=True, max_length=200, null=True),
+                ),
+                ("activo", models.BooleanField(default=True)),
+                ("fecha_creado", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='BloqueoAgenda',
+            name="BloqueoAgenda",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fecha_inicio', models.DateTimeField()),
-                ('fecha_fin', models.DateTimeField()),
-                ('motivo', models.CharField(max_length=150)),
-                ('tipo', models.CharField(choices=[('vacaciones', 'Vacaciones'), ('permiso', 'Permiso'), ('reunion', 'Reunión'), ('otro', 'Otro')], max_length=20)),
-                ('todo_el_dia', models.BooleanField(default=True)),
-                ('recurrente', models.BooleanField(default=False)),
-                ('fecha_creacion', models.DateTimeField(auto_now_add=True)),
-                ('creado_por', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bloqueos_creados', to='usuarios.veterinario')),
-                ('veterinario', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bloqueos', to='usuarios.veterinario')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("fecha_inicio", models.DateTimeField()),
+                ("fecha_fin", models.DateTimeField()),
+                ("motivo", models.CharField(max_length=150)),
+                (
+                    "tipo",
+                    models.CharField(
+                        choices=[
+                            ("vacaciones", "Vacaciones"),
+                            ("permiso", "Permiso"),
+                            ("reunion", "Reunión"),
+                            ("otro", "Otro"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("todo_el_dia", models.BooleanField(default=True)),
+                ("recurrente", models.BooleanField(default=False)),
+                ("fecha_creacion", models.DateTimeField(auto_now_add=True)),
+                (
+                    "creado_por",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bloqueos_creados",
+                        to="usuarios.veterinario",
+                    ),
+                ),
+                (
+                    "veterinario",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bloqueos",
+                        to="usuarios.veterinario",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='HorarioVeterinario',
+            name="HorarioVeterinario",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('dias_semana', models.IntegerField(choices=[(1, 'Lunes'), (2, 'Martes'), (3, 'Miércoles'), (4, 'Jueves'), (5, 'Viernes'), (6, 'Sábado'), (7, 'Domingo')])),
-                ('hora_inicio', models.TimeField()),
-                ('hora_fin', models.TimeField()),
-                ('intervalo_min', models.IntegerField()),
-                ('activo', models.BooleanField(default=True)),
-                ('fecha_desde', models.DateField()),
-                ('fecha_hasta', models.DateField()),
-                ('fecha_creacion', models.DateTimeField(auto_now_add=True)),
-                ('veterinario', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='usuarios.veterinario')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "dias_semana",
+                    models.IntegerField(
+                        choices=[
+                            (1, "Lunes"),
+                            (2, "Martes"),
+                            (3, "Miércoles"),
+                            (4, "Jueves"),
+                            (5, "Viernes"),
+                            (6, "Sábado"),
+                            (7, "Domingo"),
+                        ]
+                    ),
+                ),
+                ("hora_inicio", models.TimeField()),
+                ("hora_fin", models.TimeField()),
+                ("intervalo_min", models.IntegerField()),
+                ("activo", models.BooleanField(default=True)),
+                ("fecha_desde", models.DateField()),
+                ("fecha_hasta", models.DateField()),
+                ("fecha_creacion", models.DateTimeField(auto_now_add=True)),
+                (
+                    "veterinario",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="usuarios.veterinario",
+                    ),
+                ),
             ],
         ),
     ]

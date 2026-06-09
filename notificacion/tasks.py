@@ -5,19 +5,13 @@ from django.utils import timezone
 from datetime import datetime
 
 from notificacion.models import Notificacion
-from notificacion.services import (
-    crear_notificacion,
-    enviar_email
-)
+from notificacion.services import crear_notificacion, enviar_email
 
 
 @shared_task
 def procesar_correos_pendientes():
 
-    pendientes = Notificacion.objects.filter(
-        estado='pendiente',
-        canal='email'
-    )
+    pendientes = Notificacion.objects.filter(estado="pendiente", canal="email")
 
     print(f"📨 Correos pendientes: {pendientes.count()}")
 
@@ -27,9 +21,7 @@ def procesar_correos_pendientes():
             enviar_email(n)
 
         except Exception as e:
-            print(
-                f"❌ Error enviando correo ID {n.id}: {e}"
-            )
+            print(f"❌ Error enviando correo ID {n.id}: {e}")
 
     print("✅ Correos pendientes procesados")
 
@@ -39,9 +31,7 @@ def enviar_recordatorios():
 
     ahora = timezone.now()
 
-    citas = Cita.objects.filter(
-        estado='pendiente'
-    )
+    citas = Cita.objects.filter(estado="pendiente")
 
     print(f"📅 Citas encontradas: {citas.count()}")
 
@@ -49,16 +39,9 @@ def enviar_recordatorios():
 
         try:
 
-            cita_dt = timezone.make_aware(
-                datetime.combine(
-                    cita.fecha,
-                    cita.hora
-                )
-            )
+            cita_dt = timezone.make_aware(datetime.combine(cita.fecha, cita.hora))
 
-            horas = (
-                cita_dt - ahora
-            ).total_seconds() / 3600
+            horas = (cita_dt - ahora).total_seconds() / 3600
 
             tipo = None
 
@@ -76,27 +59,23 @@ def enviar_recordatorios():
 
             crear_notificacion(
                 usuario=cita.dueño.usuario,
-                plantilla_nombre='recordatorio_cita',
+                plantilla_nombre="recordatorio_cita",
                 cita=cita,
                 contexto={
-                    'nombre': cita.dueño.nombre,
-                    'mascota': cita.mascota.nombre,
-                    'fecha': cita.fecha,
-                    'hora': cita.hora,
-                    'servicio': cita.servicio.nombre,
-                    'tipo_recordatorio': tipo
-                }
+                    "nombre": cita.dueño.nombre,
+                    "mascota": cita.mascota.nombre,
+                    "fecha": cita.fecha,
+                    "hora": cita.hora,
+                    "servicio": cita.servicio.nombre,
+                    "tipo_recordatorio": tipo,
+                },
             )
 
-            print(
-                f"✅ Recordatorio creado para cita {cita.id}"
-            )
+            print(f"✅ Recordatorio creado para cita {cita.id}")
 
         except Exception as e:
 
-            print(
-                f"❌ Error cita {cita.id}: {e}"
-            )
+            print(f"❌ Error cita {cita.id}: {e}")
 
     print("✅ Recordatorios procesados")
 
@@ -106,9 +85,7 @@ def enviar_vacunas_pendientes():
 
     mascotas = Mascota.objects.all()
 
-    print(
-        f"💉 Mascotas encontradas: {mascotas.count()}"
-    )
+    print(f"💉 Mascotas encontradas: {mascotas.count()}")
 
     for mascota in mascotas:
 
@@ -116,22 +93,18 @@ def enviar_vacunas_pendientes():
 
             crear_notificacion(
                 usuario=mascota.propietario.usuario,
-                plantilla_nombre='vacuna_pendiente',
+                plantilla_nombre="vacuna_pendiente",
                 contexto={
-                    'nombre': mascota.propietario.nombre,
-                    'mascota': mascota.nombre,
-                    'fecha': timezone.now().date(),
-                }
+                    "nombre": mascota.propietario.nombre,
+                    "mascota": mascota.nombre,
+                    "fecha": timezone.now().date(),
+                },
             )
 
-            print(
-                f"✅ Vacuna pendiente creada para {mascota.nombre}"
-            )
+            print(f"✅ Vacuna pendiente creada para {mascota.nombre}")
 
         except Exception as e:
 
-            print(
-                f"❌ Error mascota {mascota.id}: {e}"
-            )
+            print(f"❌ Error mascota {mascota.id}: {e}")
 
     print("✅ Vacunas pendientes procesadas")

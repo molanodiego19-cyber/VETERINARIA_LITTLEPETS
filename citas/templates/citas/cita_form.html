@@ -4,6 +4,7 @@
 
 {% block content %}
 <style>
+  /* ... (Tus estilos se mantienen exactamente iguales) ... */
   .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
   .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#2d6a4f; margin-bottom:.15rem; }
   .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
@@ -46,8 +47,13 @@
 {% endif %}
 
 <div class="form-card">
-  <form method="post">
+  <form method="POST">
     {% csrf_token %}
+    
+    {% if request.GET.propietario_id %}
+      <input type="hidden" name="propietario_id" value="{{ request.GET.propietario_id }}">
+    {% endif %}
+
     <div class="form-group">
       <label>Servicio</label>{{ form.servicio }}
     </div>
@@ -67,8 +73,10 @@
     </div>
     <p class="page-sub" style="margin-bottom:.5rem;">Horarios disponibles</p>
     <div id="horarios" style="margin-bottom:1rem;"></div>
+    
     <input type="hidden" name="fecha" id="fecha_hidden">
     <input type="hidden" name="hora" id="hora_hidden">
+    
     <div class="form-actions">
       <button type="submit" class="btn-verde">Agendar</button>
       <a href="{% url 'citas:listar' %}" class="btn-marron">Cancelar</a>
@@ -77,12 +85,11 @@
 </div>
 
 <script>
-// IDs automáticos que genera Django: 'id_servicio' e 'id_vacuna'
+// ... (Tu bloque <script> se mantiene idéntico, está perfecto) ...
 const selectServicio = document.getElementById("id_servicio");
 const selectVacuna = document.getElementById("id_vacuna");
 const contenedorVacuna = document.getElementById("contenedor-vacuna");
 
-// Escuchar cambios en el servicio para cargar horarios Y evaluar si es vacuna
 selectServicio.addEventListener("change", function() {
     cargarHorarios();
     evaluarServicioVacuna();
@@ -91,17 +98,14 @@ selectServicio.addEventListener("change", function() {
 document.getElementById("fecha").addEventListener("change", cargarHorarios);
 
 function evaluarServicioVacuna() {
-    // Obtenemos el texto visible de la opción seleccionada
     const textoServicio = selectServicio.options[selectServicio.selectedIndex].text.toLowerCase();
-    
-    // Validamos si la palabra "vacuna" o "vacunación" está incluida en el nombre del servicio
     if (textoServicio.includes("vacuna") || textoServicio.includes("vacunación")) {
         contenedorVacuna.style.display = "block";
-        selectVacuna.setAttribute("required", "required"); // Se vuelve obligatorio si es vacunación
+        selectVacuna.setAttribute("required", "required");
     } else {
         contenedorVacuna.style.display = "none";
         selectVacuna.removeAttribute("required");
-        selectVacuna.value = ""; // Limpiamos el valor seleccionado
+        selectVacuna.value = "";
     }
 }
 

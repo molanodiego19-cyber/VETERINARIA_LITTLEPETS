@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, time
+from datetime import datetime, timedelta
 from .models import Cita
 
 # 🔥 MAPEAR DÍAS (con tildes correctas)
@@ -32,16 +32,12 @@ def veterinario_disponible(veterinario, fecha, hora, servicio):
 
     # 🔴 Validar cruce con otras citas
     citas = Cita.objects.filter(
-        veterinario=veterinario,
-        fecha=fecha,
-        estado__in=['pendiente', 'confirmada']
+        veterinario=veterinario, fecha=fecha, estado__in=["pendiente", "confirmada"]
     )
 
     for cita in citas:
         cita_inicio = datetime.combine(cita.fecha, cita.hora)
-        cita_fin = cita_inicio + timedelta(
-            minutes=cita.servicio.duracion_minutos
-        )
+        cita_fin = cita_inicio + timedelta(minutes=cita.servicio.duracion_minutos)
 
         if inicio < cita_fin and fin > cita_inicio:
             return False
@@ -73,8 +69,7 @@ def generar_horarios_disponibles(fecha, servicio, veterinarios):
             # 🔴 BLOQUE CLAVE: NO MOSTRAR HORAS PASADAS SI ES HOY
             if fecha == ahora.date() and inicio <= ahora:
                 hora_actual = (
-                    datetime.combine(fecha, hora_actual)
-                    + timedelta(minutes=30)
+                    datetime.combine(fecha, hora_actual) + timedelta(minutes=30)
                 ).time()
                 continue
 
@@ -83,7 +78,7 @@ def generar_horarios_disponibles(fecha, servicio, veterinarios):
             citas = Cita.objects.filter(
                 veterinario=vet,
                 fecha=fecha,
-                estado__in=['pendiente', 'confirmada', 'en_proceso']
+                estado__in=["pendiente", "confirmada", "en_proceso"],
             )
 
             for cita in citas:
@@ -97,14 +92,12 @@ def generar_horarios_disponibles(fecha, servicio, veterinarios):
 
             if not ocupado:
 
-                horarios_disponibles.append({
-                    "hora": hora_actual.strftime("%H:%M"),
-                    "veterinario_id": vet.id
-                })
+                horarios_disponibles.append(
+                    {"hora": hora_actual.strftime("%H:%M"), "veterinario_id": vet.id}
+                )
 
             hora_actual = (
-                datetime.combine(fecha, hora_actual)
-                + timedelta(minutes=30)
+                datetime.combine(fecha, hora_actual) + timedelta(minutes=30)
             ).time()
 
     return horarios_disponibles

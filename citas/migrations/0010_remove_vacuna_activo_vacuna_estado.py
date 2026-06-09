@@ -6,17 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('citas', '0009_rename_fecha_proxima_vacunacion_proxima_dosis_and_more'),
+        ("citas", "0009_rename_fecha_proxima_vacunacion_proxima_dosis_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='vacuna',
-            name='activo',
+            model_name="vacuna",
+            name="activo",
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='estado',
-            field=models.CharField(choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], default='activo', max_length=10),
+            model_name="vacuna",
+            name="estado",
+            field=models.CharField(
+                choices=[("activo", "Activo"), ("inactivo", "Inactivo")],
+                default="activo",
+                max_length=10,
+            ),
         ),
     ]

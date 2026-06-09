@@ -523,25 +523,17 @@
 
         <td>
 
-          <div class="acciones">
-            <form
-              class="btn-sm btn-eliminar"
-              method="post"
-              action="{% url 'panel:panel_propietario_delete' p.pk %}"
-            >
+  <div class="acciones">
+    
+    <a href="{% url 'citas:agendar_cita_recepcionista' %}?propietario_id={{ p.id }}"
+   class="btn-sm"
+   style="background:#e8f5e9;color:#2e7d32;">
+   📅 Agendar Cita
+</a>
 
-              {% csrf_token %}
+  </div>
+</td>
 
-              <button type="submit"
-              onclick="return confirm('¿Estás seguro de que quieres inactivar este propietario?')">
-                Inactivar
-              </button>
-
-            </form>
-
-          </div>
-
-        </td>
 
       </tr>
 

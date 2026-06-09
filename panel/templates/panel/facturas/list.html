@@ -1,4 +1,4 @@
-{% extends base_template %}
+{% extends 'base.html' %}
 {% block content %}
 
 <style>
@@ -308,12 +308,6 @@
             Gestión de facturación veterinaria
         </div>
     </div>
-
-    <a class="btn-verde"
-       href="{% url 'panel:panel_factura_create' %}">
-       + Nueva Factura
-    </a>
-
 </div>
 
 <!-- FILTROS -->
@@ -478,19 +472,21 @@
                 <!-- SERVICIO -->
                 <td>
 
-                    {% if f.cita.servicio %}
+                    {% if f.servicio_cambiado %}
+    <span class="badge-servicio">
+        🩺 {{ f.servicio_cambiado.nombre }}
+    </span>
 
-                        <span class="badge-servicio">
-                            🩺 {{ f.cita.servicio.nombre }}
-                        </span>
+{% elif f.cita.servicio %}
+    <span class="badge-servicio">
+        🩺 {{ f.cita.servicio.nombre }}
+    </span>
 
-                    {% else %}
-
-                        <span class="badge-servicio">
-                            Sin servicio
-                        </span>
-
-                    {% endif %}
+{% else %}
+    <span class="badge-servicio">
+        Sin servicio
+    </span>
+{% endif %}
 
                 </td>
 

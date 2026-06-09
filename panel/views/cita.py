@@ -1,108 +1,88 @@
 from django.views.generic import ListView
 from django.http import HttpResponse
-
 from citas.models import Cita, Servicio
 from usuarios.models import Veterinario
-
+from usuarios.models import Usuario
 # PDF
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Table,
-    TableStyle,
-    Paragraph,
-    Spacer
-)
-
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-
 # EXCEL
 import openpyxl
-
 
 # =========================================================
 # FUNCIÓN REUTILIZABLE PARA FILTRAR CITAS
 # =========================================================
 
+
 def filtrar_citas(request):
 
-    citas = Cita.objects.all().order_by('-fecha', '-hora')
+    citas = Cita.objects.all().order_by("-fecha", "-hora")
 
-    estado = request.GET.get('estado')
-    fecha = request.GET.get('fecha')
-    servicio = request.GET.get('servicio')
-    veterinario = request.GET.get('veterinario')
+    estado = request.GET.get("estado")
+    fecha = request.GET.get("fecha")
+    servicio = request.GET.get("servicio")
+    veterinario = request.GET.get("veterinario")
 
     # ==========================================
     # FILTRO ESTADO
     # ==========================================
 
     if estado:
-        citas = citas.filter(
-            estado=estado
-        )
+        citas = citas.filter(estado=estado)
 
     # ==========================================
     # FILTRO FECHA
     # ==========================================
 
     if fecha:
-        citas = citas.filter(
-            fecha=fecha
-        )
+        citas = citas.filter(fecha=fecha)
 
     # ==========================================
     # FILTRO SERVICIO
     # ==========================================
 
     if servicio:
-        citas = citas.filter(
-            servicio_id=servicio
-        )
+        citas = citas.filter(servicio_id=servicio)
 
     # ==========================================
     # FILTRO VETERINARIO
     # ==========================================
 
     if veterinario:
-        citas = citas.filter(
-            veterinario_id=veterinario
-        )
+        citas = citas.filter(veterinario_id=veterinario)
 
-    return citas.order_by('fecha', 'hora')
+    return citas.order_by("fecha", "hora")
 
 
 # =========================================================
 # LISTADO DE CITAS
 # =========================================================
-
-from usuarios.models import Usuario
-
 class CitasListView(ListView):
 
     model = Cita
-    context_object_name = 'citas'
-    ordering = ['-fecha', '-hora']
+    context_object_name = "citas"
+    ordering = ["-fecha", "-hora"]
 
     def get_template_names(self):
 
-        usuario_id = self.request.session.get('usuario_id')
+        usuario_id = self.request.session.get("usuario_id")
 
         if not usuario_id:
-            return ['panel/cita/list.html']
+            return ["panel/cita/list.html"]
 
         try:
             usuario = Usuario.objects.get(id=usuario_id)
 
             # Recepcionista
-            if hasattr(usuario, 'recepcionista'):
-                return ['panel/cita/list_recepcionista.html']
+            if hasattr(usuario, "recepcionista"):
+                return ["panel/cita/list_recepcionista.html"]
 
         except Usuario.DoesNotExist:
             pass
 
         # Administrador por defecto
-        return ['panel/cita/list.html']
+        return ["panel/cita/list.html"]
 
     def get_queryset(self):
         return filtrar_citas(self.request)
@@ -110,25 +90,23 @@ class CitasListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['servicios'] = Servicio.objects.all()
-        context['veterinarios'] = Veterinario.objects.all()
-        context['estados'] = Cita.ESTADOS
+        context["servicios"] = Servicio.objects.all()
+        context["veterinarios"] = Veterinario.objects.all()
+        context["estados"] = Cita.ESTADOS
 
         return context
+
 
 # =========================================================
 # REPORTE PDF
 # =========================================================
 
+
 def reporte_citas_pdf(request):
 
-    response = HttpResponse(
-        content_type='application/pdf'
-    )
+    response = HttpResponse(content_type="application/pdf")
 
-    response[
-        'Content-Disposition'
-    ] = 'attachment; filename="reporte_citas.pdf"'
+    response["Content-Disposition"] = 'attachment; filename="reporte_citas.pdf"'
 
     doc = SimpleDocTemplate(response)
 
@@ -140,10 +118,7 @@ def reporte_citas_pdf(request):
     # TÍTULO
     # ==========================================
 
-    titulo = Paragraph(
-        "Reporte General de Citas",
-        styles['Title']
-    )
+    titulo = Paragraph("Reporte General de Citas", styles["Title"])
 
     elementos.append(titulo)
 
@@ -153,29 +128,23 @@ def reporte_citas_pdf(request):
     # DATOS
     # ==========================================
 
-    data = [[
-        'ID',
-        'Mascota',
-        'Veterinario',
-        'Servicio',
-        'Fecha',
-        'Hora',
-        'Estado'
-    ]]
+    data = [["ID", "Mascota", "Veterinario", "Servicio", "Fecha", "Hora", "Estado"]]
 
     citas = filtrar_citas(request)
 
     for c in citas:
 
-        data.append([
-            str(c.id),
-            str(c.mascota.nombre),
-            str(c.veterinario) if c.veterinario else 'Sin asignar',
-            str(c.servicio.nombre),
-            str(c.fecha),
-            str(c.hora),
-            str(c.get_estado_display())
-        ])
+        data.append(
+            [
+                str(c.id),
+                str(c.mascota.nombre),
+                str(c.veterinario) if c.veterinario else "Sin asignar",
+                str(c.servicio.nombre),
+                str(c.fecha),
+                str(c.hora),
+                str(c.get_estado_display()),
+            ]
+        )
 
     # ==========================================
     # TABLA
@@ -183,18 +152,17 @@ def reporte_citas_pdf(request):
 
     tabla = Table(data)
 
-    tabla.setStyle(TableStyle([
-
-        ('BACKGROUND', (0, 0), (-1, 0), colors.green),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-
-    ]))
+    tabla.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.green),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+            ]
+        )
+    )
 
     elementos.append(tabla)
 
@@ -211,34 +179,31 @@ def reporte_citas_pdf(request):
 # REPORTE EXCEL
 # =========================================================
 
+
 def reporte_citas_excel(request):
 
-    response = HttpResponse(
-        content_type='application/ms-excel'
-    )
+    response = HttpResponse(content_type="application/ms-excel")
 
-    response[
-        'Content-Disposition'
-    ] = 'attachment; filename="reporte_citas.xlsx"'
+    response["Content-Disposition"] = 'attachment; filename="reporte_citas.xlsx"'
 
     workbook = openpyxl.Workbook()
 
     worksheet = workbook.active
 
-    worksheet.title = 'Citas'
+    worksheet.title = "Citas"
 
     # ==========================================
     # ENCABEZADOS
     # ==========================================
 
     encabezados = [
-        'ID',
-        'Mascota',
-        'Veterinario',
-        'Servicio',
-        'Fecha',
-        'Hora',
-        'Estado'
+        "ID",
+        "Mascota",
+        "Veterinario",
+        "Servicio",
+        "Fecha",
+        "Hora",
+        "Estado",
     ]
 
     worksheet.append(encabezados)
@@ -251,15 +216,17 @@ def reporte_citas_excel(request):
 
     for c in citas:
 
-        worksheet.append([
-            c.id,
-            str(c.mascota.nombre),
-            str(c.veterinario) if c.veterinario else 'Sin asignar',
-            str(c.servicio.nombre),
-            str(c.fecha),
-            str(c.hora),
-            str(c.get_estado_display())
-        ])
+        worksheet.append(
+            [
+                c.id,
+                str(c.mascota.nombre),
+                str(c.veterinario) if c.veterinario else "Sin asignar",
+                str(c.servicio.nombre),
+                str(c.fecha),
+                str(c.hora),
+                str(c.get_estado_display()),
+            ]
+        )
 
     workbook.save(response)
 

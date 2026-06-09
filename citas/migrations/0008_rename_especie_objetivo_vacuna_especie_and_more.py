@@ -6,68 +6,70 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('citas', '0007_alter_cita_estado'),
+        ("citas", "0007_alter_cita_estado"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='vacuna',
-            old_name='especie_objetivo',
-            new_name='especie',
+            model_name="vacuna",
+            old_name="especie_objetivo",
+            new_name="especie",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='edad_minima_dias',
+            model_name="vacuna",
+            name="edad_minima_dias",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='enfermedades',
+            model_name="vacuna",
+            name="enfermedades",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='fabricante',
+            model_name="vacuna",
+            name="fabricante",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='intervalo_dosis',
+            model_name="vacuna",
+            name="intervalo_dosis",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='lote',
+            model_name="vacuna",
+            name="lote",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='refuerzo_meses',
+            model_name="vacuna",
+            name="refuerzo_meses",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='requiere_frio',
+            model_name="vacuna",
+            name="requiere_frio",
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='laboratorio',
+            model_name="vacuna",
+            name="laboratorio",
             field=models.CharField(default=1, max_length=100),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='precio_adquisicion',
+            model_name="vacuna",
+            name="precio_adquisicion",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='precio_venta',
+            model_name="vacuna",
+            name="precio_venta",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AddField(
-            model_name='vacunacion',
-            name='lote',
-            field=models.CharField(default='1', max_length=100),
+            model_name="vacunacion",
+            name="lote",
+            field=models.CharField(default="1", max_length=100),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='vacunacion',
-            name='peso_actual',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True),
+            model_name="vacunacion",
+            name="peso_actual",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=5, null=True
+            ),
         ),
     ]

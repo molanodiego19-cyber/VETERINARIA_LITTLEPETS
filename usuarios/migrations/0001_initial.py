@@ -9,73 +9,174 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Usuario',
+            name="Usuario",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('correo', models.EmailField(max_length=254, unique=True)),
-                ('password', models.CharField(max_length=128)),
-                ('fecha_cambio_password', models.DateTimeField(blank=True, null=True)),
-                ('rol', models.CharField(choices=[('admin', 'Administrador'), ('veterinario', 'Veterinario'), ('propietario', 'Propietario')], default='propietario', max_length=20)),
-                ('estado', models.CharField(choices=[('activo', 'Activo'), ('inactivo', 'Inactivo'), ('suspendido', 'Suspendido')], default='activo', max_length=10)),
-                ('intentos_fallidos', models.IntegerField(default=0)),
-                ('bloqueado_hasta', models.DateTimeField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("correo", models.EmailField(max_length=254, unique=True)),
+                ("password", models.CharField(max_length=128)),
+                ("fecha_cambio_password", models.DateTimeField(blank=True, null=True)),
+                (
+                    "rol",
+                    models.CharField(
+                        choices=[
+                            ("admin", "Administrador"),
+                            ("veterinario", "Veterinario"),
+                            ("propietario", "Propietario"),
+                        ],
+                        default="propietario",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "estado",
+                    models.CharField(
+                        choices=[
+                            ("activo", "Activo"),
+                            ("inactivo", "Inactivo"),
+                            ("suspendido", "Suspendido"),
+                        ],
+                        default="activo",
+                        max_length=10,
+                    ),
+                ),
+                ("intentos_fallidos", models.IntegerField(default=0)),
+                ("bloqueado_hasta", models.DateTimeField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Veterinario',
+            name="Veterinario",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=60)),
-                ('apellido', models.CharField(max_length=50)),
-                ('telefono', models.CharField(blank=True, max_length=10, null=True)),
-                ('foto', models.ImageField(blank=True, default='perfiles/default.png', null=True, upload_to='perfiles/')),
-                ('num_licencia', models.CharField(max_length=50, unique=True)),
-                ('disponible', models.BooleanField(default=True)),
-                ('horario_inicio', models.TimeField(default=datetime.time(8, 0))),
-                ('horario_fin', models.TimeField(default=datetime.time(18, 0))),
-                ('dias_laborales', models.JSONField(default=list)),
-                ('fecha_creado', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=60)),
+                ("apellido", models.CharField(max_length=50)),
+                ("telefono", models.CharField(blank=True, max_length=10, null=True)),
+                (
+                    "foto",
+                    models.ImageField(
+                        blank=True,
+                        default="perfiles/default.png",
+                        null=True,
+                        upload_to="perfiles/",
+                    ),
+                ),
+                ("num_licencia", models.CharField(max_length=50, unique=True)),
+                ("disponible", models.BooleanField(default=True)),
+                ("horario_inicio", models.TimeField(default=datetime.time(8, 0))),
+                ("horario_fin", models.TimeField(default=datetime.time(18, 0))),
+                ("dias_laborales", models.JSONField(default=list)),
+                ("fecha_creado", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Propietario',
+            name="Propietario",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=60)),
-                ('apellido', models.CharField(max_length=50)),
-                ('telefono', models.CharField(blank=True, max_length=10, null=True)),
-                ('foto', models.ImageField(blank=True, default='perfiles/default.png', null=True, upload_to='perfiles/')),
-                ('tipo_documento', models.CharField(choices=[('CC', 'Cédula de Ciudadanía'), ('CE', 'Cédula de Extranjería'), ('TI', 'Tarjeta de Identidad'), ('PP', 'Pasaporte')], max_length=20)),
-                ('documento', models.CharField(max_length=10, unique=True)),
-                ('ciudad', models.CharField(max_length=100)),
-                ('direccion', models.CharField(max_length=255)),
-                ('fecha_registro', models.DateTimeField(auto_now_add=True)),
-                ('usuario', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='propietario', to='usuarios.usuario')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=60)),
+                ("apellido", models.CharField(max_length=50)),
+                ("telefono", models.CharField(blank=True, max_length=10, null=True)),
+                (
+                    "foto",
+                    models.ImageField(
+                        blank=True,
+                        default="perfiles/default.png",
+                        null=True,
+                        upload_to="perfiles/",
+                    ),
+                ),
+                (
+                    "tipo_documento",
+                    models.CharField(
+                        choices=[
+                            ("CC", "Cédula de Ciudadanía"),
+                            ("CE", "Cédula de Extranjería"),
+                            ("TI", "Tarjeta de Identidad"),
+                            ("PP", "Pasaporte"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("documento", models.CharField(max_length=10, unique=True)),
+                ("ciudad", models.CharField(max_length=100)),
+                ("direccion", models.CharField(max_length=255)),
+                ("fecha_registro", models.DateTimeField(auto_now_add=True)),
+                (
+                    "usuario",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="propietario",
+                        to="usuarios.usuario",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Administrador',
+            name="Administrador",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=60)),
-                ('apellido', models.CharField(max_length=50)),
-                ('telefono', models.CharField(blank=True, max_length=10, null=True)),
-                ('foto', models.ImageField(blank=True, default='perfiles/default.png', null=True, upload_to='perfiles/')),
-                ('usuario', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='usuarios.usuario')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=60)),
+                ("apellido", models.CharField(max_length=50)),
+                ("telefono", models.CharField(blank=True, max_length=10, null=True)),
+                (
+                    "foto",
+                    models.ImageField(
+                        blank=True,
+                        default="perfiles/default.png",
+                        null=True,
+                        upload_to="perfiles/",
+                    ),
+                ),
+                (
+                    "usuario",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="usuarios.usuario",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
     ]

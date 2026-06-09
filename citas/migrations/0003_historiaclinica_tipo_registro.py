@@ -6,14 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('citas', '0002_initial'),
+        ("citas", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='historiaclinica',
-            name='tipo_registro',
-            field=models.CharField(choices=[('consulta', 'Consulta'), ('vacunacion', 'Vacunación'), ('servicio', 'Servicio')], default='', max_length=20),
+            model_name="historiaclinica",
+            name="tipo_registro",
+            field=models.CharField(
+                choices=[
+                    ("consulta", "Consulta"),
+                    ("vacunacion", "Vacunación"),
+                    ("servicio", "Servicio"),
+                ],
+                default="",
+                max_length=20,
+            ),
             preserve_default=False,
         ),
     ]

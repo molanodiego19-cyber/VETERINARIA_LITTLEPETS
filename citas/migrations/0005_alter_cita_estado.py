@@ -6,13 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('citas', '0004_remove_historiaclinica_archivo_adjunto_and_more'),
+        ("citas", "0004_remove_historiaclinica_archivo_adjunto_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='cita',
-            name='estado',
-            field=models.CharField(choices=[('pendiente', 'Pendiente'), ('confirmada', 'Confirmada'), ('cancelada', 'Cancelada'), ('finalizada', 'Finalizada'), ('en_proceso', 'En Proceso'), ('no_asistio', 'No Asistio')], default='confirmada', max_length=15),
+            model_name="cita",
+            name="estado",
+            field=models.CharField(
+                choices=[
+                    ("pendiente", "Pendiente"),
+                    ("confirmada", "Confirmada"),
+                    ("cancelada", "Cancelada"),
+                    ("finalizada", "Finalizada"),
+                    ("en_proceso", "En Proceso"),
+                    ("no_asistio", "No Asistio"),
+                ],
+                default="confirmada",
+                max_length=15,
+            ),
         ),
     ]

@@ -96,7 +96,6 @@
     <div class="page-title">Mascotas</div>
     <div class="page-sub">Gestión de mascotas</div>
   </div>
-  <a class="btn-verde" href="{% url 'panel:panel_mascota_create' %}">+ Nueva Mascota</a>
 </div>
 
 <!-- FILTROS MASCOTAS -->
@@ -185,10 +184,10 @@
         <th>Nombre</th>
         <th>Especie</th>
         <th>Raza</th>
+        <th>Esterilización</th>
         <th>Dueño</th>
         <th>Estado</th>
         <th>Sexo</th>
-        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -197,6 +196,7 @@
         <td><strong>{{ mascota.nombre }}</strong></td>
         <td>{{ mascota.especie }}</td>
         <td>{{ mascota.raza }}</td>
+        <td>{{ mascota.esterilizacion }}</td>
         <td>{{ mascota.propietario }}</td>
         <td>
        {% if mascota.estado == 'activo' %}
@@ -205,17 +205,14 @@
        <span style="color:red;font-weight:bold;">Inactivo</span>
        {% endif %}
 </td>
-        <td>{{ mascota.sexo }}</td>
-        
         <td>
-          <div class="acciones">
-            <a class="btn-sm btn-editar" href="{% url 'panel:panel_mascota_edit' mascota.pk %}">Editar</a>
-            <form class="btn-sm btn-eliminar" method="post" action="{% url 'panel:panel_mascota_delete' mascota.pk %}">
-            {% csrf_token %}
-             <button type="submit">Eliminar</button>
-            </form>
-          </div>
-        </td>
+       {% if mascota.sexo == 'macho' %}
+       <span>Macho</span>
+       {% else %}
+       <span>Hembra</span>
+       {% endif %}
+</td>
+        
       </tr>
       {% empty %}
       <tr><td colspan="3" class="empty-msg">No hay mascotas registradas aún.</td></tr>

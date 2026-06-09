@@ -9,100 +9,164 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('citas', '0001_initial'),
-        ('mascota', '0001_initial'),
-        ('usuarios', '0001_initial'),
-        ('veterinarioapp', '0001_initial'),
+        ("citas", "0001_initial"),
+        ("mascota", "0001_initial"),
+        ("usuarios", "0001_initial"),
+        ("veterinarioapp", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cita',
-            name='dueño',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='citas', to='usuarios.propietario'),
+            model_name="cita",
+            name="dueño",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="citas",
+                to="usuarios.propietario",
+            ),
         ),
         migrations.AddField(
-            model_name='cita',
-            name='mascota',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='citas', to='mascota.mascota'),
+            model_name="cita",
+            name="mascota",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="citas",
+                to="mascota.mascota",
+            ),
         ),
         migrations.AddField(
-            model_name='cita',
-            name='veterinario',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='citas', to='usuarios.veterinario'),
+            model_name="cita",
+            name="veterinario",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="citas",
+                to="usuarios.veterinario",
+            ),
         ),
         migrations.AddField(
-            model_name='consulta',
-            name='cita',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='consultas', to='citas.cita'),
+            model_name="consulta",
+            name="cita",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="consultas",
+                to="citas.cita",
+            ),
         ),
         migrations.AddField(
-            model_name='historiaclinica',
-            name='cita',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='citas.cita'),
+            model_name="historiaclinica",
+            name="cita",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="citas.cita"
+            ),
         ),
         migrations.AddField(
-            model_name='historiaclinica',
-            name='mascota',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mascota.mascota'),
+            model_name="historiaclinica",
+            name="mascota",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="mascota.mascota"
+            ),
         ),
         migrations.AddField(
-            model_name='historiaclinica',
-            name='veterinario',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='usuarios.veterinario'),
+            model_name="historiaclinica",
+            name="veterinario",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="usuarios.veterinario"
+            ),
         ),
         migrations.AddField(
-            model_name='historialservicio',
-            name='cita',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='historial_servicios', to='citas.cita'),
+            model_name="historialservicio",
+            name="cita",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="historial_servicios",
+                to="citas.cita",
+            ),
         ),
         migrations.AddField(
-            model_name='servicio',
-            name='categoria',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='citas.categoriaservicios'),
+            model_name="servicio",
+            name="categoria",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="citas.categoriaservicios",
+            ),
         ),
         migrations.AddField(
-            model_name='servicio',
-            name='especialista_required',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='veterinarioapp.especialidad'),
+            model_name="servicio",
+            name="especialista_required",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="veterinarioapp.especialidad",
+            ),
         ),
         migrations.AddField(
-            model_name='medicamento',
-            name='servicio',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='medicamentos', to='citas.servicio'),
+            model_name="medicamento",
+            name="servicio",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="medicamentos",
+                to="citas.servicio",
+            ),
         ),
         migrations.AddField(
-            model_name='cita',
-            name='servicio',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='citas', to='citas.servicio'),
+            model_name="cita",
+            name="servicio",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="citas",
+                to="citas.servicio",
+            ),
         ),
         migrations.AddField(
-            model_name='tratamiento',
-            name='consulta',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tratamientos', to='citas.consulta'),
+            model_name="tratamiento",
+            name="consulta",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tratamientos",
+                to="citas.consulta",
+            ),
         ),
         migrations.AddField(
-            model_name='tratamiento',
-            name='veterinario',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='usuarios.veterinario'),
+            model_name="tratamiento",
+            name="veterinario",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="usuarios.veterinario"
+            ),
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='especie_objetivo',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mascota.especie'),
+            model_name="vacuna",
+            name="especie_objetivo",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="mascota.especie"
+            ),
         ),
         migrations.AddField(
-            model_name='vacunacion',
-            name='cita',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='vacunaciones', to='citas.cita'),
+            model_name="vacunacion",
+            name="cita",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="vacunaciones",
+                to="citas.cita",
+            ),
         ),
         migrations.AddField(
-            model_name='vacunacion',
-            name='vacuna',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='citas.vacuna'),
+            model_name="vacunacion",
+            name="vacuna",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="citas.vacuna"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='cita',
-            constraint=models.UniqueConstraint(condition=models.Q(('estado__in', ['pendiente', 'confirmada'])), fields=('fecha', 'hora', 'veterinario'), name='unique_cita_activa'),
+            model_name="cita",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(("estado__in", ["pendiente", "confirmada"])),
+                fields=("fecha", "hora", "veterinario"),
+                name="unique_cita_activa",
+            ),
         ),
     ]

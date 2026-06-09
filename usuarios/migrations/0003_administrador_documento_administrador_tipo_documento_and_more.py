@@ -6,32 +6,50 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('usuarios', '0002_initial'),
+        ("usuarios", "0002_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='administrador',
-            name='documento',
-            field=models.CharField(default='', max_length=10, unique=True),
+            model_name="administrador",
+            name="documento",
+            field=models.CharField(default="", max_length=10, unique=True),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='administrador',
-            name='tipo_documento',
-            field=models.CharField(choices=[('CC', 'Cédula de Ciudadanía'), ('CE', 'Cédula de Extranjería'), ('TI', 'Tarjeta de Identidad'), ('PP', 'Pasaporte')], default='', max_length=20),
+            model_name="administrador",
+            name="tipo_documento",
+            field=models.CharField(
+                choices=[
+                    ("CC", "Cédula de Ciudadanía"),
+                    ("CE", "Cédula de Extranjería"),
+                    ("TI", "Tarjeta de Identidad"),
+                    ("PP", "Pasaporte"),
+                ],
+                default="",
+                max_length=20,
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='veterinario',
-            name='documento',
-            field=models.CharField(default='', max_length=10, unique=True),
+            model_name="veterinario",
+            name="documento",
+            field=models.CharField(default="", max_length=10, unique=True),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='veterinario',
-            name='tipo_documento',
-            field=models.CharField(choices=[('CC', 'Cédula de Ciudadanía'), ('CE', 'Cédula de Extranjería'), ('TI', 'Tarjeta de Identidad'), ('PP', 'Pasaporte')], default='', max_length=20),
+            model_name="veterinario",
+            name="tipo_documento",
+            field=models.CharField(
+                choices=[
+                    ("CC", "Cédula de Ciudadanía"),
+                    ("CE", "Cédula de Extranjería"),
+                    ("TI", "Tarjeta de Identidad"),
+                    ("PP", "Pasaporte"),
+                ],
+                default="",
+                max_length=20,
+            ),
             preserve_default=False,
         ),
     ]

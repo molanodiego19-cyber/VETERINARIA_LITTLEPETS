@@ -1,20 +1,17 @@
 {% extends "usuarios/base_recepcionista.html" %}
 
-{% block page_name %}Agendar Cita{% endblock %}
+{% block page_name %}Agendar Super Cita (Nuevo Cliente){% endblock %}
 
 {% block content %}
 <style>
   .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
   .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#2d6a4f; margin-bottom:.15rem; }
   .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
-  .form-card { background:#fff; border-radius:20px; padding:2.5rem; width:100%; max-width:560px; box-shadow:0 4px 16px rgba(0,0,0,.06); border:1px solid #f0e8d8; }
-  .form-card p { margin-bottom:.8rem; }
-  .form-card p label { display:block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#2d6a4f; margin-bottom:.35rem; }
-  .form-card p input, .form-card p select, .form-card p textarea { width:100%; padding:.75rem 1rem; border:1.5px solid #e8e8e8; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:.93rem; color:#555; background:#fdf8f0; outline:none; display:block; }
-  .form-card p input:focus, .form-card p select:focus { border-color:#52b788; background:#fff; }
-  .form-group { margin-bottom:1rem; }
+  .form-card { background:#fff; border-radius:20px; padding:2.5rem; width:100%; max-width:650px; box-shadow:0 4px 16px rgba(0,0,0,.06); border:1px solid #f0e8d8; }
+  .form-section-title { font-size: 1.1rem; color: #6b3a2a; border-bottom: 2px solid #fdf8f0; padding-bottom: 0.4rem; margin-top: 1.5rem; margin-bottom: 1rem; font-weight: bold;}
+  .form-group { margin-bottom: 1rem; }
   .form-group label { display:block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#2d6a4f; margin-bottom:.35rem; }
-  .form-group input, .form-group select { width:100%; padding:.75rem 1rem; border:1.5px solid #e8e8e8; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:.93rem; color:#555; background:#fdf8f0; outline:none; }
+  .form-group input, .form-group select, .form-group textarea { width:100%; padding:.75rem 1rem; border:1.5px solid #e8e8e8; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:.93rem; color:#555; background:#fdf8f0; outline:none; box-sizing: border-box; }
   .form-group input:focus, .form-group select:focus { border-color:#52b788; background:#fff; }
   .form-actions { display:flex; gap:.8rem; margin-top:1.6rem; }
   .btn-verde { display:inline-block; padding:.65rem 1.4rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; text-decoration:none; border:none; cursor:pointer; background:#2d6a4f; color:#fff; transition:all .2s; }
@@ -29,108 +26,189 @@
 
 <div class="page-header">
   <div>
-    <p class="page-sub">Citas</p>
-    <h1 class="page-title">Agendar Cita</h1>
+    <p class="page-sub">Panel de Recepción</p>
+    <h1 class="page-title">Agendar Cita Completa</h1>
   </div>
 </div>
 
-{% if form.errors %}
+{% if propietario_form.errors or mascota_form.errors or cita_form.errors %}
 <div class="alert-error">
-  <ul style="margin:0;padding-left:1.1rem;">
-    {% for field in form %}
-      {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+  <strong style="display:block; margin-bottom:0.5rem;">Por favor corrige los siguientes errores:</strong>
+  <ul style="margin:0; padding-left:1.1rem;">
+    {% for field in propietario_form %}{% for error in field.errors %}<li><strong>[Dueño] {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}
+    {% for field in mascota_form %}{% for error in field.errors %}<li><strong>[Mascota] {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}
+    {% for field in cita_form %}{% for error in field.errors %}<li><strong>[Cita] {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}
+    {% for error in cita_form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
   </ul>
 </div>
 {% endif %}
 
 <div class="form-card">
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
+    
+    <div class="form-section-title">1. Datos del Nuevo Cliente</div>
+    {{ propietario_form.management_form }} 
+    
+    {% for field in propietario_form %}
+      {% if not field.is_hidden %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <span style="color: #e57373; font-size: 0.75rem;">{{ field.errors.0 }}</span>
+          {% endif %}
+        </div>
+      {% else %}
+        {{ field }}
+      {% endif %}
+    {% endfor %}
+
+    <div class="form-section-title">2. Datos de la Mascota</div>
+    {{ mascota_form.management_form }}
+
+    {% for field in mascota_form %}
+      {% if not field.is_hidden %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <span style="color: #e57373; font-size: 0.75rem;">{{ field.errors.0 }}</span>
+          {% endif %}
+        </div>
+      {% else %}
+        {{ field }}
+      {% endif %}
+    {% endfor %}
+        
+    <div class="form-section-title">3. Detalles de la Cita</div>
     <div class="form-group">
-      <label>Servicio</label>{{ form.servicio }}
+      <label>Servicio</label>{{ cita_form.servicio }}
     </div>
     <div class="form-group" id="contenedor-vacuna" style="display: none;">
-      <label>Vacuna Requerida</label>
-      {{ form.vacuna }}
+      <label>Vacuna Requerida</label>{{ cita_form.vacuna }}
     </div>
     <div class="form-group">
-      <label>Mascota</label>{{ form.mascota }}
-    </div>
-    <div class="form-group">
-      <label>Motivo</label>{{ form.motivo_consulta }}
+      <label>Motivo</label>{{ cita_form.motivo_consulta }}
     </div>
     <div class="form-group">
       <label>Fecha</label>
       <input type="date" id="fecha" min="{{ today }}">
     </div>
+    
     <p class="page-sub" style="margin-bottom:.5rem;">Horarios disponibles</p>
     <div id="horarios" style="margin-bottom:1rem;"></div>
-    <input type="hidden" name="fecha" id="fecha_hidden">
-    <input type="hidden" name="hora" id="hora_hidden">
+    
+    <input type="hidden" name="cita-fecha" id="fecha_hidden">
+    <input type="hidden" name="cita-hora" id="hora_hidden">
+
     <div class="form-actions">
-      <button type="submit" class="btn-verde">Agendar</button>
-      <a href="{% url 'citas:listar' %}" class="btn-marron">Cancelar</a>
+      <button type="submit" class="btn-verde">Guardar Todo y Agendar</button>
+      <a href="{% url 'panel:panel_cita_list' %}" class="btn-marron">Cancelar</a>
     </div>
   </form>
 </div>
 
 <script>
-// IDs automáticos que genera Django: 'id_servicio' e 'id_vacuna'
-const selectServicio = document.getElementById("id_servicio");
-const selectVacuna = document.getElementById("id_vacuna");
-const contenedorVacuna = document.getElementById("contenedor-vacuna");
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Elementos del Formulario de Cita (Prefix: 'cita')
+    const selectServicio = document.getElementById("id_cita-servicio");
+    const selectVacuna = document.getElementById("id_cita-vacuna");
+    const contenedorVacuna = document.getElementById("contenedor-vacuna");
+    const inputFechaVisual = document.getElementById("fecha");
 
-// Escuchar cambios en el servicio para cargar horarios Y evaluar si es vacuna
-selectServicio.addEventListener("change", function() {
-    cargarHorarios();
-    evaluarServicioVacuna();
-});
+    // 2. Elementos del Formulario de Mascota (Prefix: 'mascota')
+    const selectEspecie = document.getElementById("id_mascota-especie");
+    const selectRaza = document.getElementById("id_mascota-raza");
 
-document.getElementById("fecha").addEventListener("change", cargarHorarios);
+    // ==========================================
+    // LÓGICA DE ESPECIES Y RAZAS (AJAX)
+    // ==========================================
+    if (selectEspecie && selectRaza) {
+        selectEspecie.addEventListener("change", function() {
+            const especieId = this.value;
 
-function evaluarServicioVacuna() {
-    // Obtenemos el texto visible de la opción seleccionada
-    const textoServicio = selectServicio.options[selectServicio.selectedIndex].text.toLowerCase();
-    
-    // Validamos si la palabra "vacuna" o "vacunación" está incluida en el nombre del servicio
-    if (textoServicio.includes("vacuna") || textoServicio.includes("vacunación")) {
-        contenedorVacuna.style.display = "block";
-        selectVacuna.setAttribute("required", "required"); // Se vuelve obligatorio si es vacunación
-    } else {
-        contenedorVacuna.style.display = "none";
-        selectVacuna.removeAttribute("required");
-        selectVacuna.value = ""; // Limpiamos el valor seleccionado
+            if (!especieId) {
+                selectRaza.innerHTML = '<option value="">-- Seleccione la raza --</option>';
+                return;
+            }
+
+            // Llamada al endpoint que creamos previamente
+            fetch(`/citas/ajax/cargar-razas/?especie_id=${especieId}`)
+                .then(res => res.json())
+                .then(data => {
+                    let options = '<option value="">-- Seleccione la raza --</option>';
+                    data.forEach(raza => {
+                        options += `<option value="${raza.id}">${raza.nombre}</option>`;
+                    });
+                    selectRaza.innerHTML = options;
+                })
+                .catch(err => console.error("Error al cargar razas:", err));
+        });
     }
-}
 
-function cargarHorarios() {
-  const fecha = document.getElementById("fecha").value;
-  const servicio = selectServicio.value;
-  if (!fecha || !servicio) return;
-  
-  fetch(`/citas/horarios/?fecha=${fecha}&servicio=${servicio}`)
-    .then(res => res.json())
-    .then(data => {
-      const contenedor = document.getElementById("horarios");
-      contenedor.innerHTML = "";
-      if (data.length === 0) { 
-        contenedor.innerHTML = "<p style='color:#bbb;font-size:.88rem;'>No hay horarios disponibles</p>"; 
-        return; 
-      }
-      data.forEach(item => {
-        const btn = document.createElement("button");
-        btn.type = "button"; btn.className = "horario-btn"; btn.innerText = item.hora;
-        btn.onclick = () => {
-          document.getElementById("hora_hidden").value = item.hora;
-          document.getElementById("fecha_hidden").value = fecha;
-          document.querySelectorAll(".horario-btn").forEach(b => b.classList.remove("seleccionado"));
-          btn.classList.add("seleccionado");
-        };
-        contenedor.appendChild(btn);
-      });
-    });
-}
+    // ==========================================
+    // LÓGICA DE SERVICIOS, VACUNAS Y HORARIOS
+    // ==========================================
+    if (selectServicio) {
+        selectServicio.addEventListener("change", function() {
+            cargarHorarios();
+            evaluarServicioVacuna();
+        });
+    }
+
+    if (inputFechaVisual) {
+        inputFechaVisual.addEventListener("change", cargarHorarios);
+    }
+
+    function evaluarServicioVacuna() {
+        if (!selectServicio || selectServicio.selectedIndex <= 0) return;
+        
+        const textoServicio = selectServicio.options[selectServicio.selectedIndex].text.toLowerCase();
+        
+        if (textoServicio.includes("vacuna") || textoServicio.includes("vacunación")) {
+            contenedorVacuna.style.display = "block";
+            selectVacuna.setAttribute("required", "required");
+        } else {
+            contenedorVacuna.style.display = "none";
+            selectVacuna.removeAttribute("required");
+            selectVacuna.value = "";
+        }
+    }
+
+    function cargarHorarios() {
+        const fecha = inputFechaVisual.value;
+        const servicio = selectServicio.value;
+        if (!fecha || !servicio) return;
+        
+        fetch(`/citas/horarios/?fecha=${fecha}&servicio=${servicio}`)
+            .then(res => res.json())
+            .then(data => {
+                const contenedor = document.getElementById("horarios");
+                contenedor.innerHTML = "";
+                
+                if (data.length === 0) { 
+                    contenedor.innerHTML = "<p style='color:#bbb;font-size:.88rem;'>No hay horarios disponibles</p>"; 
+                    return; 
+                }
+                
+                data.forEach(item => {
+                    const btn = document.createElement("button");
+                    btn.type = "button"; 
+                    btn.className = "horario-btn"; 
+                    btn.innerText = item.hora;
+                    
+                    btn.onclick = () => {
+                        document.getElementById("hora_hidden").value = item.hora;
+                        document.getElementById("fecha_hidden").value = fecha;
+                        document.querySelectorAll(".horario-btn").forEach(b => b.classList.remove("seleccionado"));
+                        btn.classList.add("seleccionado");
+                    };
+                    contenedor.appendChild(btn);
+                });
+            })
+            .catch(err => console.error("Error al cargar horarios:", err));
+    }
+});
 </script>
 {% endblock %}

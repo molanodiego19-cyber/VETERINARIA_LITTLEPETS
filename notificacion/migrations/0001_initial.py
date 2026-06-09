@@ -9,34 +9,82 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('citas', '0001_initial'),
+        ("citas", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PlantillaNotificacion',
+            name="PlantillaNotificacion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('canal', models.CharField(choices=[('email', 'Email'), ('sms', 'SMS'), ('whatsapp', 'WhatsApp'), ('push', 'Push Notification')], max_length=30)),
-                ('nombre', models.CharField(max_length=150, unique=True)),
-                ('asunto_plantilla', models.CharField(max_length=255)),
-                ('cuerpo_plantilla', models.TextField()),
-                ('activo', models.BooleanField(default=True)),
-                ('fecha_creacion', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "canal",
+                    models.CharField(
+                        choices=[
+                            ("email", "Email"),
+                            ("sms", "SMS"),
+                            ("whatsapp", "WhatsApp"),
+                            ("push", "Push Notification"),
+                        ],
+                        max_length=30,
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=150, unique=True)),
+                ("asunto_plantilla", models.CharField(max_length=255)),
+                ("cuerpo_plantilla", models.TextField()),
+                ("activo", models.BooleanField(default=True)),
+                ("fecha_creacion", models.DateTimeField(auto_now_add=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Notificacion',
+            name="Notificacion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('canal', models.CharField(editable=False, max_length=30)),
-                ('asunto', models.CharField(blank=True, max_length=255)),
-                ('cuerpo_mensaje', models.TextField(blank=True)),
-                ('estado', models.CharField(choices=[('pendiente', 'Pendiente'), ('enviada', 'Enviada'), ('leida', 'Leída'), ('error', 'Error')], default='pendiente', max_length=20)),
-                ('fecha_envio', models.DateTimeField(blank=True, null=True)),
-                ('error_detalle', models.TextField(blank=True, null=True)),
-                ('fecha_creacion', models.DateTimeField(auto_now_add=True)),
-                ('cita', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='notificaciones', to='citas.cita')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("canal", models.CharField(editable=False, max_length=30)),
+                ("asunto", models.CharField(blank=True, max_length=255)),
+                ("cuerpo_mensaje", models.TextField(blank=True)),
+                (
+                    "estado",
+                    models.CharField(
+                        choices=[
+                            ("pendiente", "Pendiente"),
+                            ("enviada", "Enviada"),
+                            ("leida", "Leída"),
+                            ("error", "Error"),
+                        ],
+                        default="pendiente",
+                        max_length=20,
+                    ),
+                ),
+                ("fecha_envio", models.DateTimeField(blank=True, null=True)),
+                ("error_detalle", models.TextField(blank=True, null=True)),
+                ("fecha_creacion", models.DateTimeField(auto_now_add=True)),
+                (
+                    "cita",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notificaciones",
+                        to="citas.cita",
+                    ),
+                ),
             ],
         ),
     ]

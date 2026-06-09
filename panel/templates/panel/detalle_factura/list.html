@@ -1,15 +1,14 @@
 {% extends base_template %}
+
 {% block content %}
 
 <div class="page-header">
-  <div>
-    <div class="page-title">Detalle Factura</div>
-    <div class="page-sub">Servicios incluidos en facturas</div>
-  </div>
-  <a class="btn-verde" href="{% url 'panel:panel_detallefactura_create' %}">+ Nuevo Detalle</a>
+    <div>
+        <div class="page-title">Detalle Factura</div>
+        <div class="page-sub">Servicios incluidos en facturas</div>
+    </div>
 </div>
 
-<!-- FILTROS -->
 <form method="get" style="
     display:flex;
     flex-wrap:wrap;
@@ -21,64 +20,205 @@
     border-radius:8px;
 ">
 
-    <!-- Factura -->
     <div style="display:flex; flex-direction:column;">
         <label>N° Factura</label>
-        <input type="text" name="factura" placeholder="Buscar factura"
-               value="{{ request.GET.factura }}" style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;">
+        <input
+            type="text"
+            name="factura"
+            placeholder="Buscar factura"
+            value="{{ request.GET.factura }}"
+            style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;"
+        >
     </div>
 
-    <!-- Servicio -->
     <div style="display:flex; flex-direction:column;">
         <label>Servicio</label>
-        <input type="text" name="servicio" placeholder="Buscar servicio"
-               value="{{ request.GET.servicio }}" style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;">
+        <input
+            type="text"
+            name="servicio"
+            placeholder="Buscar servicio"
+            value="{{ request.GET.servicio }}"
+            style="padding:5px 8px; border-radius:4px; border:1px solid #ccc;"
+        >
     </div>
 
-    <!-- Botones -->
     <div style="display:flex; gap:10px; align-items:center;">
-        <button type="submit" style="padding:6px 12px; background:#0992aa; color:white; border-radius:4px;">Filtrar</button>
-        <a href="{% url 'panel:panel_detallefactura_list' %}" style="padding:6px 12px; background:#ccc; color:black; border-radius:4px;">Limpiar</a>
-        <a href="{% url 'panel:detalle_factura_pdf_list' %}?{{ request.GET.urlencode }}"
-           style="padding:6px 12px; background:#E53935; color:white; border-radius:4px; text-decoration:none;">
+        <button
+            type="submit"
+            style="padding:6px 12px; background:#0992aa; color:white; border-radius:4px;"
+        >
+            Filtrar
+        </button>
+
+        <a
+            href="{% url 'panel:panel_detallefactura_list' %}"
+            style="padding:6px 12px; background:#ccc; color:black; border-radius:4px;"
+        >
+            Limpiar
+        </a>
+
+        <a
+            href="{% url 'panel:detalle_factura_pdf_list' %}?{{ request.GET.urlencode }}"
+            style="padding:6px 12px; background:#E53935; color:white; border-radius:4px; text-decoration:none;"
+        >
             Descargar PDF
         </a>
     </div>
+
 </form>
 
-<!-- TABLA BONITA -->
 <div class="table-card">
-  <table class="tabla-bonita">
-    <thead>
-      <tr>
+
+    <table class="tabla-bonita">
+
+        <thead>
+    <tr>
         <th>Factura</th>
-        <th>Servicio</th>
+        <th>Servicio Original</th>
+        <th>Servicio Facturado</th>
+        <th>Motivo Cambio</th>
+        <th>Estado</th>
         <th>Cantidad</th>
         <th>Total</th>
         <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for d in detalles %}
-      <tr>
-        <td><strong>#{{ d.factura.numero_factura }}</strong></td>
-        <td>{{ d.servicio.nombre }}</td>
-        <td>{{ d.cantidad }}</td>
-        <td class="total">${{ d.total|floatformat:2 }}</td>
-        <td>
-          <div class="acciones">
-            <a class="btn-sm btn-editar" href="{% url 'panel:panel_detallefactura_edit' d.pk %}">Editar</a>
-            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_detallefactura_delete' d.pk %}">Eliminar</a>
-          </div>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="5" class="empty-msg">No hay detalles registrados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    </tr>
+</thead>
+
+<tbody>
+
+{% for d in detalles %}
+
+<tr>
+
+    <td>
+        <strong>#{{ d.factura.numero_factura }}</strong>
+    </td>
+
+    <!-- SERVICIO ORIGINAL -->
+    <td>
+
+        {% if d.factura.servicio_original %}
+            {{ d.factura.servicio_original.nombre }}
+        {% elif d.servicio %}
+            {{ d.servicio.nombre }}
+        {% else %}
+            ---
+        {% endif %}
+
+    </td>
+
+    <!-- SERVICIO FACTURADO -->
+    <td>
+
+        {% if d.servicio_cambiado %}
+            <span style="
+                color:#d97706;
+                font-weight:bold;
+            ">
+                {{ d.servicio_cambiado.nombre }}
+            </span>
+
+        {% elif d.servicio %}
+
+            {{ d.servicio.nombre }}
+
+        {% else %}
+
+            {{ d.descripcion }}
+
+        {% endif %}
+
+    </td>
+
+    <!-- MOTIVO -->
+    <td>
+
+        {% if d.notas %}
+            {{ d.notas }}
+        {% elif d.factura.motivo_cambio %}
+            {{ d.factura.motivo_cambio }}
+        {% else %}
+            Sin cambios
+        {% endif %}
+
+    </td>
+
+    <!-- ESTADO -->
+    <td>
+
+        {% if d.servicio_cambiado %}
+
+            <span style="
+                background:#fff3cd;
+                color:#856404;
+                padding:4px 8px;
+                border-radius:5px;
+                font-weight:bold;
+            ">
+                Modificado
+            </span>
+
+        {% else %}
+
+            <span style="
+                background:#d4edda;
+                color:#155724;
+                padding:4px 8px;
+                border-radius:5px;
+            ">
+                Normal
+            </span>
+
+        {% endif %}
+
+    </td>
+
+    <td>
+        {{ d.cantidad }}
+    </td>
+
+    <td>
+        ${{ d.total|floatformat:2 }}
+    </td>
+
+    <td>
+
+        <div class="acciones">
+
+            <a
+                class="btn-sm btn-editar"
+                href="{% url 'panel:panel_detallefactura_edit' d.pk %}"
+            >
+                Editar
+            </a>
+
+            <a
+                class="btn-sm btn-eliminar"
+                href="{% url 'panel:panel_detallefactura_delete' d.pk %}"
+            >
+                Eliminar
+            </a>
+
+        </div>
+
+    </td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+    <td colspan="8" class="empty-msg">
+        No hay detalles registrados.
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+    </table>
+
 </div>
 
-{% endblock %} 
+{% endblock %}

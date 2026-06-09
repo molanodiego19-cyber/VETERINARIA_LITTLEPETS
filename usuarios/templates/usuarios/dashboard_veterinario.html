@@ -280,170 +280,115 @@
                 </div>
             </div>
 
-            <!-- INFO -->
-            <div style="flex:1;">
+                <!-- INFO -->
+                <div style="flex:1;">
 
-                <!-- mascota -->
-                <div style="
-                    font-size:1.05rem;
-                    font-weight:800;
-                    color:#1f2937;
-                    margin-bottom:8px;
-                ">
-                    🐾 {{ cita.mascota.nombre }}
-                    {{ cita.mascota.propietario.nombre }}
-{{ cita.mascota.propietario.apellido }}
-                </div>
+                    <!-- mascota -->
+                    <div style="
+                        font-size:1.05rem;
+                        font-weight:800;
+                        color:#1f2937;
+                        margin-bottom:8px;
+                    ">
+                        🐾 {{ cita.mascota.nombre }}
+                        {{ cita.mascota.propietario.nombre }}
+    {{ cita.mascota.propietario.apellido }}
+                    </div>
 
-                <!-- servicio -->
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:8px;
-                    margin-bottom:7px;
-                    color:#4b5563;
-                    font-size:.9rem;
-                ">
-                    🩺
-                    <span>
-                        Servicio:
-                        <strong style="color:#2d6a4f;">
-                            {{ cita.servicio.nombre }}
-                        </strong>
-                    </span>
-                </div>
-
-                <!-- hora -->
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:8px;
-                    margin-bottom:10px;
-                    color:#4b5563;
-                    font-size:.9rem;
-                ">
-                    ⏰
-                    <span>
-                        {{ cita.hora|time:"H:i" }} hrs
-                    </span>
-                </div>
-
-                <!-- estado -->
-                <div>
-
-                    {% if cita.estado == 'pendiente' %}
-                        <span style="
-                            background:#fff3cd;
-                            color:#856404;
-                            padding:6px 12px;
-                            border-radius:30px;
-                            font-size:.75rem;
-                            font-weight:700;
-                            display:inline-block;
-                        ">
-                            🟡 Pendiente
+                    <!-- servicio -->
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:8px;
+                        margin-bottom:7px;
+                        color:#4b5563;
+                        font-size:.9rem;
+                    ">
+                        🩺
+                        <span>
+                            Servicio:
+                            <strong style="color:#2d6a4f;">
+                                {{ cita.servicio.nombre }}
+                            </strong>
                         </span>
+                    </div>
 
-                    {% elif cita.estado == 'confirmada' %}
-                        <span style="
-                            background:#dbeafe;
-                            color:#1e40af;
-                            padding:6px 12px;
-                            border-radius:30px;
-                            font-size:.75rem;
-                            font-weight:700;
-                            display:inline-block;
-                        ">
-                            🔵 Confirmada
+                    <!-- hora -->
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:8px;
+                        margin-bottom:10px;
+                        color:#4b5563;
+                        font-size:.9rem;
+                    ">
+                        ⏰
+                        <span>
+                            {{ cita.hora|time:"H:i" }} hrs
                         </span>
+                    </div>
 
-                    {% elif cita.estado == 'en_proceso' %}
-                        <span style="
-                            background:#dcfce7;
-                            color:#166534;
-                            padding:6px 12px;
-                            border-radius:30px;
-                            font-size:.75rem;
-                            font-weight:700;
-                            display:inline-block;
-                        ">
-                            🟢 En proceso
-                        </span>
+                <!-- BOTÓN -->
+    <div style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        height:100%;
+    ">
 
-                    {% elif cita.estado == 'cancelada' %}
-                        <span style="
-                            background:#fee2e2;
-                            color:#991b1b;
-                            padding:6px 12px;
-                            border-radius:30px;
-                            font-size:.75rem;
-                            font-weight:700;
-                            display:inline-block;
-                        ">
-                            ❌ Cancelada
-                        </span>
+        {% if cita.estado != 'atendida' and cita.estado != 'cancelada' and cita.estado != 'facturada' and cita.estado != 'pendiente' %}
 
-                    {% elif cita.estado == 'finalizada' %}
-                        <span style="
-                            background:#e5e7eb;
-                            color:#374151;
-                            padding:6px 12px;
-                            border-radius:30px;
-                            font-size:.75rem;
-                            font-weight:700;
-                            display:inline-block;
-                        ">
-                            ✅ Finalizada
-                        </span>
-                    {% endif %}
+            <a href="{% url 'citas:iniciar_consulta' cita.id %}"
+            style="
+                    background:linear-gradient(135deg,#52a878,#2d6a4f);
+                    color:#fff;
+                    text-decoration:none;
+                    padding:10px 16px;
+                    border-radius:12px;
+                    font-size:.85rem;
+                    font-weight:700;
+                    box-shadow:0 4px 10px rgba(82,168,120,.3);
+                    white-space:nowrap;
+            ">
+                ▶️ Iniciar Consulta
+            </a>
 
-                </div>
+        {% else %}
 
-            </div>
-
-            <!-- BOTÓN -->
-            <div style="
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                height:100%;
+            <span style="
+                background:#e5e7eb;
+                color:#6b7280;
+                padding:10px 16px;
+                border-radius:12px;
+                font-size:.85rem;
+                font-weight:700;
+                white-space:nowrap;
             ">
 
-                {% if cita.estado != 'cancelada' and cita.estado != 'finalizada' %}
+                {% if cita.estado == 'cancelada' %}
+                    ❌ Consulta Cancelada
 
-                    <a href="{% url 'citas:iniciar_consulta' cita.id %}"
-                       style="
-                            background:linear-gradient(135deg,#52a878,#2d6a4f);
-                            color:#fff;
-                            text-decoration:none;
-                            padding:10px 16px;
-                            border-radius:12px;
-                            font-size:.85rem;
-                            font-weight:700;
-                            box-shadow:0 4px 10px rgba(82,168,120,.3);
-                            transition:.2s;
-                            white-space:nowrap;
-                       ">
+                {% elif cita.estado == 'pendiente' %}
+                    ❌ Consulta no habilitada
 
-                        Realizar consulta
+                {% elif cita.estado == 'atendida' %}
+                    ✅ Consulta atendida
 
-                    </a>
+                {% elif cita.estado == 'facturada' %}
+                    ✅ Consulta Facturada
 
                 {% else %}
-
-                    <span style="
-                        background:#e5e7eb;
-                        color:#6b7280;
-                        padding:10px 16px;
-                        border-radius:12px;
-                        font-size:.85rem;
-                        font-weight:700;
-                        white-space:nowrap;
-                    ">
-                        No disponible
-                    </span>
+                    ✅ Consulta Finalizada
 
                 {% endif %}
+
+            </span>
+
+        {% endif %}
+
+    </div>
+
+                
 
             </div>
 

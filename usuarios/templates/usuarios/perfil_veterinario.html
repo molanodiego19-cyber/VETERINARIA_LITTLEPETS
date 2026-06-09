@@ -44,10 +44,19 @@
     <div class="info-box"><strong>Nombre:</strong> {{ veterinario.nombre }} {{ veterinario.apellido }}</div>
     <div class="info-box"><strong>Correo:</strong> {{ veterinario.usuario.correo }}</div>
     <div class="info-box"><strong>Teléfono:</strong> {{ veterinario.telefono|default:"No registrado" }}</div>
+    <div class="info-box"><strong>Documento:</strong> {{ veterinario.documento|default:"No registrado" }}</div>
     <div class="info-box"><strong>Especialidad:</strong> {{ veterinario.especialidad|default:"No especificada" }}</div>
     <div class="info-box"><strong>Número de licencia:</strong> {{ veterinario.num_licencia }}</div>
     <div class="info-box"><strong>Horario laboral:</strong> {{ veterinario.horario_inicio }} - {{ veterinario.horario_fin }}</div>
-    <div class="info-box"><strong>Días laborales:</strong> {{ veterinario.dias_laborales|join:", " }}</div>
+    <div class="info-box">
+    <strong>Días laborales:</strong>
+
+    {% if veterinario.dias_laborales %}
+        {{ veterinario.dias_laborales|join:", " }}
+    {% else %}
+        No definidos
+    {% endif %}
+</div>
   </div>
 </div>
 {% else %}

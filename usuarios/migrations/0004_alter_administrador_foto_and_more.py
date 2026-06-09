@@ -6,38 +6,77 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('usuarios', '0003_administrador_documento_administrador_tipo_documento_and_more'),
+        (
+            "usuarios",
+            "0003_administrador_documento_administrador_tipo_documento_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='administrador',
-            name='foto',
-            field=models.ImageField(blank=True, default='perfiles/default.svg', null=True, upload_to='perfiles/'),
+            model_name="administrador",
+            name="foto",
+            field=models.ImageField(
+                blank=True,
+                default="perfiles/default.svg",
+                null=True,
+                upload_to="perfiles/",
+            ),
         ),
         migrations.AlterField(
-            model_name='administrador',
-            name='tipo_documento',
-            field=models.CharField(choices=[('CC', 'Cédula de Ciudadanía'), ('CE', 'Cédula de Extranjería'), ('TI', 'Tarjeta de Identidad')], max_length=20),
+            model_name="administrador",
+            name="tipo_documento",
+            field=models.CharField(
+                choices=[
+                    ("CC", "Cédula de Ciudadanía"),
+                    ("CE", "Cédula de Extranjería"),
+                    ("TI", "Tarjeta de Identidad"),
+                ],
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='propietario',
-            name='foto',
-            field=models.ImageField(blank=True, default='perfiles/default.svg', null=True, upload_to='perfiles/'),
+            model_name="propietario",
+            name="foto",
+            field=models.ImageField(
+                blank=True,
+                default="perfiles/default.svg",
+                null=True,
+                upload_to="perfiles/",
+            ),
         ),
         migrations.AlterField(
-            model_name='propietario',
-            name='tipo_documento',
-            field=models.CharField(choices=[('CC', 'Cédula de Ciudadanía'), ('CE', 'Cédula de Extranjería'), ('TI', 'Tarjeta de Identidad')], max_length=20),
+            model_name="propietario",
+            name="tipo_documento",
+            field=models.CharField(
+                choices=[
+                    ("CC", "Cédula de Ciudadanía"),
+                    ("CE", "Cédula de Extranjería"),
+                    ("TI", "Tarjeta de Identidad"),
+                ],
+                max_length=20,
+            ),
         ),
         migrations.AlterField(
-            model_name='veterinario',
-            name='foto',
-            field=models.ImageField(blank=True, default='perfiles/default.svg', null=True, upload_to='perfiles/'),
+            model_name="veterinario",
+            name="foto",
+            field=models.ImageField(
+                blank=True,
+                default="perfiles/default.svg",
+                null=True,
+                upload_to="perfiles/",
+            ),
         ),
         migrations.AlterField(
-            model_name='veterinario',
-            name='tipo_documento',
-            field=models.CharField(choices=[('CC', 'Cédula de Ciudadanía'), ('CE', 'Cédula de Extranjería'), ('TI', 'Tarjeta de Identidad')], max_length=20),
+            model_name="veterinario",
+            name="tipo_documento",
+            field=models.CharField(
+                choices=[
+                    ("CC", "Cédula de Ciudadanía"),
+                    ("CE", "Cédula de Extranjería"),
+                    ("TI", "Tarjeta de Identidad"),
+                ],
+                max_length=20,
+            ),
         ),
     ]

@@ -22,6 +22,39 @@
     </div>
     {% endfor %}
 
+      <hr>
+
+<h4>🔄 Cambio de servicio (Opcional)</h4>
+
+<div class="form-group">
+    <label>Servicio realizado realmente</label>
+
+    <select name="servicio_cambiado" class="form-control">
+
+        <option value="">
+            Mantener servicio original
+        </option>
+
+        {% for servicio in servicios %}
+        <option value="{{ servicio.id }}">
+            {{ servicio.nombre }}
+        </option>
+        {% endfor %}
+
+    </select>
+</div>
+
+<div class="form-group">
+    <label>Motivo del cambio</label>
+
+    <textarea
+        name="motivo_cambio"
+        class="form-control"
+        rows="3"></textarea>
+</div>
+
+</div>
+
     <!-- 🔹 BOTONES -->
     <div class="form-actions">
 
@@ -46,7 +79,6 @@
     💊 Guardar + Crear Tratamiento
   </button>
 
-</div>
 
   </form>
 </div>

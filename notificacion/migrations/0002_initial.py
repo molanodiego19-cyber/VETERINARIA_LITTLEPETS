@@ -9,19 +9,27 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('notificacion', '0001_initial'),
-        ('usuarios', '0001_initial'),
+        ("notificacion", "0001_initial"),
+        ("usuarios", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='notificacion',
-            name='usuario',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notificaciones', to='usuarios.usuario'),
+            model_name="notificacion",
+            name="usuario",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="notificaciones",
+                to="usuarios.usuario",
+            ),
         ),
         migrations.AddField(
-            model_name='notificacion',
-            name='plantilla',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notificaciones', to='notificacion.plantillanotificacion'),
+            model_name="notificacion",
+            name="plantilla",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="notificaciones",
+                to="notificacion.plantillanotificacion",
+            ),
         ),
     ]

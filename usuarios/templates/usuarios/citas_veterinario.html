@@ -151,16 +151,20 @@
             </div>
 
             <div class="card-footer">
-                {% if cita.estado != 'finalizada' and cita.estado != 'cancelada' %}
+                {% if cita.estado != 'atendida' and cita.estado != 'cancelada' and cita.estado != 'facturada' and cita.estado != 'pendiente' %}
     <a href="{% url 'citas:iniciar_consulta' cita.id %}" class="btn-consulta">
         ▶️ Iniciar Consulta
     </a>
 {% else %}
     <span class="btn-consulta done">
         {% if cita.estado == 'cancelada' %}
-            ❌ Consulta Cancelada
+        ❌ Consulta Cancelada
+        {% elif cita.estado == 'pendiente' %}
+        ❌ Consulta no habilitada
+        {% elif cita.estado == 'atendida' %}
+         ✅ Consulta atendida
         {% else %}
-            ✅ Consulta Finalizada
+        ✅ Consulta Finalizada
         {% endif %}
     </span>
 {% endif %}

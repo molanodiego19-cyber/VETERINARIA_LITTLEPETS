@@ -6,37 +6,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('citas', '0008_rename_especie_objetivo_vacuna_especie_and_more'),
+        ("citas", "0008_rename_especie_objetivo_vacuna_especie_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='vacunacion',
-            old_name='fecha_proxima',
-            new_name='proxima_dosis',
+            model_name="vacunacion",
+            old_name="fecha_proxima",
+            new_name="proxima_dosis",
         ),
         migrations.RemoveField(
-            model_name='vacuna',
-            name='fecha_creacion',
+            model_name="vacuna",
+            name="fecha_creacion",
         ),
         migrations.RemoveField(
-            model_name='vacunacion',
-            name='fecha_creacion',
+            model_name="vacunacion",
+            name="fecha_creacion",
         ),
         migrations.RemoveField(
-            model_name='vacunacion',
-            name='lote',
+            model_name="vacunacion",
+            name="lote",
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='enfermedad_objetivo',
-            field=models.CharField(default='Sin especificar', max_length=50),
+            model_name="vacuna",
+            name="enfermedad_objetivo",
+            field=models.CharField(default="Sin especificar", max_length=50),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='vacuna',
-            name='lote',
-            field=models.CharField(default='RB-2025-001', max_length=100),
+            model_name="vacuna",
+            name="lote",
+            field=models.CharField(default="RB-2025-001", max_length=100),
             preserve_default=False,
         ),
     ]

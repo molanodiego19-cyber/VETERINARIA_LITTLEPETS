@@ -80,6 +80,36 @@
     font-weight:bold;
 }
 
+.btn-confirmar {
+    background: #52b788;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(82, 183, 136, 0.2);
+}
+
+.btn-confirmar:hover {
+    background: #2d6a4f;
+    transform: translateY(-1px);
+}
+
+/* Opcional: Estilo para cuando ya esté confirmada */
+.badge.confirmada {
+    background: #d8f3dc;
+    color: #2d6a4f;
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
 </style>
 
 <div class="page-header">
@@ -279,14 +309,17 @@
         <td>
 
           {% if c.estado == 'pendiente' %}
+            <form action="{% url 'citas:confirmar_cita_recepcionista' c.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-confirmar">
+                ✅ Confirmar
+              </button>
+            </form>
 
-            <span style="color:orange;font-weight:bold;">
-              {{ c.get_estado_display }}
-            </span>
-
+        
           {% elif c.estado == 'confirmada' %}
 
-            <span style="color:lightblue;font-weight:bold;">
+            <span style="color:rgb(67, 204, 223);font-weight:bold;">
               {{ c.get_estado_display }}
             </span>
 

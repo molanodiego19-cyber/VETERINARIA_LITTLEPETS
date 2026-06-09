@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from notificacion.tasks import (
     enviar_recordatorios,
     procesar_correos_pendientes,
-    enviar_vacunas_pendientes
+    enviar_vacunas_pendientes,
 )
 
 
@@ -19,16 +19,10 @@ def run_scheduler(request):
         procesar_correos_pendientes.delay()
         enviar_vacunas_pendientes.delay()
 
-        return JsonResponse({
-            "ok": True,
-            "msg": "Tareas enviadas a Celery"
-        })
+        return JsonResponse({"ok": True, "msg": "Tareas enviadas a Celery"})
 
     except Exception as e:
-        return JsonResponse({
-            "ok": False,
-            "error": str(e)
-        }, status=500)
+        return JsonResponse({"ok": False, "error": str(e)}, status=500)
 
 
 # =========================
@@ -42,21 +36,15 @@ def test_email(request):
             subject="Test Brevo",
             message="Email de prueba desde Django",
             from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[
-                settings.EMAIL_HOST_USER
-            ],
+            recipient_list=[settings.EMAIL_HOST_USER],
             fail_silently=False,
         )
 
-        return HttpResponse(
-            "✅ Email enviado correctamente"
-        )
+        return HttpResponse("✅ Email enviado correctamente")
 
     except Exception as e:
 
-        return HttpResponse(
-            f"❌ ERROR: {str(e)}"
-        )
+        return HttpResponse(f"❌ ERROR: {str(e)}")
 
 
 # =========================
@@ -64,11 +52,9 @@ def test_email(request):
 # =========================
 def smtp_info(request):
 
-    return HttpResponse(
-        f"""
+    return HttpResponse(f"""
         HOST: {settings.EMAIL_HOST}<br>
         PORT: {settings.EMAIL_PORT}<br>
         TLS: {settings.EMAIL_USE_TLS}<br>
         USER: {settings.EMAIL_HOST_USER}<br>
-        """
-    )
+        """)

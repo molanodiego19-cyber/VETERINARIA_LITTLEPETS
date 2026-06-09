@@ -8,38 +8,83 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Especie',
+            name="Especie",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('descripcion', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("descripcion", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Raza',
+            name="Raza",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
             ],
         ),
         migrations.CreateModel(
-            name='Mascota',
+            name="Mascota",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('nombre', models.CharField(max_length=50)),
-                ('fecha_nacimiento', models.DateField()),
-                ('sexo', models.CharField(choices=[('hembra', 'Hembra'), ('macho', 'Macho')], max_length=10)),
-                ('peso_kg', models.DecimalField(decimal_places=2, max_digits=5)),
-                ('foto', models.ImageField(blank=True, null=True, upload_to='mascotas/')),
-                ('esterilizacion', models.BooleanField(default=False)),
-                ('estado', models.CharField(choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')], default='activo', max_length=10)),
-                ('fecha_creacion', models.DateTimeField(auto_now_add=True)),
-                ('especie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mascota.especie')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("nombre", models.CharField(max_length=50)),
+                ("fecha_nacimiento", models.DateField()),
+                (
+                    "sexo",
+                    models.CharField(
+                        choices=[("hembra", "Hembra"), ("macho", "Macho")],
+                        max_length=10,
+                    ),
+                ),
+                ("peso_kg", models.DecimalField(decimal_places=2, max_digits=5)),
+                (
+                    "foto",
+                    models.ImageField(blank=True, null=True, upload_to="mascotas/"),
+                ),
+                ("esterilizacion", models.BooleanField(default=False)),
+                (
+                    "estado",
+                    models.CharField(
+                        choices=[("activo", "Activo"), ("inactivo", "Inactivo")],
+                        default="activo",
+                        max_length=10,
+                    ),
+                ),
+                ("fecha_creacion", models.DateTimeField(auto_now_add=True)),
+                (
+                    "especie",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="mascota.especie",
+                    ),
+                ),
             ],
         ),
     ]

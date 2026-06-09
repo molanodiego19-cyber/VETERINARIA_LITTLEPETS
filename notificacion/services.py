@@ -22,8 +22,7 @@ def crear_notificacion(usuario, plantilla_nombre, cita=None, contexto=None):
 
     try:
         plantilla = PlantillaNotificacion.objects.get(
-            nombre=plantilla_nombre,
-            activo=True
+            nombre=plantilla_nombre, activo=True
         )
     except PlantillaNotificacion.DoesNotExist:
         print(f"❌ No existe plantilla: {plantilla_nombre}")
@@ -38,7 +37,7 @@ def crear_notificacion(usuario, plantilla_nombre, cita=None, contexto=None):
         cita=cita,
         canal=plantilla.canal,
         asunto=asunto,
-        cuerpo_mensaje=cuerpo
+        cuerpo_mensaje=cuerpo,
     )
 
     print("📩 Notificación creada")
@@ -59,12 +58,11 @@ def enviar_email(notificacion):
             subject=notificacion.asunto,
             body=notificacion.cuerpo_mensaje,
             from_email=settings.EMAIL_HOST_USER,
-            to=[notificacion.usuario.correo]
+            to=[notificacion.usuario.correo],
         )
 
         email.attach_alternative(
-            f"<html><body>{notificacion.cuerpo_mensaje}</body></html>",
-            "text/html"
+            f"<html><body>{notificacion.cuerpo_mensaje}</body></html>", "text/html"
         )
 
         email.send()

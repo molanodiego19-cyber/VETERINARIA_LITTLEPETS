@@ -9,25 +9,34 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('citas', '0002_initial'),
-        ('usuarios', '0001_initial'),
-        ('veterinarioapp', '0001_initial'),
+        ("citas", "0002_initial"),
+        ("usuarios", "0001_initial"),
+        ("veterinarioapp", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='veterinario',
-            name='especialidad',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='veterinarioapp.especialidad'),
+            model_name="veterinario",
+            name="especialidad",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="veterinarioapp.especialidad",
+            ),
         ),
         migrations.AddField(
-            model_name='veterinario',
-            name='servicios',
-            field=models.ManyToManyField(blank=True, related_name='veterinarios', to='citas.servicio'),
+            model_name="veterinario",
+            name="servicios",
+            field=models.ManyToManyField(
+                blank=True, related_name="veterinarios", to="citas.servicio"
+            ),
         ),
         migrations.AddField(
-            model_name='veterinario',
-            name='usuario',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='veterinario', to='usuarios.usuario'),
+            model_name="veterinario",
+            name="usuario",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="veterinario",
+                to="usuarios.usuario",
+            ),
         ),
     ]

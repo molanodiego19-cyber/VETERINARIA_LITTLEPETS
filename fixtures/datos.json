@@ -954,36 +954,18 @@
     }
 },
 {
-    "model": "citas.servicio",
-    "pk": 7,
-    "fields": {
-        "nombre": "Baño y Peluquería",
-        "descripcion": "Baño completo de mascota",
-        "precio": "50000.00",
-        "duracion_minutos": 60,
-        "categoria": 7,
-        "especialista_required": 7,
-        "activo": true,
-        "fecha_creacion": "2026-05-27T16:15:16.201Z"
-    }
-},
-{
     "model": "citas.vacuna",
     "pk": 1,
     "fields": {
         "nombre": "RabiaVet",
-        "fabricante": "Zoetis",
-        "especie_objetivo": 1,
-        "enfermedades": "Rabia",
+        "especie": 1,
+        "enfermedad_objetivo": "Rabia",
+        "precio_adquisicion": "15000.00",
+        "precio_venta": "30000.00",
+        "laboratorio": "Zoetis",
         "dosis_total": 1,
-        "intervalo_dosis": 365,
-        "refuerzo_meses": 12,
-        "edad_minima_dias": 90,
-        "requiere_frio": true,
         "lote": "RAB-2026-001",
-        "fecha_vencimiento": "2027-05-10",
-        "activo": true,
-        "fecha_creacion": "2026-05-27T16:15:28.351Z"
+        "estado": "activo"
     }
 },
 {
@@ -991,18 +973,14 @@
     "pk": 2,
     "fields": {
         "nombre": "Triple Felina",
-        "fabricante": "Merial",
-        "especie_objetivo": 2,
-        "enfermedades": "Panleucopenia, Rinotraqueitis, Calicivirus",
+        "especie": 2,
+        "enfermedad_objetivo": "Panleucopenia",
+        "precio_adquisicion": "18000.00",
+        "precio_venta": "35000.00",
+        "laboratorio": "Merial",
         "dosis_total": 2,
-        "intervalo_dosis": 21,
-        "refuerzo_meses": 12,
-        "edad_minima_dias": 60,
-        "requiere_frio": true,
         "lote": "FEL-2026-002",
-        "fecha_vencimiento": "2027-08-15",
-        "activo": true,
-        "fecha_creacion": "2026-05-27T16:15:28.356Z"
+        "estado": "activo"
     }
 },
 {
@@ -1010,18 +988,14 @@
     "pk": 3,
     "fields": {
         "nombre": "ParvoCan",
-        "fabricante": "Boehringer",
-        "especie_objetivo": 1,
-        "enfermedades": "Parvovirus Canino",
+        "especie": 1,
+        "enfermedad_objetivo": "Parvovirus Canino",
+        "precio_adquisicion": "12000.00",
+        "precio_venta": "28000.00",
+        "laboratorio": "Boehringer",
         "dosis_total": 3,
-        "intervalo_dosis": 21,
-        "refuerzo_meses": 12,
-        "edad_minima_dias": 45,
-        "requiere_frio": true,
         "lote": "PAR-2026-003",
-        "fecha_vencimiento": "2027-01-20",
-        "activo": true,
-        "fecha_creacion": "2026-05-27T16:15:28.363Z"
+        "estado": "activo"
     }
 },
 {
@@ -1029,18 +1003,14 @@
     "pk": 4,
     "fields": {
         "nombre": "Moquillo Plus",
-        "fabricante": "Virbac",
-        "especie_objetivo": 1,
-        "enfermedades": "Moquillo Canino",
+        "especie": 1,
+        "enfermedad_objetivo": "Moquillo Canino",
+        "precio_adquisicion": "14000.00",
+        "precio_venta": "32000.00",
+        "laboratorio": "Virbac",
         "dosis_total": 2,
-        "intervalo_dosis": 30,
-        "refuerzo_meses": 12,
-        "edad_minima_dias": 50,
-        "requiere_frio": true,
         "lote": "MOQ-2026-004",
-        "fecha_vencimiento": "2027-03-05",
-        "activo": true,
-        "fecha_creacion": "2026-05-27T16:15:28.365Z"
+        "estado": "activo"
     }
 },
 {
@@ -1048,18 +1018,14 @@
     "pk": 5,
     "fields": {
         "nombre": "Leucemia Felina",
-        "fabricante": "Pfizer Animal Health",
-        "especie_objetivo": 2,
-        "enfermedades": "Leucemia Felina",
+        "especie": 2,
+        "enfermedad_objetivo": "Leucemia Felina",
+        "precio_adquisicion": "17000.00",
+        "precio_venta": "34000.00",
+        "laboratorio": "Pfizer Animal Health",
         "dosis_total": 2,
-        "intervalo_dosis": 30,
-        "refuerzo_meses": 12,
-        "edad_minima_dias": 56,
-        "requiere_frio": true,
         "lote": "LEU-2026-005",
-        "fecha_vencimiento": "2027-11-12",
-        "activo": true,
-        "fecha_creacion": "2026-05-27T16:15:28.367Z"
+        "estado": "activo"
     }
 },
 {

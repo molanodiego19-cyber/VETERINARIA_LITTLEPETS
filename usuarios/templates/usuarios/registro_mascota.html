@@ -149,7 +149,11 @@
         <button type="submit" class="btn-registro">
           Registrar Mascota <span class="arrow">→</span>
         </button>
-
+        <button type="submit" name="omitir" formnovalidate class="btn-registro">
+          Omitir <span class="arrow"></span>
+        </button>
+        
+       
       </form>
     </div>
 
@@ -203,6 +207,9 @@ document.getElementById("id_especie").addEventListener("change", function() {
 
 /* VALIDACIÓN */
 document.getElementById("mascota-form").addEventListener("submit", function(e){
+  if (botonPresionado == "omitir") {
+    return; // Evita validación si se presionó "Omitir"
+  }
   let errores=[];
   const raza=document.getElementById("id_raza").value;
 
