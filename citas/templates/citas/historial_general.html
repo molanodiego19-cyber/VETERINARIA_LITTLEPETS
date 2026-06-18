@@ -1,0 +1,95 @@
+{% extends base_template %}
+
+{% block title %}Historial de {{ mascota.nombre }}{% endblock %}
+
+{% block content %}
+
+<div style="padding:20px;">
+
+    <!-- HEADER -->
+    <div style="
+        background:#2d6a4f;
+        color:#fff;
+        padding:20px;
+        border-radius:12px;
+        margin-bottom:20px;
+    ">
+        <h2 style="margin:0;">🐾 Historial de {{ mascota.nombre }}</h2>
+        <p style="margin:5px 0 0;">
+            {{ mascota.especie.nombre }} - {{ mascota.propietario.nombre }} {{ mascota.propietario.apellido }}
+        </p>
+    </div>
+
+    <!-- RESUMEN -->
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+
+        <div style="background:#e9f5ee;padding:10px 14px;border-radius:20px;">
+            🩺 Consultas: {{ consultas|length }}
+        </div>
+
+        <div style="background:#e9f5ee;padding:10px 14px;border-radius:20px;">
+            💉 Vacunas: {{ vacunaciones|length }}
+        </div>
+
+        <div style="background:#e9f5ee;padding:10px 14px;border-radius:20px;">
+            ✂️ Servicios: {{ servicios|length }}
+        </div>
+
+        <div style="background:#e9f5ee;padding:10px 14px;border-radius:20px;">
+            💊 Tratamientos: {{ tratamientos|length }}
+        </div>
+
+    </div>
+
+    <!-- CONSULTAS -->
+    <h3>🩺 Consultas</h3>
+
+    {% for c in consultas %}
+        <div style="border:1px solid #eee;padding:12px;border-radius:10px;margin-bottom:10px;">
+            <strong>{{ c.cita.fecha }} - {{ c.cita.servicio.nombre }}</strong><br>
+            Diagnóstico: {{ c.diagnostico_definitivo }}
+        </div>
+    {% empty %}
+        <p>No hay consultas registradas</p>
+    {% endfor %}
+
+    <!-- VACUNAS -->
+    <h3>💉 Vacunaciones</h3>
+
+    {% for v in vacunaciones %}
+        <div style="border:1px solid #eee;padding:12px;border-radius:10px;margin-bottom:10px;">
+            <strong>{{ v.fecha_aplicacion }} - {{ v.vacuna.nombre }}</strong><br>
+            Dosis: {{ v.numero_dosis }}
+        </div>
+    {% empty %}
+        <p>No hay vacunaciones registradas</p>
+    {% endfor %}
+
+    <!-- SERVICIOS -->
+    <h3>✂️ Servicios Estéticos</h3>
+
+    {% for s in servicios %}
+        <div style="border:1px solid #eee;padding:12px;border-radius:10px;margin-bottom:10px;">
+            <strong>{{ s.cita.fecha }} - {{ s.cita.servicio.nombre }}</strong><br>
+            Veterinario: {{ s.veterinario.nombre }}
+        </div>
+    {% empty %}
+        <p>No hay servicios registrados</p>
+    {% endfor %}
+
+    <!-- TRATAMIENTOS -->
+    <h3>💊 Tratamientos</h3>
+
+    {% for t in tratamientos %}
+        <div style="border:1px solid #eee;padding:12px;border-radius:10px;margin-bottom:10px;">
+            <strong>{{ t.nombre }}</strong><br>
+            Medicamento: {{ t.medicamento }}<br>
+            Estado: {{ t.estado }}
+        </div>
+    {% empty %}
+        <p>No hay tratamientos registrados</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

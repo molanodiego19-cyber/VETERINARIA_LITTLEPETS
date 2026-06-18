@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Especialidades</div>
+    <div class="page-sub">Áreas médicas veterinarias</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_especialidad_create' %}">+ Nueva Especialidad</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in especialidades %}
+      <tr>
+        <td><strong>{{ e.nombre }}</strong></td>
+        <td>{{ e.descripcion|default:"—" }}</td>
+        <td>
+          {% if e.activo %}
+            <span class="badge badge-success">Activa</span>
+          {% else %}
+            <span class="badge badge-default">Inactiva</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_especialidad_edit' e.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_especialidad_delete' e.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" class="empty-msg">No hay especialidades registradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

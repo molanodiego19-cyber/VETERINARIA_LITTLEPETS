@@ -1,0 +1,334 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block page_name %}Lista de Facturas{% endblock %}
+
+{% block content %}
+
+<style>
+
+.facturas-header{
+    margin-bottom:24px;
+}
+
+.facturas-title{
+    font-size:1.8rem;
+    font-weight:800;
+    color:#2d6a4f;
+    margin-bottom:5px;
+}
+
+.facturas-sub{
+    color:#6b7280;
+    font-size:.9rem;
+}
+
+/* CARD */
+.facturas-card{
+    background:#fff;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid #f0e8d8;
+    box-shadow:0 4px 18px rgba(0,0,0,.05);
+}
+
+/* TABLA */
+.facturas-table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:'DM Sans',sans-serif;
+}
+
+.facturas-table thead{
+    background:#2d6a4f;
+}
+
+.facturas-table thead th{
+    color:#000000;
+    padding:15px;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-weight:700;
+    text-align:left;
+}
+
+.facturas-table tbody tr{
+    border-bottom:1px solid #f5f0e8;
+    transition:.2s;
+}
+
+.facturas-table tbody tr:nth-child(even){
+    background:#fcfaf7;
+}
+
+.facturas-table tbody tr:hover{
+    background:#f7fdf9;
+}
+
+.facturas-table td{
+    padding:15px;
+    font-size:.88rem;
+    color:#374151;
+    vertical-align:middle;
+}
+
+/* Número factura */
+.factura-numero{
+    font-weight:800;
+    color:#2d6a4f;
+}
+
+/* Precio */
+.total-precio{
+    font-weight:800;
+    color:#2d6a4f;
+}
+
+.subtotal-precio{
+    font-weight:700;
+    color:#374151;
+}
+
+/* Badges */
+.badge-pago{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 12px;
+    border-radius:50px;
+    font-size:.72rem;
+    font-weight:700;
+    background:#e9f5ee;
+    color:#2d6a4f;
+}
+
+.servicio-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 12px;
+    border-radius:50px;
+    font-size:.72rem;
+    font-weight:700;
+    background:#f3eadf;
+    color:#8b5e34;
+}
+
+/* Info */
+.info-text{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:600;
+}
+
+/* Empty */
+.empty-state{
+    text-align:center;
+    padding:50px 20px;
+    color:#b0b0b0;
+}
+
+.empty-icon{
+    font-size:3rem;
+    margin-bottom:10px;
+}
+
+/* Responsive */
+@media(max-width:1200px){
+
+    .facturas-card{
+        overflow-x:auto;
+    }
+
+    .facturas-table{
+        min-width:1100px;
+    }
+}
+
+</style>
+
+<!-- Header -->
+<div class="facturas-header">
+
+    <div class="facturas-title">
+        📄 Lista de Facturas
+    </div>
+
+    <div class="facturas-sub">
+        Consulta todas las facturas generadas de tus mascotas
+    </div>
+
+</div>
+
+<!-- Tabla -->
+<div class="facturas-card">
+
+    <table class="facturas-table">
+
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Dueño</th>
+                <th>Mascota</th>
+                <th>Veterinario</th>
+                <th>Servicio</th>
+                <th>Medio Pago</th>
+                <th>Subtotal</th>
+                <th>Total</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for f in facturas %}
+
+            <tr>
+
+                <!-- numero -->
+                <td>
+                    <span class="factura-numero">
+                        #{{ f.numero_factura }}
+                    </span>
+                </td>
+
+                <!-- dueño -->
+                <td>
+                    <div class="info-text">
+                        👤 {{ f.cita.mascota.propietario }}
+                    </div>
+                </td>
+
+                <!-- mascota -->
+                <td>
+                    {% if f.consulta %}
+                        <div class="info-text">
+                            🐾 {{ f.consulta.cita.mascota.nombre }}
+                        </div>
+
+                    {% elif f.cita %}
+                        <div class="info-text">
+                            🐾 {{ f.cita.mascota.nombre }}
+                        </div>
+                    {% endif %}
+                </td>
+
+                <!-- veterinario -->
+                <td>
+
+                    {% if f.consulta %}
+                        <div class="info-text">
+                            👨‍⚕️ {{ f.consulta.veterinario.nombre }}  {{ f.consulta.veterinario.apellido }}
+                        </div>
+                    {% elif f.cita %}
+                        <div class="info-text">
+                            👨‍⚕️ {{ f.cita.veterinario.nombre }}
+                        </div>
+                    {% endif %}
+
+                </td>
+
+                <!-- servicio -->
+                <td>
+
+                    {% if f.consulta %}
+                        <span class="servicio-badge">
+                            🩺 {{ f.consulta.cita.servicio.nombre }}
+                        </span>
+
+                    {% elif f.cita %}
+                        <span class="servicio-badge">
+                            🩺 {{ f.cita.servicio.nombre }}
+                        </span>
+                    {% endif %}
+
+                </td>
+
+                <!-- medio pago -->
+                <td>
+
+                    <span class="badge-pago">
+                        💳 {{ f.metodo_pago }}
+                    </span>
+
+                </td>
+
+                <!-- subtotal -->
+                <td>
+
+                    <span class="subtotal-precio">
+                        ${{ f.subtotal|floatformat:2 }}
+                    </span>
+
+                </td>
+
+                <!-- total -->
+                <td>
+
+                    <span class="total-precio">
+                        ${{ f.total|floatformat:2 }}
+                    </span>
+
+                </td>
+
+                <!-- fecha -->
+                <!-- fecha -->
+<td>
+
+    <div style="
+        display:flex;
+        flex-direction:column;
+        gap:4px;
+    ">
+
+        <span class="info-text">
+            📅 {{ f.fecha_emision|date:"d/m/Y" }}
+        </span>
+
+        <small style="
+            color:#6b7280;
+            font-size:.78rem;
+            font-weight:600;
+            margin-left:2px;
+        ">
+            ⏰ {{ f.fecha_creacion|time:"H:i" }}
+        </small>
+
+    </div>
+
+</td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="9">
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">
+                            📄
+                        </div>
+
+                        <div>
+                            No hay facturas registradas
+                        </div>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

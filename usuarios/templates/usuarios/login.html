@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Veterinaria</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/loginn.css' %}">
+</head>
+<body>
+
+<!-- ══ Panel izquierdo: slider Ken Burns ══ -->
+<div class="left-panel">
+    <div class="slider">
+        
+
+        <div class="slider-slide active" id="slide-0">
+                <img src="{% static 'img/vete2.jpg' %}" alt="perro cachorro">
+            <div class="slider-text">
+                <div class="brand">
+                    <span class="paw">🐾</span>
+                    <span>LittlePets</span>
+                </div>
+                <h2>Bienvenido a Litte PeTs</h2>
+                <p>Gestiona citas, historiales clínicos y el bienestar de tus pacientes desde un solo lugar.</p>
+                <div class="slider-dots">
+                    <button class="active" onclick="goTo(0)"></button>
+                    <button onclick="goTo(1)"></button>
+                    <button onclick="goTo(2)"></button>
+                </div>
+            </div>
+        </div>
+           <div class="slider-slide" id="slide-1">
+            <img src="https://images.unsplash.com/photo-1592194996308-7b43878e84a6?w=800&q=85" alt="Gato curioso">
+            <div class="slider-text">
+                <div class="brand">
+                    <span class="paw">🐾</span>
+                    <span>Little Pets</span>
+                </div>
+                <h2>Tu clínica, siempre organizada</h2>
+                <p>Historial clínico, vacunas y seguimientos al alcance de un clic.</p>
+                <div class="slider-dots">
+                    <button onclick="goTo(0)"></button>
+                    <button class="active" onclick="goTo(1)"></button>
+                    <button onclick="goTo(2)"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-slide" id="slide-1">
+            <img src="https://plus.unsplash.com/premium_photo-1663050689215-e2f4f493811c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Hurón café">
+            <div class="slider-text">
+                <div class="brand">
+                    <span class="paw">🐾</span>
+                    <span>Little Pets</span>
+                </div>
+                <h2>Tu clínica, siempre organizada</h2>
+                <p>Historial clínico, vacunas y seguimientos al alcance de un clic.</p>
+                <div class="slider-dots">
+                    <button onclick="goTo(0)"></button>
+                    <button class="active" onclick="goTo(1)"></button>
+                    <button onclick="goTo(2)"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-slide" id="slide-1">
+            <img src="https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=900&q=80" alt="Gato">
+            <div class="slider-text">
+                <div class="brand">
+                    <span class="paw">🐾</span>
+                    <span>Little Pets</span>
+                </div>
+                <h2>Tu clínica, siempre organizada</h2>
+                <p>Historial clínico, vacunas y seguimientos al alcance de un clic.</p>
+                <div class="slider-dots">
+                    <button onclick="goTo(0)"></button>
+                    <button class="active" onclick="goTo(1)"></button>
+                    <button onclick="goTo(2)"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-slide" id="slide-2">
+            <img src="https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=900&q=80" alt="Veterinaria">
+            <div class="slider-text">
+                <div class="brand">
+                    <span class="paw">🐾</span>
+                    <span>Little Pets</span>
+                </div>
+                <h2>Cuidado con amor y tecnología</h2>
+                <p>Cada mascota merece la mejor atención. Empieza hoy.</p>
+                <div class="slider-dots">
+                    <button onclick="goTo(0)"></button>
+                    <button onclick="goTo(1)"></button>
+                    <button class="active" onclick="goTo(2)"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-slide" id="slide-2">
+            <img src="{% static 'img/perro2.jpg' %}" alt="Sin foto">
+            <div class="slider-text">
+                <div class="brand">
+                    <span class="paw">🐾</span>
+                    <span>Little Pets</span>
+                </div>
+                <h2>Cuidado con amor y tecnología</h2>
+                <p>Cada mascota merece la mejor atención. Empieza hoy.</p>
+                <div class="slider-dots">
+                    <button onclick="goTo(0)"></button>
+                    <button onclick="goTo(1)"></button>
+                    <button class="active" onclick="goTo(2)"></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══ Panel derecho: formulario de login ══ -->
+<div class="right-panel">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="step-pill">Acceso seguro</div>
+            <h1>Iniciar sesión</h1>
+            <p>Ingresa tus credenciales para continuar</p>
+            <a href="{% url 'citas:index' %}" class="btn-home">
+        🏠 Volver al inicio
+    </a>
+        </div>
+
+        <div class="login-body">
+
+            {% if error %}
+            <div class="login-alert">
+                ⚠️ {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-stack">
+                    <div class="section-label">Credenciales</div>
+
+                    <div class="field">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo" name="correo"
+                               placeholder="correo@ejemplo.com" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Contraseña</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password"
+                                   placeholder="Tu contraseña" required>
+                            <button type="button" class="toggle-pass" id="togglePass"
+                                    title="Mostrar/ocultar contraseña">👁</button>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'usuarios:recuperar_password' %}">
+    ¿Olvidaste tu contraseña?
+</a>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Ingresar <span class="arrow">→</span>
+                </button>
+            </form>
+
+        </div>
+
+        <div class="login-footer">
+            <p>¿No tienes cuenta? <a href="{% url 'usuarios:registro' %}">Regístrate aquí</a></p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slider-slide');
+    const total  = slides.length;
+
+    function goTo(n) {
+        slides[current].classList.remove('kb', 'active');
+        current = n;
+        const slide = slides[current];
+        slide.classList.add('active');
+        requestAnimationFrame(() => requestAnimationFrame(() => slide.classList.add('kb')));
+    }
+
+    requestAnimationFrame(() => requestAnimationFrame(() => slides[0].classList.add('kb')));
+    setInterval(() => goTo((current + 1) % total), 6000);
+
+    document.getElementById('togglePass').addEventListener('click', function () {
+        const inp = document.getElementById('password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+        this.textContent = inp.type === 'password' ? '👁' : '🙈';
+    });
+</script>
+
+</body>
+</html>

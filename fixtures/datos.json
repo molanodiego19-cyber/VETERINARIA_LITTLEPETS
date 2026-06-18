@@ -1,0 +1,1091 @@
+[
+{
+    "model": "usuarios.usuario",
+    "pk": 1,
+    "fields": {
+        "correo": "admin@gmail.com",
+        "password": "pbkdf2_sha256$1200000$hBt3CFlmzExjODP3L9xyZY$NfVv0YkxxDe+JFFuMywP/v/R7raKVCL7PR2R6JbwueQ=",
+        "fecha_cambio_password": null,
+        "rol": "admin",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 2,
+    "fields": {
+        "correo": "rosa@gmail.com",
+        "password": "pbkdf2_sha256$1200000$jJcdvdQEluBWSmXNEV43U1$xNNgcrAoVGROZeQJyFwPbflHbfPAj34UMGQizgt+DZU=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 3,
+    "fields": {
+        "correo": "andrea@gmail.com",
+        "password": "pbkdf2_sha256$1200000$wuMyqZAMo7pAtWneIP9j8q$Mnn3FBV6QRvP6HU6bR/ApZaowADklkegiQ3JlTTw2ew=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 4,
+    "fields": {
+        "correo": "carlos@gmail.com",
+        "password": "pbkdf2_sha256$1200000$L7cUJpmqPgA6yzHZu6ivx6$Ebj46qF+GVe3+eNKimRM6+K2Zcrcs99XSgJu3OZ5fi8=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 5,
+    "fields": {
+        "correo": "luisa@gmail.com",
+        "password": "pbkdf2_sha256$1200000$W0rZfZNPgKnNPXxBFItefK$q92Q6YiUfkOOwfGiSb0RiryiKGUITpyitkJjoAaYAjs=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 6,
+    "fields": {
+        "correo": "miguel@gmail.com",
+        "password": "pbkdf2_sha256$1200000$80gjPrHdOdXcgR2ocRGfHp$F37bsnGsOZi9aU2pacIUtxV/7dHBp2ZnYdmMYHKkSso=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 7,
+    "fields": {
+        "correo": "valentina@gmail.com",
+        "password": "pbkdf2_sha256$1200000$EtsL7Nx8sgOaCW7T83RhIt$m8uz0w/Vxi4L6cy5QDnAvIeu3kGhVheDNuPR46i1+As=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 8,
+    "fields": {
+        "correo": "santiago@gmail.com",
+        "password": "pbkdf2_sha256$1200000$ya9S5u11Fp7UVrkdAksjPV$RraCfCIek7vmzc/ikudlS7fLZDGNBucaIAkiRwytSkk=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 9,
+    "fields": {
+        "correo": "paula@gmail.com",
+        "password": "pbkdf2_sha256$1200000$jdNSjd6Tf9vtBhntPfDyr9$IJs5bQIuGA7cwKHmXU8wo1Th5QJBW+uaDiCQmh3q3hI=",
+        "fecha_cambio_password": null,
+        "rol": "veterinario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 10,
+    "fields": {
+        "correo": "diego0@gmail.com",
+        "password": "pbkdf2_sha256$1200000$E6VngcJSS0K3eqwTlwHUPq$VCeCC/wgp8oC5iuamFrFH2eLdU0xzmMkNjw3HBxmhiI=",
+        "fecha_cambio_password": null,
+        "rol": "propietario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 11,
+    "fields": {
+        "correo": "maría1@gmail.com",
+        "password": "pbkdf2_sha256$1200000$ku6cmhng9rRjdQXsjE5oKB$/4JuGrtqG+7l6NtXHmep2kYjFWGhvJXO6JqEiG6vYQs=",
+        "fecha_cambio_password": null,
+        "rol": "propietario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 12,
+    "fields": {
+        "correo": "juan2@gmail.com",
+        "password": "pbkdf2_sha256$1200000$6KbZz0JX2zlxLZ6QMQA7lp$cOhz3VSRPrdPqUH+lzHDKR/ikZm45EJJWnpZPlhV8X0=",
+        "fecha_cambio_password": null,
+        "rol": "propietario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 13,
+    "fields": {
+        "correo": "laura3@gmail.com",
+        "password": "pbkdf2_sha256$1200000$n37vNf7TnZl8iwEIVIGZjM$f9KzXJVyzks6WMXixyN2+AnOgdbi6dUTGHzdgXhijNY=",
+        "fecha_cambio_password": null,
+        "rol": "propietario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 14,
+    "fields": {
+        "correo": "andrés4@gmail.com",
+        "password": "pbkdf2_sha256$1200000$HjHvxWdvFkwUTjbD13aseV$Te7NXEwsarsUoSPZ0tzZ+5UZUU9DRLJa6HMCA4vYYQo=",
+        "fecha_cambio_password": null,
+        "rol": "propietario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.usuario",
+    "pk": 15,
+    "fields": {
+        "correo": "sofía5@gmail.com",
+        "password": "pbkdf2_sha256$1200000$7YYVML6HpaSGKj7fXIUWBL$+PP3+45iz45EG1LPe4lgBpyxc9/wa1FX82EPtI7JS2Y=",
+        "fecha_cambio_password": null,
+        "rol": "propietario",
+        "estado": "activo",
+        "last_login": null,
+        "intentos_fallidos": 0,
+        "bloqueado_hasta": null,
+        "fecha_suspension": null,
+        "motivo_suspension": null
+    }
+},
+{
+    "model": "usuarios.administrador",
+    "pk": 1,
+    "fields": {
+        "nombre": "Dahian",
+        "apellido": "Reina",
+        "telefono": "3000000000",
+        "tipo_documento": "CC",
+        "documento": "9999999999",
+        "foto": "perfiles/default.svg",
+        "usuario": 1
+    }
+},
+{
+    "model": "usuarios.propietario",
+    "pk": 1,
+    "fields": {
+        "nombre": "Diego",
+        "apellido": "Martínez",
+        "telefono": "3001110001",
+        "tipo_documento": "CC",
+        "documento": "1000000001",
+        "foto": "perfiles/default.svg",
+        "usuario": 10,
+        "ciudad": "Bogotá",
+        "direccion": "Calle Principal 123",
+        "fecha_registro": "2026-05-27T16:15:24.014Z"
+    }
+},
+{
+    "model": "usuarios.propietario",
+    "pk": 2,
+    "fields": {
+        "nombre": "María",
+        "apellido": "Rodríguez",
+        "telefono": "3002220002",
+        "tipo_documento": "CC",
+        "documento": "1000000002",
+        "foto": "perfiles/default.svg",
+        "usuario": 11,
+        "ciudad": "Bogotá",
+        "direccion": "Calle Principal 123",
+        "fecha_registro": "2026-05-27T16:15:24.883Z"
+    }
+},
+{
+    "model": "usuarios.propietario",
+    "pk": 3,
+    "fields": {
+        "nombre": "Juan",
+        "apellido": "López",
+        "telefono": "3003330003",
+        "tipo_documento": "CC",
+        "documento": "1000000003",
+        "foto": "perfiles/default.svg",
+        "usuario": 12,
+        "ciudad": "Bogotá",
+        "direccion": "Calle Principal 123",
+        "fecha_registro": "2026-05-27T16:15:25.747Z"
+    }
+},
+{
+    "model": "usuarios.propietario",
+    "pk": 4,
+    "fields": {
+        "nombre": "Laura",
+        "apellido": "García",
+        "telefono": "3004440004",
+        "tipo_documento": "CC",
+        "documento": "1000000004",
+        "foto": "perfiles/default.svg",
+        "usuario": 13,
+        "ciudad": "Bogotá",
+        "direccion": "Calle Principal 123",
+        "fecha_registro": "2026-05-27T16:15:26.611Z"
+    }
+},
+{
+    "model": "usuarios.propietario",
+    "pk": 5,
+    "fields": {
+        "nombre": "Andrés",
+        "apellido": "Hernández",
+        "telefono": "3005550005",
+        "tipo_documento": "CC",
+        "documento": "1000000005",
+        "foto": "perfiles/default.svg",
+        "usuario": 14,
+        "ciudad": "Bogotá",
+        "direccion": "Calle Principal 123",
+        "fecha_registro": "2026-05-27T16:15:27.473Z"
+    }
+},
+{
+    "model": "usuarios.propietario",
+    "pk": 6,
+    "fields": {
+        "nombre": "Sofía",
+        "apellido": "Torres",
+        "telefono": "3006660006",
+        "tipo_documento": "CC",
+        "documento": "1000000006",
+        "foto": "perfiles/default.svg",
+        "usuario": 15,
+        "ciudad": "Bogotá",
+        "direccion": "Calle Principal 123",
+        "fecha_registro": "2026-05-27T16:15:28.337Z"
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 1,
+    "fields": {
+        "nombre": "Rosa",
+        "apellido": "Sichaca",
+        "telefono": "3001111111",
+        "tipo_documento": "CC",
+        "documento": "2000000001",
+        "foto": "perfiles/default.svg",
+        "usuario": 2,
+        "especialidad": 1,
+        "num_licencia": "VET001",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "miercoles",
+            "jueves",
+            "viernes",
+            "sabado",
+            "domingo"
+        ],
+        "fecha_creado": "2026-05-27T16:15:17.067Z",
+        "servicios": [
+            5
+        ]
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 2,
+    "fields": {
+        "nombre": "Andrea",
+        "apellido": "Molano",
+        "telefono": "3002222222",
+        "tipo_documento": "CC",
+        "documento": "2000000002",
+        "foto": "perfiles/default.svg",
+        "usuario": 3,
+        "especialidad": 2,
+        "num_licencia": "VET002",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "lunes",
+            "martes",
+            "miercoles",
+            "jueves",
+            "viernes"
+        ],
+        "fecha_creado": "2026-05-27T16:15:17.939Z",
+        "servicios": []
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 3,
+    "fields": {
+        "nombre": "Carlos",
+        "apellido": "Ramírez",
+        "telefono": "3003333333",
+        "tipo_documento": "CC",
+        "documento": "2000000003",
+        "foto": "perfiles/default.svg",
+        "usuario": 4,
+        "especialidad": 3,
+        "num_licencia": "VET003",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "lunes",
+            "martes",
+            "miercoles"
+        ],
+        "fecha_creado": "2026-05-27T16:15:18.806Z",
+        "servicios": []
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 4,
+    "fields": {
+        "nombre": "Luisa",
+        "apellido": "Fernández",
+        "telefono": "3004444444",
+        "tipo_documento": "CC",
+        "documento": "2000000004",
+        "foto": "perfiles/default.svg",
+        "usuario": 5,
+        "especialidad": 4,
+        "num_licencia": "VET004",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "jueves",
+            "viernes",
+            "sabado"
+        ],
+        "fecha_creado": "2026-05-27T16:15:19.671Z",
+        "servicios": [
+            6
+        ]
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 5,
+    "fields": {
+        "nombre": "Miguel",
+        "apellido": "Castro",
+        "telefono": "3005555555",
+        "tipo_documento": "CC",
+        "documento": "2000000005",
+        "foto": "perfiles/default.svg",
+        "usuario": 6,
+        "especialidad": 5,
+        "num_licencia": "VET005",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "lunes",
+            "martes",
+            "viernes"
+        ],
+        "fecha_creado": "2026-05-27T16:15:20.540Z",
+        "servicios": [
+            3
+        ]
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 6,
+    "fields": {
+        "nombre": "Valentina",
+        "apellido": "Torres",
+        "telefono": "3006666666",
+        "tipo_documento": "CC",
+        "documento": "2000000006",
+        "foto": "perfiles/default.svg",
+        "usuario": 7,
+        "especialidad": 6,
+        "num_licencia": "VET006",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "lunes",
+            "martes",
+            "miercoles",
+            "jueves",
+            "viernes"
+        ],
+        "fecha_creado": "2026-05-27T16:15:21.408Z",
+        "servicios": [
+            1,
+            2
+        ]
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 7,
+    "fields": {
+        "nombre": "Santiago",
+        "apellido": "Morales",
+        "telefono": "3007777777",
+        "tipo_documento": "CC",
+        "documento": "2000000007",
+        "foto": "perfiles/default.svg",
+        "usuario": 8,
+        "especialidad": 7,
+        "num_licencia": "VET007",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "sabado",
+            "domingo"
+        ],
+        "fecha_creado": "2026-05-27T16:15:22.277Z",
+        "servicios": [
+            7
+        ]
+    }
+},
+{
+    "model": "usuarios.veterinario",
+    "pk": 8,
+    "fields": {
+        "nombre": "Paula",
+        "apellido": "Gómez",
+        "telefono": "3008888888",
+        "tipo_documento": "CC",
+        "documento": "2000000008",
+        "foto": "perfiles/default.svg",
+        "usuario": 9,
+        "especialidad": 8,
+        "num_licencia": "VET008",
+        "disponible": true,
+        "horario_inicio": "08:00:00",
+        "horario_fin": "18:00:00",
+        "dias_laborales": [
+            "lunes",
+            "miercoles",
+            "viernes"
+        ],
+        "fecha_creado": "2026-05-27T16:15:23.146Z",
+        "servicios": [
+            4
+        ]
+    }
+},
+{
+    "model": "mascota.especie",
+    "pk": 1,
+    "fields": {
+        "nombre": "Perro",
+        "descripcion": "Canino doméstico"
+    }
+},
+{
+    "model": "mascota.especie",
+    "pk": 2,
+    "fields": {
+        "nombre": "Gato",
+        "descripcion": "Felino doméstico"
+    }
+},
+{
+    "model": "mascota.raza",
+    "pk": 1,
+    "fields": {
+        "nombre": "Labrador",
+        "tipo_especie": 1
+    }
+},
+{
+    "model": "mascota.raza",
+    "pk": 2,
+    "fields": {
+        "nombre": "Pastor Alemán",
+        "tipo_especie": 1
+    }
+},
+{
+    "model": "mascota.raza",
+    "pk": 3,
+    "fields": {
+        "nombre": "Siamés",
+        "tipo_especie": 2
+    }
+},
+{
+    "model": "mascota.raza",
+    "pk": 4,
+    "fields": {
+        "nombre": "Angora",
+        "tipo_especie": 2
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 1,
+    "fields": {
+        "propietario": 1,
+        "nombre": "Max",
+        "especie": 1,
+        "raza": 1,
+        "fecha_nacimiento": "2020-05-10",
+        "sexo": "macho",
+        "peso_kg": "25.50",
+        "foto": "",
+        "esterilizacion": true,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.369Z",
+        "color": ""
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 2,
+    "fields": {
+        "propietario": 1,
+        "nombre": "Luna",
+        "especie": 2,
+        "raza": 3,
+        "fecha_nacimiento": "2021-03-12",
+        "sexo": "hembra",
+        "peso_kg": "4.20",
+        "foto": "",
+        "esterilizacion": false,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.372Z",
+        "color": ""
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 3,
+    "fields": {
+        "propietario": 2,
+        "nombre": "Rocky",
+        "especie": 1,
+        "raza": 2,
+        "fecha_nacimiento": "2019-07-01",
+        "sexo": "macho",
+        "peso_kg": "30.00",
+        "foto": "",
+        "esterilizacion": false,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.374Z",
+        "color": ""
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 4,
+    "fields": {
+        "propietario": 2,
+        "nombre": "Mia",
+        "especie": 2,
+        "raza": 3,
+        "fecha_nacimiento": "2022-01-10",
+        "sexo": "hembra",
+        "peso_kg": "3.80",
+        "foto": "",
+        "esterilizacion": false,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.376Z",
+        "color": ""
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 5,
+    "fields": {
+        "propietario": 3,
+        "nombre": "Toby",
+        "especie": 1,
+        "raza": 1,
+        "fecha_nacimiento": "2020-11-12",
+        "sexo": "macho",
+        "peso_kg": "22.00",
+        "foto": "",
+        "esterilizacion": false,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.377Z",
+        "color": ""
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 6,
+    "fields": {
+        "propietario": 3,
+        "nombre": "Nala",
+        "especie": 1,
+        "raza": 2,
+        "fecha_nacimiento": "2021-06-30",
+        "sexo": "hembra",
+        "peso_kg": "24.00",
+        "foto": "",
+        "esterilizacion": false,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.379Z",
+        "color": ""
+    }
+},
+{
+    "model": "mascota.mascota",
+    "pk": 7,
+    "fields": {
+        "propietario": 4,
+        "nombre": "Bruno",
+        "especie": 1,
+        "raza": 1,
+        "fecha_nacimiento": "2020-08-08",
+        "sexo": "macho",
+        "peso_kg": "27.00",
+        "foto": "",
+        "esterilizacion": false,
+        "estado": "activo",
+        "fecha_creacion": "2026-05-27T16:15:28.381Z",
+        "color": ""
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 1,
+    "fields": {
+        "nombre": "Cirugía",
+        "descripcion": "Procedimientos quirúrgicos",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.163Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 2,
+    "fields": {
+        "nombre": "Dermatología",
+        "descripcion": "Enfermedades de piel",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.166Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 3,
+    "fields": {
+        "nombre": "Cardiología",
+        "descripcion": "Corazón y sistema circulatorio",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.168Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 4,
+    "fields": {
+        "nombre": "Odontología",
+        "descripcion": "Salud dental animal",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.170Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 5,
+    "fields": {
+        "nombre": "Diagnóstico por Imágenes",
+        "descripcion": "Ecografías y estudios",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.172Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 6,
+    "fields": {
+        "nombre": "Medicina General",
+        "descripcion": "Atención primaria veterinaria",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.174Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 7,
+    "fields": {
+        "nombre": "Estética Animal",
+        "descripcion": "Baño y peluquería",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.176Z"
+    }
+},
+{
+    "model": "veterinarioapp.especialidad",
+    "pk": 8,
+    "fields": {
+        "nombre": "Laboratorio Clínico",
+        "descripcion": "Análisis clínicos",
+        "activo": true,
+        "fecha_creado": "2026-05-27T16:15:16.177Z"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 1,
+    "fields": {
+        "nombre_categoria": "Consulta General"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 2,
+    "fields": {
+        "nombre_categoria": "Cirugía"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 3,
+    "fields": {
+        "nombre_categoria": "Vacunación"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 4,
+    "fields": {
+        "nombre_categoria": "Diagnóstico"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 5,
+    "fields": {
+        "nombre_categoria": "Laboratorio"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 6,
+    "fields": {
+        "nombre_categoria": "Odontología"
+    }
+},
+{
+    "model": "citas.categoriaservicios",
+    "pk": 7,
+    "fields": {
+        "nombre_categoria": "Estética y Baño"
+    }
+},
+{
+    "model": "citas.servicio",
+    "pk": 1,
+    "fields": {
+        "nombre": "Consulta General",
+        "descripcion": "Revisión médica general",
+        "precio": "50000.00",
+        "duracion_minutos": 30,
+        "categoria": 1,
+        "especialista_required": 6,
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:16.190Z"
+    }
+},
+{
+    "model": "citas.servicio",
+    "pk": 2,
+    "fields": {
+        "nombre": "Vacuna Antirrábica",
+        "descripcion": "Prevención de rabia",
+        "precio": "30000.00",
+        "duracion_minutos": 15,
+        "categoria": 3,
+        "especialista_required": 6,
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:16.193Z"
+    }
+},
+{
+    "model": "citas.servicio",
+    "pk": 3,
+    "fields": {
+        "nombre": "Ecografía",
+        "descripcion": "Diagnóstico por imágenes",
+        "precio": "90000.00",
+        "duracion_minutos": 40,
+        "categoria": 4,
+        "especialista_required": 5,
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:16.194Z"
+    }
+},
+{
+    "model": "citas.servicio",
+    "pk": 4,
+    "fields": {
+        "nombre": "Examen de Sangre",
+        "descripcion": "Hemograma completo",
+        "precio": "60000.00",
+        "duracion_minutos": 20,
+        "categoria": 5,
+        "especialista_required": 8,
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:16.196Z"
+    }
+},
+{
+    "model": "citas.servicio",
+    "pk": 5,
+    "fields": {
+        "nombre": "Esterilización",
+        "descripcion": "Cirugía de esterilización",
+        "precio": "180000.00",
+        "duracion_minutos": 90,
+        "categoria": 2,
+        "especialista_required": 1,
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:16.198Z"
+    }
+},
+{
+    "model": "citas.servicio",
+    "pk": 6,
+    "fields": {
+        "nombre": "Limpieza Dental",
+        "descripcion": "Profilaxis dental",
+        "precio": "70000.00",
+        "duracion_minutos": 45,
+        "categoria": 6,
+        "especialista_required": 4,
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:16.199Z"
+    }
+},
+{
+    "model": "citas.vacuna",
+    "pk": 1,
+    "fields": {
+        "nombre": "RabiaVet",
+        "especie": 1,
+        "enfermedad_objetivo": "Rabia",
+        "precio_adquisicion": "15000.00",
+        "precio_venta": "30000.00",
+        "laboratorio": "Zoetis",
+        "dosis_total": 1,
+        "lote": "RAB-2026-001",
+        "estado": "activo"
+    }
+},
+{
+    "model": "citas.vacuna",
+    "pk": 2,
+    "fields": {
+        "nombre": "Triple Felina",
+        "especie": 2,
+        "enfermedad_objetivo": "Panleucopenia",
+        "precio_adquisicion": "18000.00",
+        "precio_venta": "35000.00",
+        "laboratorio": "Merial",
+        "dosis_total": 2,
+        "lote": "FEL-2026-002",
+        "estado": "activo"
+    }
+},
+{
+    "model": "citas.vacuna",
+    "pk": 3,
+    "fields": {
+        "nombre": "ParvoCan",
+        "especie": 1,
+        "enfermedad_objetivo": "Parvovirus Canino",
+        "precio_adquisicion": "12000.00",
+        "precio_venta": "28000.00",
+        "laboratorio": "Boehringer",
+        "dosis_total": 3,
+        "lote": "PAR-2026-003",
+        "estado": "activo"
+    }
+},
+{
+    "model": "citas.vacuna",
+    "pk": 4,
+    "fields": {
+        "nombre": "Moquillo Plus",
+        "especie": 1,
+        "enfermedad_objetivo": "Moquillo Canino",
+        "precio_adquisicion": "14000.00",
+        "precio_venta": "32000.00",
+        "laboratorio": "Virbac",
+        "dosis_total": 2,
+        "lote": "MOQ-2026-004",
+        "estado": "activo"
+    }
+},
+{
+    "model": "citas.vacuna",
+    "pk": 5,
+    "fields": {
+        "nombre": "Leucemia Felina",
+        "especie": 2,
+        "enfermedad_objetivo": "Leucemia Felina",
+        "precio_adquisicion": "17000.00",
+        "precio_venta": "34000.00",
+        "laboratorio": "Pfizer Animal Health",
+        "dosis_total": 2,
+        "lote": "LEU-2026-005",
+        "estado": "activo"
+    }
+},
+{
+    "model": "notificacion.plantillanotificacion",
+    "pk": 1,
+    "fields": {
+        "canal": "email",
+        "nombre": "cita_agendada",
+        "asunto_plantilla": "✅ Cita agendada correctamente",
+        "cuerpo_plantilla": "\n            <h2>Hola {{ nombre }} 👋</h2>\n\n            <p>Tu cita fue agendada correctamente.</p>\n\n            <p><strong>Mascota:</strong> {{ mascota }}</p>\n            <p><strong>Fecha:</strong> {{ fecha }}</p>\n            <p><strong>Hora:</strong> {{ hora }}</p>\n            <p><strong>Servicio:</strong> {{ servicio }}</p>\n            <p><strong>Veterinario:</strong> {{ veterinario }}</p>\n            ",
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:28.382Z"
+    }
+},
+{
+    "model": "notificacion.plantillanotificacion",
+    "pk": 2,
+    "fields": {
+        "canal": "email",
+        "nombre": "recordatorio_cita",
+        "asunto_plantilla": "⏰ Recordatorio de cita veterinaria",
+        "cuerpo_plantilla": "\n            <h2>Hola {{ nombre }} ⏰</h2>\n\n            <p>Te recordamos que mañana tienes una cita veterinaria.</p>\n            ",
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:28.385Z"
+    }
+},
+{
+    "model": "notificacion.plantillanotificacion",
+    "pk": 3,
+    "fields": {
+        "canal": "email",
+        "nombre": "cuenta_creada",
+        "asunto_plantilla": "🎉 Bienvenido a Little Pets",
+        "cuerpo_plantilla": "\n            <h2>Bienvenido {{ nombre }} 🎉</h2>\n\n            <p>Tu cuenta fue creada correctamente.</p>\n\n            <p><strong>Correo:</strong> {{ correo }}</p>\n            ",
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:28.387Z"
+    }
+},
+{
+    "model": "notificacion.plantillanotificacion",
+    "pk": 4,
+    "fields": {
+        "canal": "email",
+        "nombre": "vacuna_pendiente",
+        "asunto_plantilla": "💉 Vacuna pendiente",
+        "cuerpo_plantilla": "\n            <h2>Hola {{ nombre }} 💉</h2>\n\n            <p>Tu mascota tiene vacunas pendientes.</p>\n            ",
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:28.388Z"
+    }
+},
+{
+    "model": "notificacion.plantillanotificacion",
+    "pk": 5,
+    "fields": {
+        "canal": "email",
+        "nombre": "cita_cancelada",
+        "asunto_plantilla": "❌ Cita cancelada con éxito",
+        "cuerpo_plantilla": "\n            <h2>Hola {{ nombre }} ❌</h2>\n\n            <p>Tu cita fue cancelada con éxito.</p>\n\n            <hr>\n\n            <h3>📅 Detalles de la cita cancelada</h3>\n\n            <ul>\n                <li><strong>Mascota:</strong> {{ mascota }}</li>\n                <li><strong>Servicio:</strong> {{ servicio }}</li>\n                <li><strong>Fecha:</strong> {{ fecha }}</li>\n                <li><strong>Hora:</strong> {{ hora }}</li>\n                <li><strong>Veterinario:</strong> {{ veterinario }}</li>\n            </ul>\n\n            <p>Si lo necesitas, puedes reagendar una nueva cita 🐾</p>\n            ",
+        "activo": true,
+        "fecha_creacion": "2026-05-27T16:15:28.390Z"
+    }
+}
+]

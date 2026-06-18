@@ -1,0 +1,155 @@
+/* ─── FORMULARIOS ─── */
+:root {
+  --verde: #2d6a4f;
+  --verde-claro: #52b788;
+  --crema: #fdf8f0;
+  --dorado: #d4a853;
+  --marron: #6b3a2a;
+  --gris: #555;
+  --blanco: #fff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--crema);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ── Tarjeta ── */
+.form-card {
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.08);
+}
+
+/* ── Cabecera ── */
+.form-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--verde);
+  margin-bottom: .2rem;
+}
+.form-logo span { color: var(--dorado); }
+
+.form-titulo {
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Progreso ── */
+.progress {
+  display: flex;
+  gap: .4rem;
+  margin-bottom: 2rem;
+}
+.progress span {
+  flex: 1; height: 3px;
+  border-radius: 2px;
+  background: #eee;
+}
+.progress span.done  { background: var(--verde-claro); }
+.progress span.active { background: var(--verde); }
+
+/* ── Campos ── */
+.form-card p { margin-bottom: .9rem; }
+
+.form-card label {
+  display: block;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: .3rem;
+}
+
+.form-card input,
+.form-card select {
+  width: 100%;
+  padding: .75rem 1rem;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .93rem;
+  color: var(--gris);
+  background: var(--crema);
+  outline: none;
+  transition: border-color .2s;
+}
+.form-card input:focus,
+.form-card select:focus {
+  border-color: var(--verde-claro);
+  background: var(--blanco);
+}
+.form-card input::placeholder { color: #ccc; }
+
+/* Info dueño */
+.dueño-info {
+  background: #f0faf5;
+  border-left: 3px solid var(--verde-claro);
+  border-radius: 8px;
+  padding: .7rem 1rem;
+  font-size: .88rem;
+  color: var(--verde);
+  margin-bottom: 1.2rem;
+}
+.dueño-info strong { font-weight: 700; }
+
+/* ── Botón ── */
+.btn-form {
+  width: 100%;
+  padding: .85rem;
+  border: none;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s;
+  margin-top: .4rem;
+}
+.btn-form.verde {
+  background: var(--verde);
+  color: var(--blanco);
+}
+.btn-form.verde:hover {
+  background: var(--verde-claro);
+  transform: translateY(-2px);
+}
+.btn-form.marron {
+  background: var(--marron);
+  color: var(--blanco);
+}
+.btn-form.marron:hover {
+  background: var(--dorado);
+  color: var(--marron);
+  transform: translateY(-2px);
+}
+
+/* ── Link volver ── */
+.form-back {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: .83rem;
+  color: #bbb;
+}
+.form-back a {
+  color: var(--verde);
+  font-weight: 600;
+  text-decoration: none;
+}
+.form-back a:hover { color: var(--verde-claro); }

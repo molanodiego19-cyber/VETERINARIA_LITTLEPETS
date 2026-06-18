@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LittlePets — Clínica Veterinaria</title>
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">🐾 Little<span>Pets</span></div>
+  <ul class="nav-links">
+    <li><a href="#mision">Nosotros</a></li>
+    <li><a href="#vacunacion">Vacunación</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#">Contacto</a></li>
+  </ul>
+  <div class="nav-buttons">
+  <a href="{% url 'usuarios:login' %}" class="nav-cta">Iniciar Sesion</a>
+   </div>
+</nav>
+
+<!-- CAROUSEL -->
+<div class="carousel" id="carousel">
+  <div class="slides" id="slides">
+
+    <div class="slide active">
+      <div class="slide-bg" style="background-image: url('static/img/veterinaria1.jpg')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content fade-up">
+        <span class="slide-tag">Bienvenido a LittlePets</span>
+        <h1>Tu mascota merece lo mejor</h1>
+        <p>Atención veterinaria de excelencia con amor y tecnología de punta para cada paciente.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-bg" style="background-image: url('static/img/veterinaria2.jpg')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-tag">Vacunación & Prevención</span>
+        <h1>Protege su salud desde el primer día</h1>
+        <p>Calendarios de vacunación personalizados para perros, gatos y más.</p>
+        <a href="#vacunacion" class="btn-slide">Ver programa</a>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-bg" style="background-image: url('static/img/veterinaria3.jpg')"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-tag">Atención 24 / 7</span>
+        <h1>Siempre aquí cuando más nos necesitas</h1>
+        <p>Urgencias veterinarias disponibles cualquier día, a cualquier hora.</p>
+        <a href="#citas" class="btn-slide">Contáctanos</a>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="carousel-btn prev" onclick="changeSlide(-1)">&#8592;</button>
+  <button class="carousel-btn next" onclick="changeSlide(1)">&#8594;</button>
+
+  <div class="carousel-dots" id="dots">
+    <button class="dot active" onclick="goTo(0)"></button>
+    <button class="dot" onclick="goTo(1)"></button>
+    <button class="dot" onclick="goTo(2)"></button>
+  </div>
+</div>
+
+<!-- MISIÓN / VISIÓN -->
+<section class="mv-section" id="mision">
+  <div class="mv-card">
+    <div class="mv-deco"></div>
+    <span class="mv-icon">🎯</span>
+    <p class="mv-label">Nuestra Misión</p>
+    <div class="mv-line"></div>
+    <h2 class="mv-title">Cuidar con pasión y ciencia</h2>
+    <p class="mv-text">En LittlePets nos dedicamos a brindar atención veterinaria integral, compasiva y de la más alta calidad. Trabajamos cada día para que cada mascota reciba el cuidado que merece, combinando medicina moderna con un trato cálido y humano tanto para el paciente como para su familia.</p>
+  </div>
+  <div class="mv-card">
+    <div class="mv-deco"></div>
+    <span class="mv-icon">🌿</span>
+    <p class="mv-label">Nuestra Visión</p>
+    <div class="mv-line"></div>
+    <h2 class="mv-title">Ser el referente del bienestar animal</h2>
+    <p class="mv-text">Aspiramos a ser la clínica veterinaria líder de la región, reconocida por la excelencia de nuestros profesionales, la innovación en nuestros tratamientos y el vínculo de confianza que construimos con cada familia que nos elige para cuidar a sus animales de compañía.</p>
+  </div>
+</section>
+
+<!-- VACUNACIÓN -->
+<section class="vacuna-section" id="vacunacion">
+  <div class="vacuna-header">
+    <div>
+      <span class="section-tag">Salud Preventiva</span>
+      <h2 class="section-title">Programa de<br/>Vacunación</h2>
+    </div>
+    <p class="section-lead">Proteger a tu mascota comienza con un calendario de vacunas bien planificado. Nuestros especialistas te guían en cada etapa.</p>
+  </div>
+
+  <div class="vacuna-grid">
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🐶</span>
+      <h3>Cachorros (Perros)</h3>
+      <p>Primera vacunación a las 6–8 semanas de vida. Incluye Moquillo, Parvovirus, Hepatitis y Leptospirosis. Refuerzos cada 3–4 semanas hasta las 16 semanas.</p>
+      <span class="vacuna-badge">🛡️ Obligatoria</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🐱</span>
+      <h3>Gatitos</h3>
+      <p>Iniciamos a las 8 semanas con la vacuna triple felina (Calicivirus, Rinotraqueítis, Panleucopenia). Antirrábica a las 12 semanas con refuerzo anual.</p>
+      <span class="vacuna-badge">🛡️ Esencial</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">💉</span>
+      <h3>Adultos — Refuerzos</h3>
+      <p>Las vacunas de adultos se aplican anualmente o cada 3 años según el tipo. Mantener al día el carné evita enfermedades graves y es requerido en peluquerías y viajes.</p>
+      <span class="vacuna-badge">📅 Anual</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🐇</span>
+      <h3>Otras Mascotas</h3>
+      <p>También atendemos conejos, hurones y aves. Contamos con protocolos de vacunación adaptados para Enfermedad Hemorrágica Viral (EHV) y distemper en hurones.</p>
+      <span class="vacuna-badge">✅ Consultar</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🦠</span>
+      <h3>Antirrábica</h3>
+      <p>Vacuna contra la rabia obligatoria por ley para perros y gatos mayores de 3 meses. Nuestras campañas periódicas la ofrecen a precios accesibles todo el año.</p>
+      <span class="vacuna-badge">⚖️ Ley Nacional</span>
+    </div>
+    
+
+</section>
+
+<section class="vacuna-section" id="servicios">
+  <div class="vacuna-header">
+    <div>
+      <span class="section-tag">Lo que ofrecemos</span>
+      <h2 class="section-title">Nuestros<br/>Servicios</h2>
+    </div>
+    <p class="section-lead">Cuidamos a tu mascota de la cabeza a la cola. Desde estética hasta medicina especializada, todo en un solo lugar.</p>
+  </div>
+
+  <div class="vacuna-grid">
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🛁</span>
+      <h3>Baño & Secado</h3>
+      <p>Baño profundo con shampoo hipoalergénico, secado profesional y perfume especial para mascotas. Dejamos a tu peludo limpio, suave y con olor increíble.</p>
+      <span class="vacuna-badge">🐾 Perros y Gatos</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">✂️</span>
+      <h3>Corte de Pelo</h3>
+      <p>Cortes estándar por raza o personalizados según tu preferencia. Nuestros estilistas caninos tienen experiencia con todas las razas y tipos de pelaje.</p>
+      <span class="vacuna-badge">✨ Estética</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🐾</span>
+      <h3>Corte de Uñas</h3>
+      <p>Corte seguro y sin estrés para tu mascota. Incluye limado para evitar bordes filosos. Recomendado cada 3–4 semanas para la salud de sus patas.</p>
+      <span class="vacuna-badge">⏱️ 15 minutos</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🦷</span>
+      <h3>Limpieza Dental</h3>
+      <p>Eliminamos el sarro y la placa bacteriana que acumulan los dientes de tu mascota. Prevenimos enfermedades periodontales y mal aliento con limpieza ultrasónica.</p>
+      <span class="vacuna-badge">🏥 Veterinario</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">👂</span>
+      <h3>Limpieza de Oídos</h3>
+      <p>Revisión y limpieza profunda del canal auditivo para prevenir infecciones por hongos y bacterias. Especialmente importante en razas de orejas caídas.</p>
+      <span class="vacuna-badge">🔍 Preventivo</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🩺</span>
+      <h3>Consulta General</h3>
+      <p>Revisión completa del estado de salud de tu mascota. Diagnóstico, exámenes de laboratorio, desparasitación y orientación nutricional con nuestros veterinarios.</p>
+      <span class="vacuna-badge">📋 Con cita</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">💊</span>
+      <h3>Desparasitación</h3>
+      <p>Control interno y externo de parásitos con productos certificados. Protegemos a tu mascota de pulgas, garrapatas, gusanos y más según su peso y edad.</p>
+      <span class="vacuna-badge">📅 Periódica</span>
+    </div>
+    <div class="vacuna-card">
+      <span class="vacuna-emoji">🚑</span>
+      <h3>Urgencias 24/7</h3>
+      <p>Atención de emergencias veterinarias disponible las 24 horas. Contamos con quirófano, equipos de diagnóstico por imagen y personal especializado siempre listo.</p>
+      <span class="vacuna-badge">🔴 Disponible</span>
+    </div>
+    <div class="vacuna-card">
+  <span class="vacuna-emoji">ﮩـﮩﮩ٨ـ🫀ﮩ٨ـﮩﮩ٨ـ</span>
+  <h3>Ecografía Veterinaria</h3>
+  <p>Diagnóstico por imagen para evaluar órganos internos, detectar gestaciones, tumores, inflamaciones y otras condiciones de salud de forma rápida, segura y no invasiva.</p>
+  <span class="vacuna-badge">🔬 Diagnóstico</span>
+</div>
+
+  <div class="vacuna-card">
+    <span class="vacuna-emoji">🧪</span>
+    <h3>Examen de Sangre</h3>
+    <p>Realizamos pruebas hematológicas y bioquímicas para evaluar el estado general de salud de tu mascota, detectar enfermedades y apoyar diagnósticos precisos.</p>
+    <span class="vacuna-badge">📋 Laboratorio</span>
+  </div>
+  </div>
+</section>
+
+<!-- CITAS + CONTACTO (MISMO FONDO / HORIZONTAL) -->
+<section class="citas-section" id="citas">
+
+  <div class="citas-blob b1"></div>
+  <div class="citas-blob b2"></div>
+
+  <div class="citas-split">
+
+    <!-- ===================== -->
+    <!-- IZQUIERDA: CITAS -->
+    <!-- ===================== -->
+    <div class="citas-block">
+
+      <span class="section-tag">Reserva Online</span>
+
+      <h2 class="section-title fade-up">
+        ¿Listo para darle la mejor atención a tu mascota?
+      </h2>
+
+      <p class="section-lead fade-up delay-1">
+        Agenda tu cita en minutos. Elige el horario ideal para ti.
+      </p>
+
+      <div class="citas-badges fade-up delay-3">
+        <span class="citas-badge">📞 Confirmación inmediata</span>
+        <span class="citas-badge">🕒 Horario flexible</span>
+        <span class="citas-badge">🏥 Sin lista de espera</span>
+        <span class="citas-badge">💳 Múltiples formas de pago</span>
+      </div>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 <span>LittlePets Clínica Veterinaria</span> — Todos los derechos reservados &nbsp;|&nbsp; Hecho con ❤️ para las mascotas</p>
+</footer>
+
+<script>
+  let current = 0;
+  const slides = document.getElementById('slides');
+  const allSlides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  let timer;
+
+  function goTo(n) {
+    allSlides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (n + allSlides.length) % allSlides.length;
+    allSlides[current].classList.add('active');
+    dots[current].classList.add('active');
+    slides.style.transform = `translateX(-${current * 100}%)`;
+    resetTimer();
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => changeSlide(1), 5000);
+  }
+
+  resetTimer();
+
+  // Scroll fade-up for cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.vacuna-card, .mv-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(28px)';
+    el.style.transition = `opacity .6s ${i * .1}s, transform .6s ${i * .1}s`;
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

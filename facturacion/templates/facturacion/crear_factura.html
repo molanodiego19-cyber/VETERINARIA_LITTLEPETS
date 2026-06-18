@@ -1,0 +1,230 @@
+{% extends 'usuarios/base_recepcionista.html' %}
+
+{% block page_name %}Facturación{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card shadow border-0 factura-card">
+
+        <div class="card-header factura-header text-center">
+            <h3 class="mb-0">🧾 Factura</h3>
+        </div>
+
+        <div class="card-body p-4">
+
+            {% if consulta %}
+
+            <div class="row text-center mb-4">
+
+                <div class="col-md-3">
+                    <small class="text-muted">Mascota</small>
+                    <h6>{{ consulta.cita.mascota }}</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">Veterinario</small>
+                    <h6>{{ consulta.veterinario }}</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">Fecha</small>
+                    <h6>{{ consulta.cita.fecha }}</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">Hora</small>
+                    <h6>{{ consulta.cita.hora }}</h6>
+                </div>
+
+            </div>
+
+            {% with servicio=consulta.cita.servicio %}
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover text-center align-middle">
+
+                    <thead class="table-light">
+
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Precio</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>{{ servicio.nombre }}</td>
+                            <td class="fw-bold text-success">
+                                ${{ servicio.precio }}
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% endwith %}
+
+            {% elif cita %}
+
+            <div class="row text-center mb-4">
+
+                <div class="col-md-3">
+                    <small class="text-muted">Mascota</small>
+                    <h6>{{ cita.mascota }}</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">Veterinario</small>
+                    <h6>{{ cita.veterinario }}</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">Fecha</small>
+                    <h6>{{ cita.fecha }}</h6>
+                </div>
+
+                <div class="col-md-3">
+                    <small class="text-muted">Hora</small>
+                    <h6>{{ cita.hora }}</h6>
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover text-center align-middle">
+
+                    <thead class="table-light">
+
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Precio</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>{{ servicio.nombre }}</td>
+                            <td class="fw-bold text-success">
+                                ${{ servicio.precio }}
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% endif %}
+
+            <div class="row justify-content-center mt-4">
+
+                <div class="col-md-5">
+
+                    <div class="card border-0 bg-light">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <strong>${{ subtotal }}</strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Impuestos (1%):</span>
+                                <strong>${{ impuestos }}</strong>
+                            </div>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between">
+
+                                <h5 class="mb-0">
+                                    Total
+                                </h5>
+
+                                <h5 class="mb-0 text-success fw-bold">
+                                    ${{ total }}
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <form method="post" class="mt-4">
+
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="text-center">
+
+                    <button type="submit" class="btn btn-success px-4">
+
+                        💰 Confirmar y Pagar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.factura-card{
+    max-width: 950px;
+    margin: auto;
+    border-radius: 15px;
+}
+
+.factura-header{
+    background: linear-gradient(135deg,#4f46e5,#2563eb);
+    color:white;
+    padding:18px;
+}
+
+.table{
+    margin-bottom:0;
+}
+
+.table th{
+    font-weight:600;
+}
+
+.card.bg-light{
+    border-radius:12px;
+}
+
+h6{
+    font-weight:600;
+    margin-top:5px;
+}
+
+</style>
+
+{% endblock %}

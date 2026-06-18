@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Recepcionista</title>
+    {% load static %}
+    {% block extra_styles %}{% endblock %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/panel_propietario.css' %}">
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+    <a href="{% url 'usuarios:panel_recepcionista' %}" class="nav-brand">
+        🐾 Little<span>Pets</span>
+    </a>
+
+    <span class="nav-page-title">Panel del Recepcionista</span>
+
+    <div style="display:flex; align-items:center; gap:.75rem;">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Abrir menú">☰</button>
+        <a href="{% url 'usuarios:logout' %}" class="btn-verde">Cerrar sesión</a>
+    </div>
+</nav>
+
+<!-- ── LAYOUT ── -->
+<div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+
+        <!-- Dashboard -->
+        <a href="{% url 'usuarios:panel_recepcionista' %}"
+           class="sidebar-home {% if request.resolver_match.url_name == 'dashboard_recepcionista' %}active{% endif %}">
+            <span class="icon">🏠</span> Dashboard
+        </a>
+
+        <div class="sidebar-sep"></div>
+
+        <!-- MI CUENTA -->
+        <div class="acc-section sec-usuarios">
+            <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+                <span class="acc-dot dot-usuarios"></span>
+                <span class="acc-label">Mi Cuenta</span>
+                <span class="acc-arrow">▼</span>
+            </button>
+
+            <div class="acc-panel">
+                <div class="acc-inner">
+
+                    <a href="{% url 'usuarios:perfil_recepcionista' %}"
+                       class="sidebar-link {% if request.resolver_match.url_name == 'perfil_recepcionista' %}active{% endif %}">
+                        <span class="icon">👤</span> Mi Perfil
+                    </a>
+
+                    <a href="{% url 'usuarios:contraseña_recepcionista' %}"
+                       class="sidebar-link">
+                        <span class="icon">🔒</span> Cambiar Contraseña
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- CITAS -->
+        <div class="acc-section sec-citas">
+            <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+                <span class="acc-dot dot-citas"></span>
+                <span class="acc-label">Citas</span>
+                <span class="acc-arrow">▼</span>
+            </button>
+
+            <div class="acc-panel">
+                <div class="acc-inner">
+
+                    <a href="{% url 'panel:panel_cita_list' %}" class="sidebar-link">
+                        <span class="icon">📅</span> Ver Citas
+                    </a>
+
+                    <a href="{% url 'citas:crear' %}" class="sidebar-link">
+                        <span class="icon">➕</span> Agendar Cita
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- PROPIETARIOS -->
+        <div class="acc-section sec-usuarios">
+            <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+                <span class="acc-dot dot-usuarios"></span>
+                <span class="acc-label">Propietarios</span>
+                <span class="acc-arrow">▼</span>
+            </button>
+
+            <div class="acc-panel">
+                <div class="acc-inner">
+
+                    <a href="{% url 'panel:panel_propietario_list' %}" class="sidebar-link">
+                        <span class="icon">👥</span> Ver Propietarios
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- FACTURACIÓN -->
+        <div class="acc-section sec-factura">
+            <button class="acc-btn" onclick="toggleAcc(this)" aria-expanded="false">
+                <span class="acc-dot dot-factura"></span>
+                <span class="acc-label">Facturación</span>
+                <span class="acc-arrow">▼</span>
+            </button>
+
+            <div class="acc-panel">
+                <div class="acc-inner">
+
+                    <a href="{% url 'panel:panel_factura_list' %}" class="sidebar-link">
+                        <span class="icon">🧾</span> Ver Facturas
+                    </a>
+
+                    <a href="{% url 'facturacion:factura_pendiente' %}" class="sidebar-link">
+                        <span class="icon">🧾</span> Facturas Pendientes
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- ── CONTENIDO ── -->
+    <main class="page-content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+    Little Pets &copy; 2026 · Recepción
+</footer>
+
+<!-- Overlay mobile -->
+<div id="sidebarOverlay" onclick="closeSidebar()"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:150; backdrop-filter:blur(2px);"></div>
+
+<script>
+function toggleAcc(btn) {
+    const panel = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+
+    btn.classList.toggle('open', !isOpen);
+    panel.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+}
+
+document.querySelectorAll('.sidebar-link.active').forEach(link => {
+    const panel = link.closest('.acc-panel');
+    const btn = panel?.previousElementSibling;
+    if (panel && btn) {
+        panel.classList.add('open');
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+    }
+});
+
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+    const open = sidebar.classList.toggle('open');
+    overlay.style.display = open ? 'block' : 'none';
+});
+
+function closeSidebar() {
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+}
+</script>
+
+</body>
+</html>

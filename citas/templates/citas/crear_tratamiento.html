@@ -1,0 +1,87 @@
+{% extends 'usuarios/base_veterinario.html' %}
+
+{% block content %}
+<style>
+  .form-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-top:25px;
+}
+
+.form-actions button{
+    border:none;
+    border-radius:12px;
+    padding:12px 22px;
+    font-size:0.9rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:all .25s ease;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.btn-verde{
+    background:linear-gradient(135deg,#2d6a4f,#40916c);
+    color:#fff;
+}
+
+.btn-verde:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(64,145,108,.25);
+}
+
+.btn-marron{
+    background:linear-gradient(135deg,#9c6644,#7f5539);
+    color:#fff;
+}
+
+.btn-marron:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(156,102,68,.25);
+}
+
+.form-actions button:active{
+    transform:scale(.98);
+}
+</style>
+<div class="form-card">
+  <div class="page-title">
+    💊 Crear Tratamiento - {{ consulta.cita.mascota.nombre }}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="form-group">
+        <label>{{ field.label }}</label>
+        {{ field }}
+
+        {% if field.errors %}
+          <small style="color:red;">{{ field.errors }}</small>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">
+        Guardar Tratamiento
+      </button>
+
+      <button type="submit"
+    name="accion"
+    value="cancelar"
+    class="btn-marron"
+    formnovalidate>
+    ❌ Cancelar Tratamiento
+  </button>
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

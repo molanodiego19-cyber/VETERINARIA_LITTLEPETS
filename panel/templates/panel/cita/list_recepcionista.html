@@ -1,0 +1,419 @@
+{% extends "usuarios/base_recepcionista.html" %}
+{% block content %}
+
+<style>
+
+.filters-wrap{
+    background:white;
+    padding:1rem;
+    border-radius:14px;
+    margin-bottom:1.5rem;
+    border:1px solid #eee;
+}
+
+.filters-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1rem;
+    align-items:end;
+}
+
+.filters-grid label{
+    display:block;
+    font-size:.75rem;
+    font-weight:bold;
+    margin-bottom:.3rem;
+    color:#666;
+}
+
+.filters-grid select,
+.filters-grid input{
+    width:100%;
+    padding:.7rem;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.filter-buttons{
+    display:flex;
+    gap:.5rem;
+}
+
+.btn-filtrar{
+    background:#198754;
+    color:white;
+    border:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.btn-limpiar{
+    background:#dc3545;
+    color:white;
+    text-decoration:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+}
+
+.report-actions{
+    display:flex;
+    gap:1rem;
+    margin-bottom:1rem;
+}
+
+.btn-pdf{
+    background:#dc3545;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.btn-excel{
+    background:#198754;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.btn-confirmar {
+    background: #52b788;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(82, 183, 136, 0.2);
+}
+
+.btn-confirmar:hover {
+    background: #2d6a4f;
+    transform: translateY(-1px);
+}
+
+/* Opcional: Estilo para cuando ya esté confirmada */
+.badge.confirmada {
+    background: #d8f3dc;
+    color: #2d6a4f;
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.btn-cancelar {
+    background: #ef476f;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(239, 71, 111, 0.25);
+}
+
+.btn-cancelar:hover {
+    background: #d90429;
+    transform: translateY(-1px);
+}
+</style>
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Citas</div>
+    <div class="page-sub">
+      Visualización general de citas registradas
+    </div>
+  </div>
+</div>
+
+
+<form method="get" class="filters-wrap">
+
+  <div class="filters-grid">
+
+    <!-- ESTADO -->
+    <div>
+      <label>Estado</label>
+
+      <select name="estado">
+
+        <option value="">Todos</option>
+
+        {% for value, label in estados %}
+
+          <option 
+            value="{{ value }}"
+            {% if request.GET.estado == value %}
+              selected
+            {% endif %}
+          >
+            {{ label }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- FECHA -->
+    <div>
+      <label>Fecha</label>
+
+      <input
+        type="date"
+        name="fecha"
+        value="{{ request.GET.fecha }}"
+      >
+    </div>
+
+    <!-- SERVICIO -->
+    <div>
+      <label>Servicio</label>
+
+      <select name="servicio">
+
+        <option value="">Todos</option>
+
+        {% for s in servicios %}
+
+          <option
+            value="{{ s.id }}"
+            {% if request.GET.servicio == s.id|stringformat:"s" %}
+              selected
+            {% endif %}
+          >
+            {{ s.nombre }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- VETERINARIO -->
+    <div>
+      <label>Veterinario</label>
+
+      <select name="veterinario">
+
+        <option value="">Todos</option>
+
+        {% for v in veterinarios %}
+
+          <option
+            value="{{ v.id }}"
+            {% if request.GET.veterinario == v.id|stringformat:"s" %}
+              selected
+            {% endif %}
+          >
+            {{ v }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="filter-buttons">
+
+      <button type="submit" class="btn-filtrar">
+        Filtrar
+      </button>
+
+      <a href="{% url 'panel:panel_cita_list' %}" class="btn-limpiar">
+        Limpiar
+      </a>
+
+    </div>
+
+  </div>
+
+</form>
+
+
+<div class="table-wrap">
+
+  <table>
+
+    <thead>
+      <tr>
+
+        <th>ID</th>
+        <th>Propietario</th>
+        <th>Mascota</th>
+        <th>Veterinario</th>
+        <th>Servicio</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Cancelar</th>
+        <th>Recordatorio</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {% for c in citas %}
+
+      <tr>
+
+        <td>
+          <strong>#{{ c.id }}</strong>
+        </td>
+
+        <td>
+          {{ c.dueño }}
+        </td>
+
+        <td>
+          {{ c.mascota.nombre }}
+        </td>
+
+        <td>
+
+          {% if c.veterinario %}
+            {{ c.veterinario }}
+          {% else %}
+            <span style="color:#999;">
+              Sin asignar
+            </span>
+          {% endif %}
+
+        </td>
+
+        <td>
+          {{ c.servicio.nombre }}
+        </td>
+
+        <td>
+          {{ c.fecha }}
+        </td>
+
+        <td>
+          {{ c.hora }}
+        </td>
+
+        <td>
+
+          {% if c.estado == 'pendiente' %}
+            <form action="{% url 'citas:confirmar_cita_recepcionista' c.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-confirmar">
+                ✅ Confirmar
+              </button>
+            </form>
+
+        
+          {% elif c.estado == 'confirmada' %}
+
+            <span style="color:rgb(67, 204, 223);font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'cancelada' %}
+
+            <span style="color:red;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'finalizada' %}
+
+            <span style="color:green;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% elif c.estado == 'en_proceso' %}
+
+            <span style="color:#6f42c1;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% else %}
+
+            <span style="color:#666;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% endif %}
+
+        </td>
+
+        <td>
+
+          {% if c.estado == 'pendiente' %}
+            <form action="{% url 'citas:cancelar' c.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-cancelar">
+                    ❌ Cancelar
+                </button>
+            </form>
+
+          {% elif c.estado == 'cancelada' %}
+
+            <span style="color:red;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% else %}
+
+            <span style="color:#666;font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
+          {% endif %}
+
+        </td>
+
+        <td>
+
+          {% if c.recordatorio_enviado %}
+
+            <span style="color:green;font-weight:bold;">
+              Enviado
+            </span>
+
+          {% else %}
+
+            <span style="color:red;font-weight:bold;">
+              Pendiente
+            </span>
+
+          {% endif %}
+
+        </td>
+
+      </tr>
+
+      {% empty %}
+
+      <tr>
+        <td colspan="9" class="empty-msg">
+          No existen citas registradas.
+        </td>
+      </tr>
+
+      {% endfor %}
+
+    </tbody>
+
+  </table>
+
+</div>
+
+{% endblock %}

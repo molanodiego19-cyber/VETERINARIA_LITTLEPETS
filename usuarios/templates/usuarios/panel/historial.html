@@ -1,0 +1,21 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block content %}
+<h3>Historial Clínico</h3>
+
+<table class="table">
+    <tr>
+        <th>Mascota</th>
+        <th>Fecha</th>
+        <th>Diagnóstico</th>
+    </tr>
+
+    {% for h in object_list %}
+    <tr>
+        <td>{{ h.mascota.nombre }}</td>
+        <td>{{ h.fecha }}</td>
+        <td>{{ h.descripcion }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

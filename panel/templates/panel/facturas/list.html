@@ -1,0 +1,563 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.page-title{
+    font-size:2.2rem;
+    font-weight:800;
+    color:#2d6a4f;
+    margin-bottom:4px;
+}
+
+.page-sub{
+    color:#7c7c7c;
+    font-size:1rem;
+}
+
+.btn-verde{
+    background:#2d6a4f;
+    color:#fff;
+    padding:12px 20px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:700;
+    font-size:.92rem;
+    transition:.2s;
+}
+
+.btn-verde:hover{
+    background:#40916c;
+    color:#fff;
+}
+
+/* =========================
+   FILTROS
+========================= */
+
+.filtros-card{
+    background:#fff;
+    padding:22px;
+    border-radius:20px;
+    margin-bottom:24px;
+    border:1px solid #f0e8d8;
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+}
+
+.filtros-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:18px;
+}
+
+.input-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.input-group label{
+    font-size:.9rem;
+    font-weight:700;
+    color:#444;
+}
+
+.input-group input,
+.input-group select{
+    padding:11px 14px;
+    border-radius:12px;
+    border:1px solid #dcdcdc;
+    font-size:.9rem;
+    transition:.2s;
+}
+
+.input-group input:focus,
+.input-group select:focus{
+    outline:none;
+    border-color:#52b788;
+    box-shadow:0 0 0 3px rgba(82,183,136,.15);
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.filtros-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:22px;
+}
+
+.btn-filtrar,
+.btn-limpiar,
+.btn-pdf{
+    padding:11px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    border:none;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-filtrar{
+    background:#2d6a4f;
+    color:#fff;
+}
+
+.btn-filtrar:hover{
+    background:#40916c;
+}
+
+.btn-limpiar{
+    background:#e5e5e5;
+    color:#222;
+}
+
+.btn-limpiar:hover{
+    background:#d6d6d6;
+}
+
+.btn-pdf{
+    background:#e63946;
+    color:#fff;
+}
+
+.btn-pdf:hover{
+    background:#d62839;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+.table-card{
+    background:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    border:1px solid #f0e8d8;
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+.tabla-bonita{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.tabla-bonita thead{
+    background:#2d6a4f;
+}
+
+.tabla-bonita thead th{
+    color:#245d87;
+    padding:18px;
+    text-align:left;
+    font-size:.88rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    font-weight:700;
+}
+
+.tabla-bonita tbody tr{
+    border-bottom:1px solid #f5f0e8;
+    transition:.2s;
+}
+
+.tabla-bonita tbody tr:nth-child(even){
+    background:#fcfaf7;
+}
+
+.tabla-bonita tbody tr:hover{
+    background:#f8fffb;
+}
+
+.tabla-bonita td{
+    padding:18px;
+    font-size:.95rem;
+    color:#374151;
+    vertical-align:middle;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:50px;
+    background:#e9f5ee;
+    color:#2d6a4f;
+    font-size:.8rem;
+    font-weight:700;
+}
+
+.badge-servicio{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:8px 14px;
+    border-radius:50px;
+    background:#f3eadf;
+    color:#8b5e34;
+    font-size:.8rem;
+    font-weight:700;
+}
+
+/* =========================
+   TOTAL
+========================= */
+
+.total{
+    font-weight:800;
+    color:#166534;
+    font-size:1rem;
+}
+
+/* =========================
+   ACCIONES
+========================= */
+
+.acciones{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn-sm{
+    padding:8px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-size:.82rem;
+    font-weight:700;
+    transition:.2s;
+}
+
+.btn-editar{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.btn-editar:hover{
+    background:#bfdbfe;
+}
+
+.btn-eliminar{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.btn-eliminar:hover{
+    background:#fecaca;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty-msg{
+    text-align:center;
+    padding:35px;
+    color:#9ca3af;
+    font-size:1rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1200px){
+
+    .table-card{
+        overflow-x:auto;
+    }
+
+    .tabla-bonita{
+        min-width:1400px;
+    }
+}
+
+</style>
+
+<!-- HEADER -->
+<div class="page-header">
+
+    <div>
+        <div class="page-title">
+            📄 Facturas
+        </div>
+
+        <div class="page-sub">
+            Gestión de facturación veterinaria
+        </div>
+    </div>
+</div>
+
+<!-- FILTROS -->
+<form method="get" class="filtros-card">
+
+    <div class="filtros-grid">
+
+        <div class="input-group">
+            <label>N° Factura</label>
+
+            <input type="text"
+                   name="numero_factura"
+                   placeholder="Ej: FAC-0001"
+                   value="{{ request.GET.numero_factura }}">
+        </div>
+
+        <div class="input-group">
+            <label>Dueño</label>
+
+            <input type="text"
+                   name="dueño"
+                   placeholder="Buscar dueño"
+                   value="{{ request.GET.dueño }}">
+        </div>
+
+        <div class="input-group">
+            <label>Fecha Desde</label>
+
+            <input type="date"
+                   name="fecha_desde"
+                   value="{{ request.GET.fecha_desde }}">
+        </div>
+
+        <div class="input-group">
+            <label>Fecha Hasta</label>
+
+            <input type="date"
+                   name="fecha_hasta"
+                   value="{{ request.GET.fecha_hasta }}">
+        </div>
+
+        <div class="input-group">
+
+            <label>Método de Pago</label>
+
+            <select name="metodo_pago">
+
+                <option value="">Todos</option>
+
+                <option value="efectivo"
+                    {% if request.GET.metodo_pago == "efectivo" %}
+                        selected
+                    {% endif %}
+                >
+                    Efectivo
+                </option>
+
+                <option value="tarjeta"
+                    {% if request.GET.metodo_pago == "tarjeta" %}
+                        selected
+                    {% endif %}
+                >
+                    Tarjeta
+                </option>
+
+                <option value="daviplata"
+                    {% if request.GET.metodo_pago == "daviplata" %}
+                        selected
+                    {% endif %}
+                >
+                    Daviplata
+                </option>
+
+                <option value="nequi"
+                    {% if request.GET.metodo_pago == "nequi" %}
+                        selected
+                    {% endif %}
+                >
+                    Nequi
+                </option>
+
+                <option value="transferencia"
+                    {% if request.GET.metodo_pago == "transferencia" %}
+                        selected
+                    {% endif %}
+                >
+                    Transferencia
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <!-- BOTONES -->
+    <div class="filtros-actions">
+
+        <button type="submit" class="btn-filtrar">
+            Filtrar
+        </button>
+
+        <a href="{% url 'panel:panel_factura_list' %}"
+           class="btn-limpiar">
+           Limpiar
+        </a>
+
+        <a href="{% url 'panel:factura_pdf_list' %}?{{ request.GET.urlencode }}"
+           class="btn-pdf">
+           Descargar PDF
+        </a>
+
+    </div>
+
+</form>
+
+<!-- TABLA -->
+<div class="table-card">
+
+    <table class="tabla-bonita">
+
+        <thead>
+
+            <tr>
+                <th>N° Factura</th>
+                <th>Mascota</th>
+                <th>Dueño</th>
+                <th>Servicio</th>
+                <th>Subtotal</th>
+                <th>Total</th>
+                <th>Método</th>
+                <th>Notas</th>
+                <th>Fecha Creación</th>
+                <th>Acciones</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for f in facturas %}
+
+            <tr>
+
+                <!-- NUMERO -->
+                <td>
+                    <strong style="color:#2d6a4f; font-size:.96rem;">
+                        {{ f.numero_factura }}
+                    </strong>
+                </td>
+
+                <!-- MASCOTA -->
+                <td>
+                    🐾 {{ f.cita.mascota.nombre }}
+                </td>
+
+                <!-- DUEÑO -->
+                <td>
+                    👤 {{ f.cita.mascota.propietario }}
+                </td>
+
+                <!-- SERVICIO -->
+                <td>
+
+                    {% if f.servicio_cambiado %}
+    <span class="badge-servicio">
+        🩺 {{ f.servicio_cambiado.nombre }}
+    </span>
+
+{% elif f.cita.servicio %}
+    <span class="badge-servicio">
+        🩺 {{ f.cita.servicio.nombre }}
+    </span>
+
+{% else %}
+    <span class="badge-servicio">
+        Sin servicio
+    </span>
+{% endif %}
+
+                </td>
+
+                <!-- SUBTOTAL -->
+                <td>
+                    ${{ f.subtotal|floatformat:2 }}
+                </td>
+
+                <!-- TOTAL -->
+                <td class="total">
+                    ${{ f.total|floatformat:2 }}
+                </td>
+
+                <!-- METODO -->
+                <td>
+
+                    <span class="badge">
+                        💳 {{ f.metodo_pago|capfirst }}
+                    </span>
+
+                </td>
+
+                <!-- NOTAS -->
+                <td>
+                    {{ f.notas|default:"Sin notas" }}
+                </td>
+
+                <!-- FECHA CREACION -->
+                <td>
+                    📅 {{ f.fecha_creacion|date:"d/m/Y" }}
+                    <br>
+                    ⏰ {{ f.fecha_creacion|time:"H:i" }}
+                </td>
+
+                <!-- ACCIONES -->
+                <td>
+
+                    <div class="acciones">
+
+                        <a class="btn-sm btn-editar"
+                           href="{% url 'panel:panel_factura_edit' f.pk %}">
+                           Editar
+                        </a>
+
+                        <a class="btn-sm btn-eliminar"
+                           href="{% url 'panel:panel_factura_delete' f.pk %}">
+                           Eliminar
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="13" class="empty-msg">
+                    No hay facturas registradas.
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

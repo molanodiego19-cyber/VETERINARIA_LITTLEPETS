@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-card">
+  <div class="page-title">
+    {% if object %}Editar Propietario{% else %}Nuevo Propietario{% endif %}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      {{ field }}
+
+      {% if field.errors %}
+      <small style="color:var(--marron);font-size:.75rem">
+        {{ field.errors|join:", " }}
+      </small>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">Guardar</button>
+      <a class="btn-marron" href="{% url 'panel:panel_propietario_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

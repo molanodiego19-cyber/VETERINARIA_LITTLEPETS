@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Especies</div>
+    <div class="page-sub">Gestión de especies de mascotas</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_especie_create' %}">+ Nueva Especie</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for especie in especies %}
+      <tr>
+        <td><strong>{{ especie.nombre }}</strong></td>
+        <td>{{ especie.descripcion }}</td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_especie_edit' especie.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_especie_delete' especie.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" class="empty-msg">No hay especies registradas aún.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

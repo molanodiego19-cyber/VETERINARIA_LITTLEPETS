@@ -1,0 +1,272 @@
+{% extends "usuarios/base_panel.html" %}
+
+{% block page_name %}Mis Citas{% endblock %}
+
+{% block content %}
+<style>
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; flex-wrap:wrap; gap:1rem; }
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#2d6a4f; margin-bottom:.15rem; }
+  .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
+  .btn-verde { display:inline-block; padding:.65rem 1.4rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; text-decoration:none; border:none; cursor:pointer; background:#2d6a4f; color:#fff; transition:all .2s; }
+  .btn-verde:hover { background:#52b788; transform:translateY(-1px); }
+  .table-wrap { background:#fff; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,.06); overflow:hidden; border:1px solid #f0e8d8; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { padding:11px 18px; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#2d6a4f; background:#f0faf5; text-align:left; border-bottom:1.5px solid #d8f0e6; }
+  tbody tr { border-bottom:1px solid #f5f0e8; transition:background .12s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:#fdf8f0; }
+  tbody td { padding:12px 18px; font-size:.88rem; color:#555; vertical-align:middle; }
+  .empty-msg { text-align:center; color:#ccc; padding:2.5rem !important; font-size:.88rem; }
+  .acciones { display:flex; gap:.4rem; align-items:center; }
+  .btn-sm { font-family:'DM Sans',sans-serif; font-size:.72rem; font-weight:700; padding:4px 12px; border-radius:50px; text-decoration:none; border:none; cursor:pointer; transition:all .15s; display:inline-block; line-height:1.6; }
+  .btn-editar { background:#f0faf5; color:#2d6a4f; }
+  .btn-editar:hover { background:#52b788; color:#fff; }
+  .btn-eliminar { background:#fde8e8; color:#6b3a2a; }
+  .btn-eliminar:hover { background:#6b3a2a; color:#fff; }
+  .badge { display:inline-block; font-size:.68rem; font-weight:700; padding:3px 11px; border-radius:50px; letter-spacing:.03em; text-transform:capitalize; }
+  .badge-confirmada { background:#d8f0e6; color:#2d6a4f; }
+  .badge-pendiente { background:#fef3c7; color:#92400e; }
+  .badge-cancelada { background:#fde8e8; color:#6b3a2a; }
+</style>
+<style>
+
+.filters-wrap{
+    background:white;
+    padding:1rem;
+    border-radius:14px;
+    margin-bottom:1.5rem;
+    border:1px solid #eee;
+}
+
+.filters-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1rem;
+    align-items:end;
+}
+
+.filters-grid label{
+    display:block;
+    font-size:.75rem;
+    font-weight:bold;
+    margin-bottom:.3rem;
+    color:#666;
+}
+
+.filters-grid select,
+.filters-grid input{
+    width:100%;
+    padding:.7rem;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.filter-buttons{
+    display:flex;
+    gap:.5rem;
+}
+
+.btn-filtrar{
+    background:#198754;
+    color:white;
+    border:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.btn-limpiar{
+    background:#dc3545;
+    color:white;
+    text-decoration:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+}
+
+.report-actions{
+    display:flex;
+    gap:1rem;
+    margin-bottom:1rem;
+}
+
+.btn-pdf{
+    background:#dc3545;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.btn-excel{
+    background:#198754;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+</style>
+
+<div class="page-header">
+  <div>
+    <p class="page-sub">Citas</p>
+    <h1 class="page-title">Visualización general de citas registradas</h1>
+  </div>
+  <a href="{% url 'citas:crear_cita' %}" class="btn-verde">+ Agendar Cita</a>
+</div>
+
+<form method="get" class="filters-wrap">
+
+  <div class="filters-grid">
+
+    <!-- ESTADO -->
+    <div>
+      <label>Estado</label>
+
+      <select name="estado">
+
+        <option value="">Todos</option>
+
+        {% for value, label in estados %}
+
+          <option 
+            value="{{ value }}"
+            {% if request.GET.estado == value %}
+              selected
+            {% endif %}
+          >
+            {{ label }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- FECHA -->
+    <div>
+      <label>Fecha</label>
+
+      <input
+        type="date"
+        name="fecha"
+        value="{{ request.GET.fecha }}"
+      >
+    </div>
+
+    <!-- SERVICIO -->
+    <div>
+      <label>Servicio</label>
+
+      <select name="servicio">
+
+        <option value="">Todos</option>
+
+        {% for s in servicios %}
+
+          <option
+            value="{{ s.id }}"
+            {% if request.GET.servicio == s.id|stringformat:"s" %}
+              selected
+            {% endif %}
+          >
+            {{ s.nombre }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- VETERINARIO -->
+    <div>
+      <label>Veterinario</label>
+
+      <select name="veterinario">
+
+        <option value="">Todos</option>
+
+        {% for v in veterinarios %}
+
+          <option
+            value="{{ v.id }}"
+            {% if request.GET.veterinario == v.id|stringformat:"s" %}
+              selected
+            {% endif %}
+          >
+            {{ v }}
+          </option>
+
+        {% endfor %}
+
+      </select>
+    </div>
+
+    <!-- BOTONES -->
+    <div class="filter-buttons">
+
+      <button type="submit" class="btn-filtrar">
+        Filtrar
+      </button>
+
+      <a href="{% url 'citas:listar' %}" class="btn-limpiar">
+        Limpiar
+      </a>
+
+    </div>
+
+  </div>
+
+</form>
+
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Fecha</th><th>Hora</th><th>Mascota</th>
+        <th>Servicio</th><th>Veterinario</th><th>Estado</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cita in object_list %}
+      <tr>
+        <td>{{ cita.fecha }}</td>
+        <td>{{ cita.hora }}</td>
+        <td>{{ cita.mascota }}</td>
+        <td>{{ cita.servicio }}</td>
+        <td>{{ cita.veterinario.nombre }} {{ cita.veterinario.apellido }}</td>
+        <td>
+          <span class="badge {% if cita.estado == 'pendiente' %}badge-pendiente{% elif cita.estado == 'confirmada' %}badge-confirmada{% else %}badge-cancelada{% endif %}">
+            {{ cita.estado }}
+          </span>
+        </td>
+        <td>
+  {% if cita.estado == 'pendiente' or cita.estado == 'confirmada' %}
+    <div class="acciones">
+      <a href="{% url 'citas:reagendar' cita.id %}" class="btn-sm btn-editar">
+        Reagendar
+      </a>
+
+      <a href="{% url 'citas:cancelar' cita.id %}" class="btn-sm btn-eliminar"
+      onclick="return confirm('¿Estás seguro de que quieres cancelar esta cita?')">
+        Cancelar
+      </a>
+    </div>
+
+  {% else %}
+    <span style="color:#999; font-size:.75rem;">
+      Sin acciones
+    </span>
+  {% endif %}
+</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="empty-msg">No tienes citas registradas</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

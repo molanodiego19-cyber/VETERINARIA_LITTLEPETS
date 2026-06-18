@@ -1,0 +1,60 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block page_name %}Mascota{% endblock %}
+
+{% block content %}
+<style>
+  .page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.8rem; }
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#2d6a4f; margin-bottom:.15rem; }
+  .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
+  .form-card { background:#fff; border-radius:20px; padding:2.5rem; width:100%; max-width:480px; box-shadow:0 4px 16px rgba(0,0,0,.06); border:1px solid #f0e8d8; }
+  .form-card p { margin-bottom:.8rem; }
+  .form-card p label { display:block; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#2d6a4f; margin-bottom:.35rem; }
+  .form-card p input, .form-card p select, .form-card p textarea { width:100%; padding:.75rem 1rem; border:1.5px solid #e8e8e8; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:.93rem; color:#555; background:#fdf8f0; outline:none; display:block; }
+  .form-card p input:focus, .form-card p select:focus { border-color:#52b788; background:#fff; }
+  .form-actions { display:flex; gap:.8rem; margin-top:1.6rem; }
+  .btn-verde { display:inline-block; padding:.65rem 1.4rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; text-decoration:none; border:none; cursor:pointer; background:#2d6a4f; color:#fff; transition:all .2s; }
+  .btn-verde:hover { background:#52b788; }
+  .btn-marron { display:inline-block; padding:.65rem 1.4rem; border-radius:50px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; text-decoration:none; border:none; cursor:pointer; background:#6b3a2a; color:#fff; transition:all .2s; }
+  .btn-marron:hover { background:#d4a853; color:#6b3a2a; }
+</style>
+
+<div class="page-header">
+  <div>
+    <p class="page-sub">Mascotas</p>
+    <h1 class="page-title">Formulario Mascota</h1>
+  </div>
+</div>
+
+<div class="form-card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-actions">
+      <button type="submit" class="btn-verde">Guardar</button>
+      <a href="{% url 'mascota:mascotas' %}" class="btn-marron">Cancelar</a>
+    </div>
+  </form>
+</div>
+<script>
+document.getElementById("id_especie").addEventListener("change", function() {
+    const especieId = this.value;
+    const razaSelect = document.getElementById("id_raza");
+
+    razaSelect.innerHTML = '<option value="">Cargando...</option>';
+
+    fetch(`/mascota/ajax/cargar-razas/?especie_id=${especieId}`)
+        .then(response => response.json())
+        .then(data => {
+            razaSelect.innerHTML = '<option value="">Seleccione raza</option>';
+
+            data.forEach(function(raza) {
+                const option = document.createElement("option");
+                option.value = raza.id;
+                option.textContent = raza.nombre;
+                razaSelect.appendChild(option);
+            });
+        });
+});
+</script>
+{% endblock %}

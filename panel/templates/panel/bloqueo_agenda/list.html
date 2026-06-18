@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Bloqueos de Agenda</div>
+    <div class="page-sub">Gestión de disponibilidad</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_bloqueo_create' %}">+ Nuevo Bloqueo</a>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Veterinario</th>
+        <th>Tipo</th>
+        <th>Fecha</th>
+        <th>Motivo</th>
+        <th>Todo el día</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bloqueos %}
+      <tr>
+        <td><strong>{{ b.veterinario }}</strong></td>
+        <td>{{ b.get_tipo_display }}</td>
+        <td>{{ b.fecha_inicio }} - {{ b.fecha_fin }}</td>
+        <td>{{ b.motivo }}</td>
+        <td>
+          {% if b.todo_el_dia %}
+            <span class="badge badge-success">Sí</span>
+          {% else %}
+            <span class="badge badge-default">No</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_bloqueo_edit' b.pk %}">Editar</a>
+            <a class="btn-sm btn-eliminar" href="{% url 'panel:panel_bloqueo_delete' b.pk %}">Eliminar</a>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="empty-msg">
+          No hay bloqueos registrados.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

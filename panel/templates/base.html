@@ -1,0 +1,536 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/panel.css' %}">
+  <title>Little Pets — {% block title %}Panel{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --verde:         #2d6a4f;
+      --verde-claro:   #52b788;
+      --verde-pale:    #d8f3dc;
+      --crema:         #fdf8f0;
+      --dorado:        #d4a853;
+      --gris:          #555;
+      --gris-claro:    #f4f4f0;
+      --blanco:        #fff;
+      --borde:         #f0e8d8;
+      --texto:         #1c2b22;
+      --sidebar-w:     248px;
+      --nav-h:         58px;
+      --c-citas:       #2d6a4f;
+      --c-citas-bg:    #d8f3dc;
+      --c-user:        #b07d2a;
+      --c-user-bg:     #fef3dc;
+      --c-veterinario:     #e72555;
+      --c-mascotas:    #b84a30;
+      --c-mascotas-bg: #fde8e2;
+      --c-factura:     #810d78;
+      --c-notificacion:     #2f0f86;
+      --c-medicamento:     #097b8f;
+      --c-servicios:     #961117;
+      --c-factura-bg:  #daeaf5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--crema);
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: var(--blanco);
+      border-bottom: 2px solid var(--borde);
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem 0 calc(var(--sidebar-w) + 1.5rem);
+      box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--verde);
+      text-decoration: none;
+      position: fixed;
+      left: 0;
+      width: var(--sidebar-w);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--nav-h);
+      border-right: 2px solid var(--borde);
+      border-bottom: 2px solid var(--borde);
+      background: var(--blanco);
+      gap: .4rem;
+    }
+    .nav-brand span { color: var(--dorado); }
+
+    .nav-page-title {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gris);
+      letter-spacing: .03em;
+    }
+
+    /* ── LAYOUT ── */
+    .layout { display: flex; flex: 1; padding-top: var(--nav-h); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: var(--nav-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--blanco);
+      border-right: 2px solid var(--borde);
+      overflow-y: auto; overflow-x: hidden;
+      display: flex; flex-direction: column;
+      padding: 1rem 0 3rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--borde) transparent;
+    }
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 4px; }
+
+    /* Dashboard link */
+    .sidebar-home {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .52rem 1rem; margin: 0 .6rem .5rem;
+      border-radius: 10px; font-size: .82rem; font-weight: 600;
+      color: var(--gris); text-decoration: none;
+      transition: background .15s, color .15s;
+    }
+    .sidebar-home:hover { background: var(--gris-claro); color: var(--texto); }
+    .sidebar-home.active { background: var(--verde); color: var(--blanco); }
+    .sidebar-home .icon { font-size: 14px; }
+
+    .sidebar-sep { height: 1px; background: var(--borde); margin: .2rem .8rem .8rem; }
+
+    /* ── ACORDEÓN ── */
+    .acc-section { margin-bottom: .15rem; }
+
+    .acc-btn {
+      width: calc(100% - 1.2rem); margin: 0 .6rem;
+      display: flex; align-items: center; gap: .65rem;
+      padding: .6rem .9rem; border-radius: 11px;
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .81rem; font-weight: 700; color: var(--texto);
+      transition: background .15s; text-align: left;
+    }
+    .acc-btn:hover { background: var(--gris-claro); }
+
+    .acc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-citas    { background: var(--c-citas); }
+    .dot-usuarios { background: var(--c-user); }
+    .dot-mascotas { background: var(--c-mascotas); }
+    .dot-factura  { background: var(--c-factura); }
+    .dot-veterinario  { background: var(--c-veterinario); }
+    .dot-notificacion  { background: var(--c-notificacion); }
+    .dot-meditratamiento  { background: var(--c-medicamento); }
+    .dot-servicios  { background: var(--c-servicios); }
+
+    .acc-label { flex: 1; }
+
+    .acc-arrow {
+      font-size: .62rem; color: var(--gris);
+      transition: transform .22s ease; flex-shrink: 0;
+      display: inline-block;
+    }
+    .acc-btn.open .acc-arrow { transform: rotate(180deg); }
+
+    .acc-panel { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+    .acc-panel.open { max-height: 700px; }
+    .acc-inner { padding: .2rem 0 .5rem; }
+
+    /* Links */
+    .sidebar-link {
+      display: flex; align-items: center; gap: .55rem;
+      padding: .44rem .9rem .44rem 2.7rem;
+      margin: 0 .6rem .08rem; border-radius: 9px;
+      font-size: .79rem; font-weight: 500; color: var(--gris);
+      text-decoration: none; transition: background .13s, color .13s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      position: relative;
+    }
+    .sidebar-link:hover { background: var(--gris-claro); color: var(--texto); }
+    .sidebar-link .icon { font-size: 13px; flex-shrink: 0; opacity: .65; }
+    .sidebar-link.active .icon { opacity: 1; }
+    .sidebar-link.active::before {
+      content: ''; position: absolute;
+      left: .6rem; top: 20%; bottom: 20%;
+      width: 3px; border-radius: 4px;
+    }
+    .sec-citas    .sidebar-link.active { background: var(--c-citas-bg);    color: var(--c-citas);    font-weight: 600; }
+    .sec-usuarios .sidebar-link.active { background: var(--c-user-bg);     color: var(--c-user);     font-weight: 600; }
+    .sec-mascotas .sidebar-link.active { background: var(--c-mascotas-bg); color: var(--c-mascotas); font-weight: 600; }
+    .sec-factura  .sidebar-link.active { background: var(--c-factura-bg);  color: var(--c-factura);  font-weight: 600; }
+    .sec-citas    .sidebar-link.active::before { background: var(--c-citas); }
+    .sec-usuarios .sidebar-link.active::before { background: var(--c-user); }
+    .sec-mascotas .sidebar-link.active::before { background: var(--c-mascotas); }
+    .sec-factura  .sidebar-link.active::before { background: var(--c-factura); }
+
+    /* ── MAIN ── */
+    .page-content {
+      flex: 1;
+      margin-left: var(--sidebar-w);
+      padding: 2.5rem 2rem;
+      max-width: calc(1200px + var(--sidebar-w));
+      width: 100%;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: .75rem;
+      color: #ccc;
+      border-top: 1px solid var(--borde);
+      background: var(--blanco);
+      margin-left: var(--sidebar-w);
+    }
+    footer span { color: var(--dorado); }
+
+    /* ACCIONES DE TABLAS */
+    .acciones{
+
+    display:flex;
+
+    gap:.6rem;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+  }
+
+  .btn-sm{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:.55rem 1rem;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    transition:.2s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.35rem;
+
+  }
+
+  .btn-editar{
+
+    background:#dceef6;
+
+    color:#245d87;
+
+  }
+
+  .btn-editar:hover{
+
+    background:#c7e3ef;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar{
+
+    background:#fde5e5;
+
+    color:#a12727;
+
+  }
+
+  .btn-eliminar:hover{
+
+    background:#f8d0d0;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar button{
+
+    background:none;
+
+    border:none;
+
+    color:inherit;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:.78rem;
+
+  }
+
+
+    /* ── RESPONSIVE ── */
+    .sidebar-toggle {
+      display: none;
+      background: none; border: 1.5px solid var(--borde);
+      cursor: pointer; color: var(--texto);
+      font-size: 1.1rem; padding: .28rem .55rem;
+      border-radius: 8px; line-height: 1;
+    }
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 0px; }
+      nav { padding-left: 1.2rem; }
+      .nav-brand { position: static; width: auto; border: none; background: none; }
+      .sidebar-toggle { display: flex; }
+      .sidebar { width: 240px; transform: translateX(-100%); transition: transform .22s ease; z-index: 200; box-shadow: 4px 0 24px rgba(0,0,0,.1); }
+      .sidebar.open { transform: translateX(0); }
+      .page-content, footer { margin-left: 0; }
+    }
+
+    .btn-danger {
+    text-align: center;
+    color: #000000;                /* texto blanco */
+    border: none;               /* sin borde */
+    padding: 5px 15px;         /* espacio interno */
+    font-size: 14px;            /* tamaño de la letra */
+    font-weight: bold;
+    border-radius: 10px;         /* bordes redondeados */
+    cursor: pointer;            /* cambia el cursor al pasar por encima */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* animación suave */
+    text-decoration: none;      /* quitar subrayado de enlaces */
+    display: inline-block;
+}
+
+/* Efecto al pasar el cursor */
+.btn-danger:hover {
+    background-color: #c2f8f4;  /* rojo más oscuro */
+    transform: scale(1.05);      /* ligera ampliación */
+}
+
+/* Efecto al hacer clic */
+.btn-danger:active {
+    transform: scale(0.95);      /* efecto de “presionar” */
+}
+
+
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a class="nav-brand" href="{% url 'panel:panel_dashboard' %}">🐾 Little <span>Pets</span></a>
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+      <span class="nav-page-title">{% block page_name %}{% endblock %}</span>
+    </div>
+  </nav>
+
+  <div class="layout">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar" id="sidebar">
+
+
+      {% with u=request.resolver_match.url_name %}
+
+      {# ══ USUARIOS ══ #}
+      <div class="acc-section sec-usuarios">
+        <button class="acc-btn{% if u == 'panel:panel_especialidad_list' or u == 'panel_historiaclinica_list' or u == 'panel_tratamiento_list' or u == 'panel:panel_tratamientomedicamento_list' or u == 'panel_medicamento_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-usuarios"></span>
+          <span class="acc-label">Usuarios</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_especialidad_list' or u == 'panel:panel_historiaclinica_list' or u == 'panel_tratamiento_list' or u == 'panel:panel_tratamientomedicamento_list' or u == 'panel:panel_medicamento_list' %} open{% endif %}">
+          <div class="acc-inner">
+
+  <a href="{% url 'panel:panel_propietario_list' %}" 
+     class="sidebar-link{% if u == 'panel_propietario_list' %} active{% endif %}">
+     <span class="icon">🐾</span> Propietarios
+  </a>
+
+  <a href="{% url 'panel:panel_recepcionista_list' %}" 
+     class="sidebar-link{% if u == 'panel_recepcionista_list' %} active{% endif %}">
+     <span class="icon">⏱️</span> Recepcionista
+  </a>
+
+  <a href="{% url 'panel:panel_veterinario_list' %}" 
+     class="sidebar-link{% if u == 'panel_veterinario_list' %} active{% endif %}">
+     <span class="icon">🩺</span> Veterinarios
+  </a>
+
+  <a href="{% url 'usuarios:usuarios_suspendidos' %}" 
+     class="sidebar-link{% if u == 'usuarios_suspendidos' %} active{% endif %}">
+     <span class="icon">⚠️</span> Usuarios_Suspendidos/Inactivos
+  </a>
+</div>
+        </div>
+      </div>
+
+      {# ══ MASCOTAS ══ #}
+      <div class="acc-section sec-mascotas">
+        <button class="acc-btn{% if u == 'panel:panel_mascota_list' or u == 'panel:panel_especie_list' or u == 'panel_raza_list' or u == 'panel:panel_vacunacatalogo_list' or u == 'panel:panel_vacunacion_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-mascotas"></span>
+          <span class="acc-label">Mascotas</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_mascota_list' or u == 'panel:panel_especie_list' or u == 'panel_raza_list' or u == 'panel:panel_vacunacion_list' or u == 'panel:panel_vacunacion_list' %} open{% endif %}">
+          <div class="acc-inner">
+            <a href="{% url 'panel:panel_mascota_list' %}"        class="sidebar-link{% if u == 'panel:panel_mascota_list' %} active{% endif %}">        <span class="icon">🐾</span> Mascotas</a>
+            <a href="{% url 'panel:panel_especie_list' %}"        class="sidebar-link{% if u == 'panel:panel_especie_list' %} active{% endif %}">        <span class="icon">🦎</span> Especies</a>
+            <a href="{% url 'panel:panel_raza_list' %}"           class="sidebar-link{% if u == 'panel:panel_raza_list' %} active{% endif %}">           <span class="icon">🐕</span> Razas</a>
+            <a href="{% url 'panel:panel_vacuna_list' %}" class="sidebar-link{% if u == 'panel:panel_vacuna_list' %} active{% endif %}"> <span class="icon">📖</span> Vacunas</a>
+            <a href="{% url 'panel:panel_vacunacion_list' %}"     class="sidebar-link{% if u == 'panel:panel_vacunacion_list' %} active{% endif %}">     <span class="icon">🩹</span> Vacunaciones</a>
+          </div>
+        </div>
+      </div>
+
+      
+      {# ══ Veterinario ══ #}
+      <div class="acc-section sec-veterinario">
+        <button class="acc-btn{% if u == 'panel:panel_especialidad_list'  or u == 'panel:panel_bloqueos_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-veterinario"></span>
+          <span class="acc-label">Veterinario</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_especialidad_list' or u == 'panel:panel_historiaclinica_list' or u == 'panel_tratamiento_list' or u == 'panel:panel_tratamientomedicamento_list' or u == 'panel:panel_medicamento_list' %} open{% endif %}">
+          <div class="acc-inner">
+            <a href="{% url 'panel:panel_especialidad_list' %}"          class="sidebar-link{% if u == 'panel:panel_especialidad_list' %} active{% endif %}">          <span class="icon">🎓</span> Especialidades</a>
+          </div>
+        </div>
+      </div>
+      {# ══ Servicios ══ #}
+      <div class="acc-section sec-servicios">
+        <button class="acc-btn{% if u == 'panel:panel_factura_list' or u == 'panel:panel_detallefactura_list' or u == 'panel:panel_categoriaservicio_list' or u == 'panel:panel_servicio_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-servicios"></span>
+          <span class="acc-label">Servicios</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_factura_list' or u == 'panel:panel_detallefactura_list' or u == 'panel:panel_categoriaservicio_list' or u == 'panel:panel_servicio_list' %} open{% endif %}">
+          <div class="acc-inner">
+            <a href="{% url 'panel:panel_categoriaservicio_list' %}" class="sidebar-link{% if u == 'panel:panel_categoriaservicio_list' %} active{% endif %}"> <span class="icon">🏷️</span> Cat. Servicio</a>
+            <a href="{% url 'panel:panel_servicio_list' %}"          class="sidebar-link{% if u == 'panel:panel_servicio_list' %} active{% endif %}">          <span class="icon">🛎️</span> Servicios</a>
+          </div>
+        </div>
+      </div>
+
+      {# ══ Citas ══ #}
+      <div class="acc-section sec-citas">
+        <button class="acc-btn{% if u == 'panel:panel_cita_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-citas"></span>
+          <span class="acc-label">Citas</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_cita_list' %} open{% endif %}">
+          <div class="acc-inner">
+            <a href="{% url 'panel:panel_cita_list' %}"               class="sidebar-link{% if u == 'panel:panel_cita_list' %} active{% endif %}">               <span class="icon">📅</span> Citas</a>
+          </div>
+        </div>
+      </div>
+
+
+
+      {# ══ NOTIFICACION ══ #}
+      <div class="acc-section sec-notificacion">
+        <button class="acc-btn{% if u == 'panel:panel_factura_list' or u == 'panel:panel_detallefactura_list' or u == 'panel:panel_categoriaservicio_list' or u == 'panel:panel_servicio_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-notificacion"></span>
+          <span class="acc-label">Notificaciones</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_factura_list' or u == 'panel:panel_detallefactura_list' or u == 'panel:panel_categoriaservicio_list' or u == 'panel:panel_servicio_list' %} open{% endif %}">
+          <div class="acc-inner">
+            <a href="{% url 'panel:panel_notificacion_list' %}"     class="sidebar-link{% if u == 'panel_notificacion_list' %} active{% endif %}">     <span class="icon">🔔</span> Notificaciones</a>
+            <a href="{% url 'panel:panel_plantilla_list' %}"        class="sidebar-link{% if u == 'panel_plantilla_list' %} active{% endif %}">        <span class="icon">📝</span> Plantillas</a>
+          </div>
+        </div>
+      </div>
+
+
+      {# ══ FACTURACIÓN ══ #}
+      <div class="acc-section sec-factura">
+        <button class="acc-btn{% if u == 'panel:panel_factura_list' or u == 'panel:panel_detallefactura_list' or u == 'panel:panel_categoriaservicio_list' or u == 'panel:panel_servicio_list' %} open{% endif %}"
+                onclick="toggleAcc(this)">
+          <span class="acc-dot dot-factura"></span>
+          <span class="acc-label">Facturación</span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-panel{% if u == 'panel:panel_factura_list' or u == 'panel:panel_detallefactura_list' or u == 'panel:panel_categoriaservicio_list' or u == 'panel:panel_servicio_list' %} open{% endif %}">
+          <div class="acc-inner">
+            <a href="{% url 'panel:panel_factura_list' %}"           class="sidebar-link{% if u == 'panel:panel_factura_list' %} active{% endif %}">           <span class="icon">🧾</span> Facturas</a>
+            <a href="{% url 'panel:panel_detallefactura_list' %}"    class="sidebar-link{% if u == 'panel:panel_detallefactura_list' %} active{% endif %}">    <span class="icon">📊</span> Detalle Factura</a>
+          </div>
+        </div>
+      </div>
+
+      <a href="{% url 'usuarios:logout' %}" class="btn btn-danger">Cerrar sesión</a>
+
+      {% endwith %}
+
+    </aside>
+
+    <!-- ── CONTENT ── -->
+    <div class="page-content">
+      {% block content %}{% endblock %}
+    </div>
+
+  </div>
+
+  <footer>
+    © 2026 Little <span>Pets</span> — Panel Administrativo
+  </footer>
+
+  <script>
+    function toggleAcc(btn) {
+      const panel = btn.nextElementSibling;
+      const isOpen = btn.classList.contains('open');
+      btn.classList.toggle('open', !isOpen);
+      panel.classList.toggle('open', !isOpen);
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar.classList.contains('open') &&
+          !sidebar.contains(e.target) &&
+          !e.target.closest('.sidebar-toggle')) {
+        sidebar.classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>

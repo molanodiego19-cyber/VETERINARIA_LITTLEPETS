@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro — Clínica Veterinaria</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+</head>
+<body>
+
+<div class="left-panel">
+    <div class="slider">
+
+        <!-- Perro feliz (ya la tenías) -->
+<div class="slider-slide active">
+        <img src="{% static 'img/vete1.jpg' %}" alt="perro cachorro">
+
+</div>
+
+<!-- Gato bonito (ya la tenías) -->
+<div class="slider-slide">
+    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=85" alt="Gato bonito">
+</div>
+
+<!-- Conejo blanco -->
+<div class="slider-slide">
+    <img src="https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800&q=85" alt="conejo blanco">
+</div>
+
+<!-- Conejo gris en jardín -->
+<div class="slider-slide">
+    <img src="{% static 'img/gato.jpg' %}" alt="gato dormilón">
+</div>
+
+<!-- Gato curioso (ya la tenías) -->
+<div class="slider-slide">
+    <img src="{% static 'img/perro3.jpg' %}" alt="perro cachorro">
+</div>
+
+<!-- Gato naranja -->
+<div class="slider-slide">
+    <img src="{% static 'img/hamster.jpg' %}" alt="hamster">
+
+</div>
+
+<!-- Veterinario con perro -->
+<div class="slider-slide">
+    <img src="https://plus.unsplash.com/premium_photo-1764251476330-9c0c2cf7cfa3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fHBlcnJvJTIwcGl0YnVsfGVufDB8fDB8fHww" alt="pitbul">
+</div>
+
+<!-- Consultorio veterinario -->
+<div class="slider-slide">
+    <img src="https://media.istockphoto.com/id/172128808/es/foto/little-mancha-2.webp?a=1&b=1&s=612x612&w=0&k=20&c=vZBzQbeMh9mciVdUbWSlgwW0w8zk7LVwm53boaVs2bA=" alt="bull terrier en veterinaria">
+</div>
+
+
+<!-- Perro cachorro (ya la tenías) -->
+<div class="slider-slide">
+    <img src="{% static 'img/perro1.jpg' %}" alt="perro cachorro">
+</div>
+
+<!-- Perro cachorro (ya la tenías) -->
+<div class="slider-slide">
+    <img src="{% static 'img/calvo.jpg' %}" alt="perro cachorro">
+
+</div>
+
+
+
+<div class="slider-slide">
+    <img src="{% static 'img/perro2.jpg' %}" alt="perro cachorro">
+</div>
+
+
+        <div class="slider-text">
+            <div class="brand">
+                <span class="paw">🐾</span>
+                <span>LittlePets</span>
+            </div>
+            <h2>La salud de tu<br>mascota, primero</h2>
+            <p>Agenda citas, accede al historial médico<br>y recibe recordatorios en un solo lugar.</p>
+            <div class="slider-dots" id="dots">
+                <button class="active" onclick="goToSlide(0)"></button>
+                <button onclick="goToSlide(1)"></button>
+                <button onclick="goToSlide(2)"></button>
+                <button onclick="goToSlide(3)"></button>
+                <button onclick="goToSlide(4)"></button>
+                <button onclick="goToSlide(5)"></button>
+                <button onclick="goToSlide(6)"></button>
+                <button onclick="goToSlide(7)"></button>
+                <button onclick="goToSlide(8)"></button>
+                <button onclick="goToSlide(9)"></button>
+                <button onclick="goToSlide(10)"></button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="right-panel">
+    <div class="registro-card">
+
+        <div class="registro-header">
+            <div class="step-pill">Paso 1 de 2</div>
+            <h1>Registro de Propietario</h1>
+            <p>Crea tu cuenta para gestionar la salud de tu mascota</p>
+            <a href="{% url 'usuarios:login' %}" class="btn-home">
+        🏠 Volver al login
+    </a>
+        </div>
+
+        <div class="registro-body">
+
+            {% if error %}
+                <div class="registro-alert">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8"  x2="12"    y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    {{ error }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="form-grid">
+
+                    <div class="section-label full">Cuenta</div>
+
+                    <div class="field full">
+                        <label for="correo">Correo electrónico</label>
+                        <input type="email" id="correo" name="correo"
+                               placeholder="tucorreo@ejemplo.com" required>
+                    </div>
+
+                    <div class="field full">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password"
+                               placeholder="••••••••" 
+                               required
+                               minlength="6"
+                               maxlength="20">
+                    </div>
+
+                    <div class="section-label full">Información personal</div>
+
+                    <div class="field">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre"
+                               placeholder="Juan" 
+                               required
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"
+                               minlength="3"
+                               maxlength="30"
+                               title="Solo letras">
+                    </div>
+
+                    <div class="field">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" name="apellido"
+                               placeholder="Pérez" 
+                               required
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"
+                               minlength="3"
+                               maxlength="30"
+                               title="Solo letras">
+                    </div>
+
+                    <div class="field full">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text"         
+                               id="telefono" 
+                               name="telefono"
+                               placeholder="+57 300 000 0000" 
+                               required
+                               pattern="[0-9]{10}"
+                               minlength="10"
+                               maxlength="10"
+                               title="Debe tener 10 números">
+                    </div>
+
+                    <div class="section-label full">Documento</div>
+
+                    <div class="field">
+                        <label for="tipo_documento">Tipo de documento</label>
+                        <select id="tipo_documento" name="tipo_documento" required>
+                            <option value="">Seleccione</option>
+                            <option value="CC">Cédula de ciudadanía</option>
+                            <option value="CE">Cédula de extranjería</option>
+                            <option value="TI">Tarjeta de identidad</option>
+                            <option value="PP">Pasaporte</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="documento">Número de documento</label>
+                        <input type="text" 
+                               id="documento" 
+                               name="documento"
+                               placeholder="1234567890" 
+                               required
+                               pattern="[0-9]+"
+                               minlength="8"
+                               maxlength="10"
+                               title="Solo números">
+                    </div>
+
+                    <div class="section-label full">Ubicación</div>
+
+                    <div class="field">
+                        <label for="ciudad">Ciudad</label>
+                        <input type="text" 
+                               id="ciudad" 
+                               name="ciudad"
+                               placeholder="Bogotá" 
+                               required
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"
+                               minlength="3"
+                               maxlength="50">
+                    </div>
+
+                    <div class="field">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion" name="direccion"
+                               placeholder="Cra 1 # 2-3" 
+                               required
+                               minlength="5"
+                               maxlength="100">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn-registro">
+                    Siguiente <span class="arrow">→</span>
+                </button>
+
+            </form>
+        </div>
+
+        <div class="registro-footer">
+            <p>¿Ya tienes cuenta? <a href="{% url 'usuarios:login' %}">Inicia sesión aquí</a></p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const slides = document.querySelectorAll('.slider-slide');
+    const dots   = document.querySelectorAll('.slider-dots button');
+    const KB_DURATION = 6000;
+    let current = 0;
+    let timer;
+
+    function goToSlide(index) {
+        const prev = slides[current];
+        dots[current].classList.remove('active');
+        prev.classList.remove('active', 'kb');
+
+        current = (index + slides.length) % slides.length;
+
+        const next = slides[current];
+        dots[current].classList.add('active');
+        next.classList.add('active');
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                next.classList.add('kb');
+            });
+        });
+
+        resetTimer();
+    }
+
+    function resetTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => goToSlide(current + 1), KB_DURATION);
+    }
+
+    slides[0].classList.add('kb');
+    resetTimer();
+</script>
+
+</body>
+</html>

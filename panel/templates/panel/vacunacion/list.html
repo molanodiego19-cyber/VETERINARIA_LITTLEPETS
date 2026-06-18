@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header">
+  <div>
+    <div class="page-title">Vacunación</div>
+    <div class="page-sub">Registro de vacunas aplicadas</div>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Mascota</th>
+        <th>Propietario</th>
+        <th>Veterinario</th>
+        <th>Vacuna</th>
+        <th>Fecha</th>
+        <th>Dosis</th>
+        <th>Próxima Dosis</th>
+        <th>Peso actual</th>
+        <th>Observaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in vacunaciones %}
+      <tr>
+        <td><strong>{{ v.cita.mascota.propietario }}</strong></td>
+        <td><strong>{{ v.cita.propietario }}</strong></td>
+        <td>{{ v.cita.veterinario }}</td>
+        <td>{{ v.vacuna }}</td>
+        <td>{{ v.fecha_aplicacion }}</td>
+        <td>{{ v.numero_dosis }}</td>
+        <td>{{ v.fecha_proxima }}</td>
+        <td>{{ v.peso_actual }}</td>
+        <td>{{ v.observaciones }}</td>
+        <td>
+
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="empty-msg">No hay vacunaciones registradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

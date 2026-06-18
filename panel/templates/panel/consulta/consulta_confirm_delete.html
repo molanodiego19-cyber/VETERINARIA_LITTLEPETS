@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="confirm-card">
+  <div class="confirm-icon">🐾</div>
+  <div class="page-title">¿Eliminar consulta?</div>
+  <p>Esta acción eliminará la consulta de <strong>{{ object.id_cita }}</strong> atendida por <strong>{{ object.id_veterinario }}</strong>. No se puede deshacer.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-actions">
+      <button type="submit" class="btn-marron">Sí, eliminar</button>
+      <a class="btn-verde" href="{% url 'panel:panel_consulta_list' %}">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

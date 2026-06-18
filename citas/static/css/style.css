@@ -1,0 +1,303 @@
+:root {
+      --verde: #2d6a4f;
+      --verde-claro: #52b788;
+      --verde-menta: #b7e4c7;
+      --crema: #fdf8f0;
+      --marron: #6b3a2a;
+      --dorado: #d4a853;
+      --gris: #444;
+      --blanco: #fff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--crema);
+      color: var(--gris);
+      overflow-x: hidden;
+}
+
+    /* ─── NAV ─── */
+nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 4rem;
+      background: rgba(253,248,240,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(45,106,79,0.12);
+}
+.logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.7rem; font-weight: 900;
+      color: var(--verde);
+      display: flex; align-items: center; gap: .5rem;
+}
+.logo span { color: var(--dorado); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+text-decoration: none; color: var(--gris);
+font-size: .9rem; font-weight: 500; letter-spacing: .03em;
+transition: color .2s;
+}
+.nav-links a:hover { color: var(--verde); }
+.nav-cta {
+ background: var(--verde); 
+ color: var(--blanco);
+ border: none; 
+ padding: .6rem 1.5rem; 
+ border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; 
+      font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .15s;
+      text-decoration: none;
+    }
+    .nav-cta:hover { background: var(--verde-claro); transform: translateY(-2px); }
+
+    .nav-buttons {
+  display: flex;
+  gap: .2rem;   /* ← cambia este valor, más pequeño = más juntos */
+}
+    /* ─── CAROUSEL ─── */
+    .carousel {
+      position: relative; width: 100%; height: 100vh;
+      overflow: hidden; margin-top: 0;
+    }
+    .slides { display: flex; height: 100%; transition: transform .8s cubic-bezier(.77,0,.175,1); }
+    .slide {
+      min-width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .slide-bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      transform: scale(1.05);
+      transition: transform 6s ease;
+    }
+    .slide.active .slide-bg { transform: scale(1); }
+    .slide-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(45,106,79,.72) 0%, rgba(107,58,42,.4) 100%);
+    }
+    .slide-content {
+      position: relative; z-index: 2;
+      text-align: center; color: var(--blanco); padding: 2rem;
+      max-width: 760px;
+    }
+    .slide-tag {
+      display: inline-block;
+      background: var(--dorado); color: var(--marron);
+      font-size: .75rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; padding: .35rem 1rem; border-radius: 50px;
+      margin-bottom: 1.2rem;
+    }
+    .slide-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 900; line-height: 1.12;
+      margin-bottom: 1rem; text-shadow: 0 2px 20px rgba(0,0,0,.3);
+    }
+    .slide-content p {
+      font-size: 1.1rem; font-weight: 300; opacity: .92;
+      max-width: 500px; margin: 0 auto 1.8rem;
+    }
+    .btn-slide {
+      background: var(--blanco); color: var(--verde);
+      border: none; padding: .85rem 2.4rem; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: all .2s; text-decoration: none; display: inline-block;
+    }
+    .btn-slide:hover { background: var(--dorado); color: var(--marron); transform: translateY(-3px); }
+
+    .carousel-dots {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; gap: .6rem; z-index: 10;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,.45); border: none; cursor: pointer;
+      transition: all .3s;
+    }
+    .dot.active { background: var(--dorado); transform: scale(1.3); }
+
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,.18); border: 2px solid rgba(255,255,255,.5);
+      color: var(--blanco); width: 52px; height: 52px; border-radius: 50%;
+      font-size: 1.4rem; cursor: pointer; z-index: 10;
+      transition: all .2s; display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+    .carousel-btn:hover { background: var(--verde); border-color: var(--verde); }
+    .carousel-btn.prev { left: 2rem; }
+    .carousel-btn.next { right: 2rem; }
+
+    /* ─── SECTIONS COMMON ─── */
+    section { padding: 6rem 4rem; }
+    .section-tag {
+      display: inline-block; font-size: .75rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--verde); margin-bottom: .8rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem); font-weight: 900;
+      color: #1a1a1a; margin-bottom: 1rem; line-height: 1.2;
+    }
+    .section-lead {
+      font-size: 1.05rem; font-weight: 300; color: #666;
+      max-width: 540px; line-height: 1.7;
+    }
+
+    /* ─── MISIÓN / VISIÓN ─── */
+    .mv-section {
+      background: var(--verde);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; padding: 0;
+    }
+    .mv-card {
+      padding: 5rem 4rem; position: relative; overflow: hidden;
+    }
+    .mv-card:first-child { border-right: 1px solid rgba(255,255,255,.15); }
+    .mv-deco {
+      position: absolute; right: -2rem; top: -2rem;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+    .mv-icon {
+      font-size: 2.8rem; margin-bottom: 1.2rem; display: block;
+    }
+    .mv-label {
+      font-size: .75rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--dorado); margin-bottom: .6rem;
+    }
+    .mv-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 900; color: var(--blanco);
+      margin-bottom: 1rem;
+    }
+    .mv-text {
+      font-size: 1rem; font-weight: 300; color: rgba(255,255,255,.8);
+      line-height: 1.75; max-width: 420px;
+    }
+    .mv-line {
+      width: 48px; height: 3px; background: var(--dorado);
+      margin-bottom: 1.4rem; border-radius: 2px;
+    }
+
+    /* ─── VACUNACIÓN ─── */
+    .vacuna-section { background: var(--blanco); }
+    .vacuna-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .vacuna-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .vacuna-card {
+      background: var(--crema); border-radius: 20px;
+      padding: 2rem; border: 1px solid rgba(45,106,79,.1);
+      transition: all .3s; position: relative; overflow: hidden;
+    }
+    .vacuna-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--verde-claro); transform: scaleX(0); transform-origin: left;
+      transition: transform .3s;
+    }
+    .vacuna-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(45,106,79,.12); }
+    .vacuna-card:hover::before { transform: scaleX(1); }
+    .vacuna-emoji { font-size: 2.5rem; margin-bottom: 1rem; display: block; }
+    .vacuna-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700; color: var(--verde);
+      margin-bottom: .5rem;
+    }
+    .vacuna-card p { font-size: .9rem; font-weight: 300; line-height: 1.65; color: #666; }
+    .vacuna-badge {
+      display: inline-block; margin-top: .9rem;
+      background: var(--verde-menta); color: var(--verde);
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; padding: .3rem .8rem; border-radius: 50px;
+    }
+
+    /* ─── CITAS CTA ─── */
+    .citas-section {
+      background: var(--crema);
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 7rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .citas-blob {
+      position: absolute; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, var(--verde-menta) 0%, transparent 70%);
+      opacity: .45; pointer-events: none;
+    }
+    .citas-blob.b1 { top: -200px; left: -100px; }
+    .citas-blob.b2 { bottom: -200px; right: -100px; }
+    .citas-section .section-title { max-width: 640px; }
+    .citas-section .section-lead { margin: 0 auto 2.5rem; text-align: center; }
+    .btn-cita {
+      background: var(--verde); color: var(--blanco);
+      border: none; padding: 1.1rem 3rem; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 700;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      box-shadow: 0 8px 32px rgba(45,106,79,.35);
+      transition: all .25s; letter-spacing: .02em;
+      position: relative; z-index: 1;
+    }
+    .btn-cita:hover {
+      background: var(--verde-claro);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 16px 48px rgba(45,106,79,.4);
+    }
+    .btn-cita::after {
+      content: ' →'; display: inline;
+    }
+    .citas-badges {
+      display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;
+      justify-content: center; position: relative; z-index: 1;
+    }
+    .citas-badge {
+      background: var(--blanco); color: var(--verde);
+      font-size: .8rem; font-weight: 600; padding: .45rem 1.1rem;
+      border-radius: 50px; border: 1px solid var(--verde-menta);
+      display: flex; align-items: center; gap: .4rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #111;
+      color: rgba(255,255,255,.55);
+      text-align: center; padding: 2rem;
+      font-size: .85rem;
+    }
+    footer span { color: var(--dorado); }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .mv-section { grid-template-columns: 1fr; }
+      .mv-card:first-child { border-right: none; border-bottom: 1px solid rgba(255,255,255,.15); }
+      .mv-card { padding: 3rem 2rem; }
+      .vacuna-header { flex-direction: column; align-items: flex-start; }
+      .carousel-btn { display: none; }
+    }
+
+    /* ─── FADE IN ─── */
+    .fade-up {
+      opacity: 0; transform: translateY(30px);
+      animation: fadeUp .8s forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: .15s; }
+    .delay-2 { animation-delay: .3s; }
+    .delay-3 { animation-delay: .45s; }
+ 

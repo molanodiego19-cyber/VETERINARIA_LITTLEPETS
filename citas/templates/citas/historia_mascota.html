@@ -1,0 +1,190 @@
+{% extends base_template %}
+
+{% block page_name %}Historia Clínica{% endblock %}
+
+{% block content %}
+
+<h2 style="font-size:22px; margin-bottom:15px;">
+    🐾 Historia clínica de {{ mascota.nombre }}
+</h2>
+
+<hr style="margin-bottom:20px;">
+
+<!-- ================= CONSULTAS ================= -->
+
+<h3 style="margin-bottom:15px;">🩺 Consultas</h3>
+
+{% if consultas %}
+
+    {% for h in consultas %}
+
+    <div style="
+        background:#ffffff;
+        border:1px solid #e5e5e5;
+        border-radius:10px;
+        padding:20px;
+        margin-bottom:18px;
+    ">
+
+        <h4>📅 {{ h.fecha_consulta|date:"d/m/Y" }}</h4>
+
+        <p><b>👨‍⚕️ Veterinario:</b> {{ h.veterinario }}</p>
+
+        <p><b>🏥 Servicio:</b> {{ h.cita.servicio.nombre }}</p>
+
+        <hr>
+
+        <p><b>📋 Motivo:</b><br>{{ h.motivo_consulta }}</p>
+
+        <p><b>🧠 Anamnesis:</b><br>{{ h.anamnesis }}</p>
+
+        <p><b>🔍 Examen físico:</b><br>{{ h.examen_fisico }}</p>
+
+        <p><b>🧪 Diagnóstico:</b><br>{{ h.diagnostico }}</p>
+
+        <p><b>💡 Recomendaciones:</b><br>{{ h.recomendaciones }}</p>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No hay consultas registradas.</p>
+
+{% endif %}
+
+<!-- ================= VACUNACIONES ================= -->
+
+<h3 style="margin-top:35px; margin-bottom:15px;">
+    💉 Vacunaciones
+</h3>
+
+{% if vacunaciones %}
+
+    {% for v in vacunaciones %}
+
+    <div style="
+        background:#ffffff;
+        border:1px solid #e5e5e5;
+        border-radius:10px;
+        padding:20px;
+        margin-bottom:18px;
+    ">
+
+        <h4>📅 {{ v.fecha_aplicacion|date:"d/m/Y" }}</h4>
+
+        <p>
+            <b>👨‍⚕️ Veterinario:</b>
+            {{ v.cita.veterinario }}
+        </p>
+
+        <hr>
+
+        <p>
+            <b>💉 Vacuna:</b><br>
+            {{ v.vacuna.nombre }}
+        </p>
+
+        <p>
+            <b>🏭 Fabricante:</b><br>
+            {{ v.vacuna.fabricante }}
+        </p>
+
+        <p>
+            <b>🔢 Dosis:</b><br>
+            {{ v.numero_dosis }}
+        </p>
+
+        {% if v.observaciones %}
+        <p>
+            <b>💡 Observaciones:</b><br>
+            {{ v.observaciones }}
+        </p>
+        {% endif %}
+
+        {% if v.fecha_proxima %}
+        <p>
+            <b>📆 Próxima dosis:</b><br>
+            {{ v.fecha_proxima|date:"d/m/Y" }}
+        </p>
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No hay vacunaciones registradas.</p>
+{% endif %}
+
+    <!-- ================= TRATAMIENTOS ================= -->
+
+<h3 style="margin-top:35px; margin-bottom:15px;">
+    💊 Tratamientos
+</h3>
+
+{% if tratamientos %}
+
+    {% for t in tratamientos %}
+
+    <div style="
+        background:#ffffff;
+        border:1px solid #e5e5e5;
+        border-radius:10px;
+        padding:20px;
+        margin-bottom:18px;
+    ">
+
+        <h4>💊 {{ t.nombre }}</h4>
+
+        <p>
+            <b>💉 Medicamento:</b><br>
+            {{ t.medicamento }}
+        </p>
+
+        {% if t.dosis %}
+        <p>
+            <b>📏 Dosis:</b><br>
+            {{ t.dosis }}
+        </p>
+        {% endif %}
+
+        {% if t.frecuencia %}
+        <p>
+            <b>⏰ Frecuencia:</b><br>
+            {{ t.frecuencia }}
+        </p>
+        {% endif %}
+
+        {% if t.duracion %}
+        <p>
+            <b>📅 Duración:</b><br>
+            {{ t.duracion }}
+        </p>
+        {% endif %}
+
+        <p>
+            <b>📌 Estado:</b><br>
+            {{ t.estado }}
+        </p>
+
+        {% if t.observaciones %}
+        <p>
+            <b>📝 Observaciones:</b><br>
+            {{ t.observaciones }}
+        </p>
+        {% endif %}
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>No hay tratamientos registrados.</p>
+
+
+{% endif %}
+{% endblock %}

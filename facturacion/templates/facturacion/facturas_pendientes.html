@@ -1,0 +1,212 @@
+{% extends 'usuarios/base_recepcionista.html' %}
+
+{% block page_name %}Facturas Pendientes{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="card factura-card">
+
+        <div class="card-header factura-header">
+
+            <div>
+                <h3 class="mb-1">
+                    💰 Facturas Pendientes
+                </h3>
+
+                <p class="mb-0">
+                    Gestione las facturas pendientes de los clientes.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>👤 Cliente</th>
+                            <th>🐾 Mascota</th>
+                            <th>🩺 Servicio</th>
+                            <th>📅 Fecha</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for cita in citas_pendientes %}
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    {{ cita.mascota.propietario }}
+                                </strong>
+                            </td>
+
+                            <td>
+                                <span class="badge mascota-badge">
+                                    {{ cita.mascota.nombre }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {{ cita.servicio.nombre }}
+                            </td>
+
+                            <td>
+                                {{ cita.fecha }}
+                            </td>
+
+                            <td class="text-center">
+
+                                <a href="{% url 'facturacion:crear_factura' cita.id %}"
+                                   class="btn btn-generar">
+
+                                    <i class="fas fa-file-invoice-dollar me-1"></i>
+                                    Generar Factura
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="5">
+
+                                <div class="empty-state">
+
+                                    <div class="empty-icon">
+                                        ✅
+                                    </div>
+
+                                    <h4>
+                                        No hay facturas pendientes
+                                    </h4>
+
+                                    <p>
+                                        Todas las facturas han sido generadas correctamente.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.factura-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.factura-header{
+    background:linear-gradient(135deg,#f59e0b,#fbbf24);
+    color:#222;
+    padding:25px;
+    border:none;
+}
+
+.factura-header h3{
+    font-weight:700;
+}
+
+.factura-header p{
+    opacity:.8;
+}
+
+.table thead{
+    background:#f8f9fa;
+}
+
+.table thead th{
+    font-weight:700;
+    border:none;
+    color:#555;
+}
+
+.table tbody tr{
+    transition:.25s;
+}
+
+.table tbody tr:hover{
+    background:#fff8e7;
+    transform:scale(1.005);
+}
+
+.mascota-badge{
+    background:#e8f4ff;
+    color:#0d6efd;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:.85rem;
+    font-weight:600;
+}
+
+.btn-generar{
+    background:#22c55e;
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:8px 18px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-generar:hover{
+    background:#16a34a;
+    color:white;
+    transform:translateY(-2px);
+}
+
+.empty-state{
+    text-align:center;
+    padding:50px 20px;
+}
+
+.empty-icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+.empty-state h4{
+    color:#198754;
+    font-weight:700;
+}
+
+.empty-state p{
+    color:#6c757d;
+}
+
+</style>
+
+{% endblock %}

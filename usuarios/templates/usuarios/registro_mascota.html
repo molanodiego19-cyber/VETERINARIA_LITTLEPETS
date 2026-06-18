@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registrar Mascota</title>
+
+  <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+</head>
+<body>
+
+<!-- ══ PANEL IZQUIERDO — SLIDER CORRECTO ══ -->
+<div class="left-panel">
+  <div class="slider">
+
+    <div class="slider-slide active">
+      <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=85">
+    </div>
+
+    <div class="slider-slide">
+      <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=85">
+    </div>
+
+    <div class="slider-slide">
+      <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=85">
+    </div>
+
+    <div class="slider-text">
+      <div class="brand">
+        <span class="paw">🐾</span>
+        <span>LittlePets</span>
+      </div>
+
+      <h2>Registra tu mascota</h2>
+      <p>Guarda su información y controla su salud fácilmente</p>
+
+      <div class="slider-dots">
+        <button class="active" onclick="goToSlide(0)"></button>
+        <button onclick="goToSlide(1)"></button>
+        <button onclick="goToSlide(2)"></button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ PANEL DERECHO ══ -->
+<div class="right-panel">
+  <div class="registro-card">
+
+    <div class="registro-header">
+      <div class="step-pill">Nueva mascota</div>
+      <h1>Registrar Mascota</h1>
+      <p>Completa los datos de tu compañero peludo</p>
+    </div>
+
+    <div class="registro-body">
+
+      <!-- ERRORES -->
+      {% if form.errors %}
+        <div class="registro-alert">
+          {{ form.errors }}
+        </div>
+      {% endif %}
+
+      <div id="form-error" class="registro-alert" style="display:none;"></div>
+
+      <form method="POST" enctype="multipart/form-data" id="mascota-form">
+        {% csrf_token %}
+
+        <div class="form-grid">
+
+          <div class="field full">
+            <label>Nombre</label>
+            <input type="text" name="nombre" placeholder="Max"  required 
+            pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"minlength="3" maxlength="15" title="Solo letras">
+          </div>
+
+          <div class="field">
+            <label>Especie</label>
+            <select id="id_especie" name="especie" required>
+              <option value="">Seleccione</option>
+              {% for especie in especies %}
+                <option value="{{ especie.id }}">{{ especie.nombre }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Raza</label>
+            <select id="id_raza" name="raza" required>
+              <option value="">Seleccione</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Color</label>
+            <input type="text" name="color" placeholder="Color de tu peludito"  required 
+            pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ ]+"minlength="3" maxlength="15" title="Solo letras">
+          </div>
+
+
+          <div class="field">
+            <label>Fecha</label>
+            <input type="date" name="fecha_nacimiento" max="{{ today }}" required title="Solo fechas pasadas">
+          </div>
+
+          <div class="field">
+  <label for="id_peso_kg">Peso (kg)</label>
+  <input 
+    type="number" 
+    id="id_peso_kg"
+    name="peso_kg" 
+    step="0.01"
+    min="0.1"
+    max="100"
+    required
+    oninput="validarPeso(this)"
+  >
+  <small id="error_peso" style="color:red;"></small>
+</div>
+
+          <div class="field full">
+            <label>Sexo</label>
+            <select name="sexo" required>
+              <option value="">Seleccione</option>
+              <option value="macho">Macho</option>
+              <option value="hembra">Hembra</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Foto</label>
+            <input type="file" name="foto">
+          </div>
+
+          <div class="field full">
+  <label for="id_esterilizacion">Esterilización</label>
+  <select name="esterilizacion" id="id_esterilizacion">
+    <option value="">Seleccione una opción</option>
+    <option value="1">Sí</option>
+    <option value="0">No</option>
+  </select>
+</div>
+
+        </div>
+
+        <button type="submit" class="btn-registro">
+          Registrar Mascota <span class="arrow">→</span>
+        </button>
+        <button type="submit" name="omitir" formnovalidate class="btn-registro">
+          Omitir <span class="arrow"></span>
+        </button>
+        
+       
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SCRIPT SLIDER + AJAX ══ -->
+<script>
+const slides = document.querySelectorAll('.slider-slide');
+const dots   = document.querySelectorAll('.slider-dots button');
+let current = 0;
+
+function goToSlide(index) {
+  slides[current].classList.remove('active','kb');
+  dots[current].classList.remove('active');
+
+  current = index;
+
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+
+  requestAnimationFrame(()=>{
+    slides[current].classList.add('kb');
+  });
+}
+
+setInterval(()=>goToSlide((current+1)%slides.length),5000);
+slides[0].classList.add('kb');
+
+
+/* AJAX RAZAS */
+document.getElementById("id_especie").addEventListener("change", function() {
+  const especieId = this.value;
+  const razaSelect = document.getElementById("id_raza");
+
+  if (!especieId){
+    razaSelect.innerHTML='<option value="">Seleccione</option>';
+    return;
+  }
+
+  fetch(`/mascota/ajax/cargar-razas/?especie_id=${especieId}`)
+    .then(r=>r.json())
+    .then(data=>{
+      razaSelect.innerHTML='<option value="">Seleccione</option>';
+      data.forEach(r=>{
+        razaSelect.innerHTML += `<option value="${r.id}">${r.nombre}</option>`;
+      });
+    });
+});
+
+
+/* VALIDACIÓN */
+document.getElementById("mascota-form").addEventListener("submit", function(e){
+  if (botonPresionado == "omitir") {
+    return;
+  }
+  let errores=[];
+  const raza=document.getElementById("id_raza").value;
+
+  if(!raza){
+    errores.push("Selecciona una raza");
+  }
+
+  if(errores.length>0){
+    e.preventDefault();
+    const errorDiv = document.getElementById("form-error");
+    errorDiv.style.display = "block";
+    errorDiv.innerHTML=errores.join("<br>");
+  }
+});
+</script>
+
+</body>
+</html>

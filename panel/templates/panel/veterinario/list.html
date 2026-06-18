@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+
+  /* =====================================================
+     FILTROS
+  ===================================================== */
+
+  .filters-wrap{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:1rem;
+
+    background:#fff;
+
+    padding:1.2rem;
+
+    border-radius:16px;
+
+    margin-bottom:1.5rem;
+
+    border:1px solid #ececec;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.04);
+
+    align-items:center;
+
+  }
+
+  .filters-wrap input,
+  .filters-wrap select{
+
+    height:42px;
+
+    padding:0 14px;
+
+    border-radius:10px;
+
+    border:1px solid #dcdcdc;
+
+    outline:none;
+
+    min-width:180px;
+
+    font-size:.85rem;
+
+    transition:.2s;
+
+    background:#fafafa;
+
+  }
+
+  .filters-wrap input:focus,
+  .filters-wrap select:focus{
+
+    border-color:#52b788;
+
+    box-shadow:0 0 0 3px rgba(82,183,136,.15);
+
+    background:white;
+
+  }
+
+  /* =====================================================
+     BOTONES FILTROS
+  ===================================================== */
+
+  .btn-filter{
+
+    height:42px;
+
+    padding:0 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:.82rem;
+
+    transition:.2s;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+  }
+
+  .btn-buscar{
+
+    background:#52b788;
+
+    color:white;
+
+  }
+
+  .btn-buscar:hover{
+
+    background:#40916c;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-limpiar{
+
+    background:#efefef;
+
+    color:#444;
+
+  }
+
+  .btn-limpiar:hover{
+
+    background:#dddddd;
+
+    transform:translateY(-2px);
+
+  }
+
+  /* =====================================================
+     REPORTES
+  ===================================================== */
+
+  .reportes-wrap{
+
+    display:flex;
+
+    gap:1rem;
+
+    margin-bottom:1.5rem;
+
+  }
+
+  .btn-reporte{
+
+    padding:.8rem 1.2rem;
+
+    border-radius:10px;
+
+    text-decoration:none;
+
+    font-size:.82rem;
+
+    font-weight:700;
+
+    transition:.2s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:.5rem;
+
+  }
+
+  .btn-pdf{
+
+    background:#dc3545;
+
+    color:white;
+
+  }
+
+  .btn-pdf:hover{
+
+    background:#bb2d3b;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-excel{
+
+    background:#198754;
+
+    color:white;
+
+  }
+
+  .btn-excel:hover{
+
+    background:#157347;
+
+    transform:translateY(-2px);
+
+  }
+
+  /* =====================================================
+     BOTONES TABLA
+  ===================================================== */
+
+  .acciones{
+
+    display:flex;
+
+    gap:.6rem;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+  }
+
+  .btn-sm{
+
+    border:none;
+
+    border-radius:10px;
+
+    padding:.55rem 1rem;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    transition:.2s;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.35rem;
+
+  }
+
+  .btn-editar{
+
+    background:#dceef6;
+
+    color:#245d87;
+
+  }
+
+  .btn-editar:hover{
+
+    background:#c7e3ef;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar{
+
+    background:#fde5e5;
+
+    color:#a12727;
+
+  }
+
+  .btn-eliminar:hover{
+
+    background:#f8d0d0;
+
+    transform:translateY(-2px);
+
+  }
+
+  .btn-eliminar button{
+
+    background:none;
+
+    border:none;
+
+    color:inherit;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    font-size:.78rem;
+
+  }
+
+  /* =====================================================
+     RESPONSIVE
+  ===================================================== */
+
+  @media(max-width:768px){
+
+    .filters-wrap{
+
+      flex-direction:column;
+
+      align-items:stretch;
+
+    }
+
+    .filters-wrap input,
+    .filters-wrap select,
+    .btn-filter{
+
+      width:100%;
+
+    }
+
+    .reportes-wrap{
+
+      flex-direction:column;
+
+    }
+
+    .acciones{
+
+      flex-direction:column;
+
+      align-items:stretch;
+
+    }
+
+    .btn-sm{
+
+      width:100%;
+
+    }
+
+  }
+
+</style>
+<div class="page-header">
+  <div>
+    <div class="page-title">Veterinarios</div>
+    <div class="page-sub">Gestión de profesionales</div>
+  </div>
+  <a class="btn-verde" href="{% url 'panel:panel_veterinario_create' %}">+ Nuevo Veterinario</a>
+</div>
+<form method="get" class="filters-wrap">
+
+  <input
+    type="text"
+    name="nombre"
+    placeholder="Buscar nombre"
+    value="{{ request.GET.nombre }}"
+  >
+
+  <input
+    type="text"
+    name="documento"
+    placeholder="Documento"
+    value="{{ request.GET.documento }}"
+  >
+
+<select name="especialidad_id">
+
+  <option value="">Todas las especialidades</option>
+
+  {% for e in especialidades %}
+    <option value="{{ e.id }}"
+      {% if request.GET.especialidad_id == e.id|stringformat:"s" %}
+        selected
+      {% endif %}
+    >
+      {{ e.nombre }}
+    </option>
+  {% endfor %}
+
+</select>
+  <select name="estado">
+
+    <option value="">
+      Todos los estados
+    </option>
+
+    {% for value,label in estados %}
+
+      <option
+        value="{{ value }}"
+        {% if request.GET.estado == value %}
+          selected
+        {% endif %}
+      >
+        {{ label }}
+      </option>
+
+    {% endfor %}
+
+  </select>
+
+  <button
+    type="submit"
+    class="btn-filter btn-buscar"
+  >
+    Filtrar
+  </button>
+
+  <a
+    href="{% url 'panel:panel_veterinario_list' %}"
+    class="btn-filter btn-limpiar"
+  >
+    Limpiar
+  </a>
+
+</form>
+
+<!-- =====================================================
+     REPORTES
+===================================================== -->
+
+<div class="reportes-wrap">
+
+  <a
+    href="{% url 'panel:reporte_propietarios_pdf' %}?{{ request.GET.urlencode }}"
+    class="btn-reporte btn-pdf"
+  >
+    Descargar PDF
+  </a>
+
+  <a
+    href="{% url 'panel:reporte_propietarios_excel' %}?{{ request.GET.urlencode }}"
+    class="btn-reporte btn-excel"
+  >
+    Descargar Excel
+  </a>
+
+</div>
+
+
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Licencia</th>
+        <th>Especialidad</th>
+        <th>Días laborales</th> 
+        <th>Correo</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for v in veterinarios %}
+      <tr>
+        <td><strong>{{ v.nombre }}</strong></td>
+        <td>{{ v.num_licencia }}</td>
+        <td>{{ v.especialidad }}</td>
+
+        <!-- MOSTRAR DÍAS -->
+        <td>
+          {% if v.dias_laborales %}
+            {% for dia in v.dias_laborales %}
+              <span style="background:#e3f2fd; padding:4px 8px; margin:2px; border-radius:5px; display:inline-block;">
+                {{ dia|title }}
+              </span>
+            {% endfor %}
+          {% else %}
+            <span style="color:gray;">Sin días</span>
+          {% endif %}
+        </td>
+
+        <td>{{ v.usuario.correo }}</td>
+        
+        <td>
+          {% if v.usuario.estado == 'activo' %}
+            <span style="color:green;font-weight:bold;">Activo</span>
+          {% else %}
+            <span style="color:red;font-weight:bold;">Inactivo</span>
+          {% endif %}
+        </td>
+
+        <td>
+          <div class="acciones">
+            <a class="btn-sm btn-editar" href="{% url 'panel:panel_veterinario_edit' v.pk %}">Editar</a>
+            <form class="btn-sm btn-eliminar" method="post" action="{% url 'panel:panel_veterinario_delete' v.pk %}">
+            {% csrf_token %}
+             <button type="submit"
+             onclick="return confirm('¿Estás seguro de que quieres inactivar este veterinario?')">
+              Inactivar
+             </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+
+      {% empty %}
+      <tr>
+        <td colspan="7" class="empty-msg">No hay veterinarios registrados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

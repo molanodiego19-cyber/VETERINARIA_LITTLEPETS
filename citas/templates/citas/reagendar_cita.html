@@ -1,0 +1,208 @@
+{% extends "usuarios/base_panel.html" %}
+
+{% block content %}
+<style>
+/* ═══════════════════════════════════════
+   REAGENDAR CITA (UPDATE VIEW)
+═══════════════════════════════════════ */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.8rem;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--verde);
+  margin-bottom: .15rem;
+}
+
+.page-sub {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: #bbb;
+}
+
+/* CARD PRINCIPAL */
+.reagendar-card {
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--borde);
+}
+
+/* CAMPOS */
+.reagendar-card label {
+  display: block;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: .35rem;
+}
+
+.reagendar-card input,
+.reagendar-card select,
+.reagendar-card textarea {
+  width: 100%;
+  padding: .75rem 1rem;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .93rem;
+  color: var(--gris);
+  background: var(--crema);
+  outline: none;
+  transition: all .2s;
+}
+
+.reagendar-card input:focus,
+.reagendar-card select:focus,
+.reagendar-card textarea:focus {
+  border-color: var(--verde-claro);
+  background: var(--blanco);
+}
+
+/* ERROR */
+.alert-error {
+  background: #fde8e8;
+  border-left: 3px solid #e57373;
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  margin-bottom: 1.2rem;
+  font-size: .85rem;
+  color: #b71c1c;
+}
+
+/* HORARIOS */
+#horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .5rem;
+}
+
+.horario-btn {
+  padding: 10px 15px;
+  border: 1.5px solid var(--borde);
+  border-radius: 10px;
+  background: var(--crema);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .85rem;
+  color: var(--texto);
+  transition: all .15s;
+}
+
+.horario-btn:hover {
+  background: var(--verde-pale);
+  border-color: var(--verde-claro);
+}
+
+.horario-btn.seleccionado {
+  background: var(--verde);
+  color: var(--blanco);
+  border-color: var(--verde);
+}
+
+/* BOTONES */
+.form-actions {
+  display: flex;
+  gap: .8rem;
+  margin-top: 1.6rem;
+}
+
+.btn-verde {
+  background: var(--verde);
+  color: var(--blanco);
+  border: none;
+  padding: .65rem 1.4rem;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-verde:hover {
+  background: var(--verde-claro);
+}
+
+.btn-marron {
+  background: var(--marron);
+  color: var(--blanco);
+  border: none;
+  padding: .65rem 1.4rem;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-marron:hover {
+  background: var(--dorado);
+  color: var(--marron);
+}
+</style>
+
+
+<div class="page-header">
+    <div>
+        <p class="page-sub">Citas</p>
+        <h1 class="page-title">Reagendar Cita</h1>
+    </div>
+</div>
+
+{% if form.non_field_errors %}
+  <div class="alert-error">
+      {{ form.non_field_errors }}
+  </div>
+{% endif %}
+
+<div class="reagendar-card">
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Mascota</label>
+            {{ form.mascota }}
+        </div>
+
+        <div class="form-group">
+            <label>Servicio</label>
+            {{ form.servicio }}
+        </div>
+
+        <div class="form-group">
+            <label>Fecha</label>
+            {{ form.fecha }}
+        </div>
+
+        <div class="form-group">
+            <label>Hora</label>
+            {{ form.hora }}
+        </div>
+
+        <div class="form-group">
+            <label>Motivo de consulta</label>
+            {{ form.motivo_consulta }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-verde">Reagendar</button>
+            <a href="{% url 'citas:listar' %}" class="btn-marron">Cancelar</a>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

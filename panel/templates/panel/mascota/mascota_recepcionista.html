@@ -1,0 +1,254 @@
+{% extends "usuarios/base_recepcionista.html" %}
+{% block content %}
+
+<style>
+.info-card{
+    background:white;
+    border-radius:14px;
+    padding:1rem;
+    margin-bottom:1rem;
+    border:1px solid #eee;
+}
+
+.filters-wrap{
+    background:white;
+    padding:1rem;
+    border-radius:14px;
+    margin-bottom:1.5rem;
+    border:1px solid #eee;
+}
+
+.filters-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1rem;
+    align-items:end;
+}
+
+.filters-grid label{
+    display:block;
+    font-size:.75rem;
+    font-weight:bold;
+    margin-bottom:.3rem;
+    color:#666;
+}
+
+.filters-grid select,
+.filters-grid input{
+    width:100%;
+    padding:.7rem;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.filter-buttons{
+    display:flex;
+    gap:.5rem;
+}
+
+.btn-filtrar{
+    background:#198754;
+    color:white;
+    border:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.btn-limpiar{
+    background:#dc3545;
+    color:white;
+    text-decoration:none;
+    padding:.7rem 1rem;
+    border-radius:8px;
+}
+
+.btn-pdf{
+    background:#E53935;
+    color:white;
+    padding:.7rem 1rem;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.estado-activo{
+    color:green;
+    font-weight:bold;
+}
+
+.estado-inactivo{
+    color:red;
+    font-weight:bold;
+}
+</style>
+
+<div class="page-header">
+    <div>
+        <div class="page-title">Mascotas Registradas</div>
+        <div class="page-sub">
+            Consulta general de mascotas del sistema
+        </div>
+    </div>
+</div>
+
+<form method="get" class="filters-wrap">
+
+<div class="filters-grid">
+
+    <div>
+        <label>Nombre</label>
+        <input
+            type="text"
+            name="nombre"
+            value="{{ request.GET.nombre }}"
+            placeholder="Buscar mascota"
+        >
+    </div>
+
+    <div>
+        <label>Especie</label>
+        <select name="especie">
+            <option value="">Todas</option>
+
+            {% for esp in especies %}
+            <option
+                value="{{ esp.id }}"
+                {% if request.GET.especie == esp.id|stringformat:"s" %}
+                    selected
+                {% endif %}
+            >
+                {{ esp.nombre }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label>Sexo</label>
+        <select name="sexo">
+            <option value="">Todos</option>
+            <option value="macho" {% if request.GET.sexo == "macho" %}selected{% endif %}>
+                Macho
+            </option>
+            <option value="hembra" {% if request.GET.sexo == "hembra" %}selected{% endif %}>
+                Hembra
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Estado</label>
+        <select name="estado">
+            <option value="">Todos</option>
+
+            <option value="activo"
+                {% if request.GET.estado == "activo" %}
+                    selected
+                {% endif %}
+            >
+                Activo
+            </option>
+
+            <option value="inactivo"
+                {% if request.GET.estado == "inactivo" %}
+                    selected
+                {% endif %}
+            >
+                Inactivo
+            </option>
+        </select>
+    </div>
+
+</div>
+
+<div style="margin-top:1rem;display:flex;gap:10px;">
+    <button type="submit" class="btn-filtrar">
+        Filtrar
+    </button>
+
+    <a href="{% url 'usuarios:mascotas' %}"
+       class="btn-limpiar">
+        Limpiar
+    </a>
+
+    <a href="{% url 'panel:reporte_mascotas_pdf' %}?{{ request.GET.urlencode }}"
+       class="btn-pdf">
+        Descargar PDF
+    </a>
+</div>
+
+</form>
+
+<div class="table-wrap">
+
+<table>
+
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Propietario</th>
+            <th>Sexo</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for mascota in mascotas %}
+
+        <tr>
+
+            <td>
+                <strong>{{ mascota.nombre }}</strong>
+            </td>
+
+            <td>
+                {{ mascota.especie }}
+            </td>
+
+            <td>
+                {{ mascota.raza }}
+            </td>
+
+            <td>
+                {{ mascota.propietario }}
+            </td>
+
+            <td>
+                {{ mascota.sexo }}
+            </td>
+
+            <td>
+                {% if mascota.estado == 'activo' %}
+                    <span class="estado-activo">
+                        Activo
+                    </span>
+                {% else %}
+                    <span class="estado-inactivo">
+                        Inactivo
+                    </span>
+                {% endif %}
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="6" class="empty-msg">
+                No hay mascotas registradas.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

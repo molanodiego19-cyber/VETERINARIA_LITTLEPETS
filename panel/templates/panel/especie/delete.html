@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="form-card">
+
+  <div class="form-logo">Eliminar Especie</div>
+
+  <p>¿Seguro que deseas eliminar <strong>{{ object.nombre }}</strong>?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn-form marron">Eliminar</button>
+  </form>
+
+  <div class="form-back">
+    <a href="{% url 'panel:panel_especie_list' %}">Cancelar</a>
+  </div>
+
+</div>
+
+{% endblock %}

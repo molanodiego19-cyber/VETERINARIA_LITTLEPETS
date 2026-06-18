@@ -1,0 +1,426 @@
+{% extends 'usuarios/base_panel.html' %}
+
+{% block page_name %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .page-title { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:#2d6a4f; margin-bottom:.15rem; }
+  .page-sub { font-size:.75rem; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:#bbb; }
+
+  /* Bienvenida */
+  .welcome-card {
+    background: linear-gradient(135deg, #2d6a4f 0%, #52b788 100%);
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 32px rgba(45,106,79,.25);
+  }
+  .welcome-card h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: .3rem;
+  }
+  .welcome-card p {
+    font-size: .88rem;
+    color: rgba(255,255,255,.75);
+    margin: 0;
+  }
+  .welcome-emoji { font-size: 4rem; }
+
+  /* Stats */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.3rem 1.5rem;
+    border: 1px solid #f0e8d8;
+    box-shadow: 0 4px 16px rgba(0,0,0,.05);
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+  .stat-card .stat-icon { font-size: 1.6rem; }
+  .stat-card .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #2d6a4f;
+    line-height: 1;
+  }
+  .stat-card .stat-label {
+    font-size: .73rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: #bbb;
+  }
+
+  /* Secciones */
+  .sections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media(max-width:640px){ .sections-grid { grid-template-columns:1fr; } }
+
+  .section-card {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #f0e8d8;
+    box-shadow: 0 4px 16px rgba(0,0,0,.05);
+    overflow: hidden;
+  }
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid #f5f0e8;
+  }
+  .section-head-left {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+  .section-head-icon { font-size: 1.2rem; }
+  .section-head h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2d6a4f;
+    margin: 0;
+  }
+  .btn-sm-verde {
+    font-family: 'DM Sans', sans-serif;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 50px;
+    text-decoration: none;
+    background: #d8f3dc;
+    color: #2d6a4f;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .btn-sm-verde:hover { background: #2d6a4f; color: #fff; }
+
+  /* Items de lista */
+  .section-list { list-style: none; padding: 0; margin: 0; }
+
+  .section-item {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    padding: .9rem 1.5rem;
+    border-bottom: 1px solid #f5f0e8;
+    transition: background .12s;
+  }
+  .section-item:last-child { border-bottom: none; }
+  .section-item:hover { background: #fdf8f0; }
+
+  .item-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .avatar-mascota { background: #fde8e2; }
+  .avatar-cita    { background: #d8f3dc; }
+
+  .item-info { flex: 1; min-width: 0; }
+  .item-name {
+    font-size: .88rem;
+    font-weight: 600;
+    color: #1c2b22;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .item-sub {
+    font-size: .75rem;
+    color: #bbb;
+    margin-top: .1rem;
+  }
+
+  .badge-cita {
+    font-size: .65rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+    background: #fef3c7;
+    color: #92400e;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #ccc;
+    font-size: .85rem;
+  }
+  .empty-state span { display:block; font-size:2rem; margin-bottom:.5rem; }
+</style>
+
+<!-- Bienvenida -->
+<div class="welcome-card">
+  <div>
+    <h1>¡Hola, {{ propietario.nombre }}! 👋</h1>
+    <p>Bienvenido a tu panel de Little Pets. Aquí puedes gestionar tus mascotas y citas.</p>
+  </div>
+  <div class="welcome-emoji">🐾</div>
+</div>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat-card">
+    <span class="stat-icon">🐶</span>
+    <span class="stat-num">{{ mascotas|length }}</span>
+    <span class="stat-label">Mascotas</span>
+  </div>
+  <div class="stat-card">
+    <span class="stat-icon">📅</span>
+    <span class="stat-num">{{ citas|length }}</span>
+    <span class="stat-label">Próximas citas</span>
+  </div>
+</div>
+
+
+  <!-- Citas -->
+  <div class="section-card">
+
+    <div class="section-head">
+      <div class="section-head-left">
+        <span class="section-head-icon">📅</span>
+        <h2>Próximas Citas</h2>
+      </div>
+
+      <a href="{% url 'citas:listar' %}" class="btn-sm-verde">
+        Ver todas
+      </a>
+    </div>
+
+    <div style="padding:1rem;">
+
+      {% for cita in citas %}
+
+      <div style="
+        background:#fff;
+        border:1px solid #edf2f7;
+        border-radius:18px;
+        padding:1rem;
+        margin-bottom:1rem;
+        display:flex;
+        gap:1rem;
+        align-items:flex-start;
+        box-shadow:0 4px 14px rgba(0,0,0,.05);
+        transition:.2s;
+      ">
+
+        <!-- FECHA -->
+        <div style="
+          min-width:72px;
+          border-radius:16px;
+          background:linear-gradient(135deg,#52b788,#2d6a4f);
+          padding:12px 10px;
+          text-align:center;
+          color:#fff;
+          box-shadow:0 4px 12px rgba(45,106,79,.25);
+        ">
+
+          <div style="
+            font-size:1.5rem;
+            font-weight:900;
+            line-height:1;
+          ">
+            {{ cita.fecha|date:"d" }}
+          </div>
+
+          <div style="
+            font-size:.72rem;
+            text-transform:uppercase;
+            margin-top:4px;
+            letter-spacing:1px;
+            opacity:.9;
+          ">
+            {{ cita.fecha|date:"M" }}
+          </div>
+
+        </div>
+
+        <!-- INFO -->
+        <div style="flex:1;">
+
+          <!-- mascota -->
+          <div style="
+            font-size:1rem;
+            font-weight:800;
+            color:#1c2b22;
+            margin-bottom:.45rem;
+          ">
+            🐶 {{ cita.mascota.nombre }}
+          </div>
+
+          <!-- servicio -->
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:.4rem;
+            color:#555;
+            font-size:.86rem;
+          ">
+            🩺
+            <span>
+              <strong>Servicio:</strong>
+              {{ cita.servicio.nombre }}
+            </span>
+          </div>
+
+          <!-- veterinario -->
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:.4rem;
+            color:#555;
+            font-size:.86rem;
+          ">
+            👨‍⚕️
+            <span>
+              <strong>Veterinario:</strong>
+              {{ cita.veterinario.nombre }}
+            </span>
+          </div>
+
+          <!-- hora -->
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:.7rem;
+            color:#555;
+            font-size:.86rem;
+          ">
+            ⏰
+            <span>
+              {{ cita.hora|time:"H:i" }} hrs
+            </span>
+          </div>
+
+          <!-- estado -->
+          <div>
+
+            {% if cita.estado == 'pendiente' %}
+
+              <span style="
+                background:#fff3cd;
+                color:#856404;
+                padding:6px 12px;
+                border-radius:50px;
+                font-size:.72rem;
+                font-weight:700;
+              ">
+                🟡 Pendiente
+              </span>
+
+            {% elif cita.estado == 'confirmada' %}
+
+              <span style="
+                background:#dbeafe;
+                color:#1e40af;
+                padding:6px 12px;
+                border-radius:50px;
+                font-size:.72rem;
+                font-weight:700;
+              ">
+                🔵 Confirmada
+              </span>
+
+            {% elif cita.estado == 'en_proceso' %}
+
+              <span style="
+                background:#dcfce7;
+                color:#166534;
+                padding:6px 12px;
+                border-radius:50px;
+                font-size:.72rem;
+                font-weight:700;
+              ">
+                🟢 En proceso
+              </span>
+
+            {% elif cita.estado == 'cancelada' %}
+
+              <span style="
+                background:#fee2e2;
+                color:#991b1b;
+                padding:6px 12px;
+                border-radius:50px;
+                font-size:.72rem;
+                font-weight:700;
+              ">
+                ❌ Cancelada
+              </span>
+
+            {% elif cita.estado == 'finalizada' %}
+
+              <span style="
+                background:#e5e7eb;
+                color:#374151;
+                padding:6px 12px;
+                border-radius:50px;
+                font-size:.72rem;
+                font-weight:700;
+              ">
+                ✅ Finalizada
+              </span>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {% empty %}
+
+      <div class="empty-state" style="
+        background:#fff;
+        border-radius:18px;
+        padding:2rem;
+        box-shadow:0 4px 14px rgba(0,0,0,.05);
+      ">
+
+        <span style="
+          font-size:3rem;
+          display:block;
+          margin-bottom:.6rem;
+        ">
+          📅
+        </span>
+
+        No tienes citas próximas
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
