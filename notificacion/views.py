@@ -10,6 +10,20 @@ from notificacion.tasks import (
 from django.http import HttpResponse
 from django.conf import settings
 
+import socket
+from django.http import HttpResponse
+
+def smtp_test(request):
+    try:
+        sock = socket.create_connection(
+            ("smtp-relay.brevo.com", 587),
+            timeout=10
+        )
+        sock.close()
+        return HttpResponse("✅ Conexion SMTP OK")
+    except Exception as e:
+        return HttpResponse(f"❌ ERROR SMTP: {e}")
+
 def smtp_info(request):
     return HttpResponse(f"""
         HOST: {settings.EMAIL_HOST}<br>
@@ -37,32 +51,11 @@ def run_scheduler(request):
 # TEST EMAIL
 # =========================
 def test_email(request):
-
-    try:
-
-        send_mail(
-            subject="Test Brevo",
-            message="Email de prueba desde Django",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[settings.EMAIL_HOST_USER],
-            fail_silently=False,
-        )
-
-        return HttpResponse("✅ Email enviado correctamente")
-
-    except Exception as e:
-
-        return HttpResponse(f"❌ ERROR: {str(e)}")
-
-
-# =========================
-# INFO SMTP
-# =========================
-def smtp_info(request):
+    from django.conf import settings
 
     return HttpResponse(f"""
-        HOST: {settings.EMAIL_HOST}<br>
-        PORT: {settings.EMAIL_PORT}<br>
-        TLS: {settings.EMAIL_USE_TLS}<br>
-        USER: {settings.EMAIL_HOST_USER}<br>
-        """)
+        HOST={settings.EMAIL_HOST}<br>
+        PORT={settings.EMAIL_PORT}<br>
+        USER={settings.EMAIL_HOST_USER}<br>
+        PASS={'SI' if settings.EMAIL_HOST_PASSWORD else 'NO'}<br>
+    """)
