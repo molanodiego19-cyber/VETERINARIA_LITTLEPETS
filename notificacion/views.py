@@ -60,7 +60,7 @@ from notificacion.services import enviar_email
 def test_email(request):
 
     class FakeUser:
-        correo = "TU_CORREO@gmail.com"
+        correo = "molanodiego19@gmail.com"
 
     class FakeNotif:
         usuario = FakeUser()
