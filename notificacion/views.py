@@ -16,9 +16,9 @@ from django.http import HttpResponse
 def smtp_test(request):
     try:
         sock = socket.create_connection(
-            ("smtp-relay.brevo.com", 587),
-            timeout=10
-        )
+    ("smtp-relay.brevo.com", 465),
+    timeout=10
+)
         sock.close()
         return HttpResponse("✅ Conexion SMTP OK")
     except Exception as e:
