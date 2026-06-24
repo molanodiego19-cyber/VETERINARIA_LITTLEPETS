@@ -50,12 +50,21 @@ def run_scheduler(request):
 # =========================
 # TEST EMAIL
 # =========================
-def test_email(request):
-    from django.conf import settings
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.conf import settings
 
-    return HttpResponse(f"""
-        HOST={settings.EMAIL_HOST}<br>
-        PORT={settings.EMAIL_PORT}<br>
-        USER={settings.EMAIL_HOST_USER}<br>
-        PASS={'SI' if settings.EMAIL_HOST_PASSWORD else 'NO'}<br>
-    """)
+def test_email(request):
+    try:
+        send_mail(
+            subject="Prueba Brevo desde Render",
+            message="Si recibes este correo, SMTP funciona correctamente.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=["TU_CORREO@gmail.com"],  # pon tu correo real
+            fail_silently=False,
+        )
+
+        return HttpResponse("✅ Email enviado correctamente")
+
+    except Exception as e:
+        return HttpResponse(f"❌ ERROR: {e}")
