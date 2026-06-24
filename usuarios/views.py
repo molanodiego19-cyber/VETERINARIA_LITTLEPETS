@@ -146,7 +146,7 @@ def login_view(request):
         return render(request, "usuarios/login.html", {"error": mensaje})
 
     return render(request, "usuarios/login.html")
-from notificacion.services import enviar_email
+from notificacion.services import crear_notificacion
 from notificacion.models import Notificacion
 
 def recuperar_password(request):
@@ -155,35 +155,34 @@ def recuperar_password(request):
 
         correo = request.POST.get("correo")
 
-        try:
-            usuario = Usuario.objects.get(correo=correo)
+        if not correo:
+            messages.error(request, "Correo requerido")
+            return render(request, "usuarios/recuperar_password.html")
 
-            token_generator = PasswordResetTokenGenerator()
+        usuario = Usuario.objects.filter(correo=correo).first()
 
-            uid = urlsafe_base64_encode(force_bytes(usuario.pk))
-            token = token_generator.make_token(usuario)
+        if not usuario:
+            messages.error(request, "No existe una cuenta con ese correo")
+            return render(request, "usuarios/recuperar_password.html")
 
-            link = request.build_absolute_uri(
-                reverse("usuarios:reset_password", kwargs={"uidb64": uid, "token": token})
-            )
+        token_generator = PasswordResetTokenGenerator()
 
-            # CREAR NOTIFICACIÓN (RECOMENDADO)
-            Notificacion.objects.create(
-                usuario=usuario,
-                asunto="Recuperar contraseña",
-                cuerpo_mensaje=f"Ingresa al siguiente enlace:\n\n{link}",
-                canal="email",
-                estado="pendiente"
-            )
+        uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+        token = token_generator.make_token(usuario)
 
-            messages.success(request, "Se envió un enlace al correo.")
+        link = request.build_absolute_uri(
+            reverse("usuarios:reset_password", kwargs={"uidb64": uid, "token": token})
+        )
 
-        except Usuario.DoesNotExist:
+        crear_notificacion(
+            usuario=usuario,
+            plantilla_nombre="recuperar_password",
+            contexto={"link": link},
+        )
 
-            messages.error(request, "No existe una cuenta con ese correo.")
+        messages.success(request, "Se envió un enlace al correo.")
 
     return render(request, "usuarios/recuperar_password.html")
-
 
 def reset_password(request, uidb64, token):
 
