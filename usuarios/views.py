@@ -146,7 +146,8 @@ def login_view(request):
         return render(request, "usuarios/login.html", {"error": mensaje})
 
     return render(request, "usuarios/login.html")
-
+from notificacion.services import enviar_email
+from notificacion.models import Notificacion
 
 def recuperar_password(request):
 
@@ -160,21 +161,19 @@ def recuperar_password(request):
             token_generator = PasswordResetTokenGenerator()
 
             uid = urlsafe_base64_encode(force_bytes(usuario.pk))
-
             token = token_generator.make_token(usuario)
 
             link = request.build_absolute_uri(
-                reverse(
-                    "usuarios:reset_password", kwargs={"uidb64": uid, "token": token}
-                )
+                reverse("usuarios:reset_password", kwargs={"uidb64": uid, "token": token})
             )
 
-            send_mail(
-                "Recuperar contraseña",
-                f"Ingresa al siguiente enlace:\n\n{link}",
-                "admin@veterinaria.com",
-                [correo],
-                fail_silently=False,
+            # CREAR NOTIFICACIÓN (RECOMENDADO)
+            Notificacion.objects.create(
+                usuario=usuario,
+                asunto="Recuperar contraseña",
+                cuerpo_mensaje=f"Ingresa al siguiente enlace:\n\n{link}",
+                canal="email",
+                estado="pendiente"
             )
 
             messages.success(request, "Se envió un enlace al correo.")
