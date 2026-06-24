@@ -1,5 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-
+scheduler = BackgroundScheduler(timezone="America/Bogota")
 from .tasks import (
     enviar_recordatorios,
     enviar_vacunas_pendientes,
