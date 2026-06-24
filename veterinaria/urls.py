@@ -13,6 +13,7 @@ urlpatterns = [
     path("facturacion/", include("facturacion.urls")),
     path("notificacion/", include("notificacion.urls")),
     path("mascota/", include("mascota.urls")),
+    path("cron/emails/<str:secret>/", views.cron_emails),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -13,6 +13,21 @@ from django.conf import settings
 import socket
 from django.http import HttpResponse
 
+from notificacion.tasks import procesar_correos_pendientes
+from django.http import HttpResponse
+
+from django.conf import settings
+from django.http import HttpResponseForbidden, HttpResponse
+
+def cron_emails(request, secret):
+
+    if secret != settings.CRON_SECRET:
+        return HttpResponseForbidden("No autorizado")
+
+    procesar_correos_pendientes()
+    return HttpResponse("OK")
+
+
 def smtp_test(request):
     try:
         sock = socket.create_connection(

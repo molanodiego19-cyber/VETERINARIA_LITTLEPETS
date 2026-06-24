@@ -24,6 +24,8 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+CRON_SECRET = os.getenv("CRON_SECRET", "dev-secret")
+
 
 # =====================
 # APPS
@@ -139,17 +141,6 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DEBUG = True
-# =====================
-# STATIC
-# =====================
-STATIC_URL = "/static/"
-
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-
 # =====================
 # MEDIA
 # =====================
@@ -172,4 +163,4 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_TIMEOUT = 30
+EMAIL_TIMEOUT = 30 
