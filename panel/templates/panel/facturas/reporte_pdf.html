@@ -97,46 +97,43 @@
                 Sin servicio
             {% endif %}
         </p>
-        {% if factura.cita.servicio_realizado and factura.cita.servicio_realizado != factura.cita.servicio %}
+        {% if factura.cita.vacunaciones.exists %}
 
-<table style="margin-top:15px; background:#fff8e1;">
+        <table style="margin-top:15px;">
 
-    <tr>
-        <th colspan="2" style="text-align:center;">
-            CAMBIO DE SERVICIO REALIZADO
-        </th>
-    </tr>
+            <tr>
+                <th colspan="3" style="text-align:center;">
+                    VACUNAS APLICADAS
+                </th>
+            </tr>
 
-    <tr>
-        <td width="35%">
-            <strong>Servicio Agendado</strong>
-        </td>
-        <td>
-            {{ factura.cita.servicio.nombre }}
-        </td>
-    </tr>
+            <tr>
+                <th>Vacuna</th>
+                <th>Dosis</th>
+                <th>Próxima Dosis</th>
+            </tr>
 
-    <tr>
-        <td>
-            <strong>Servicio Realizado</strong>
-        </td>
-        <td>
-            {{ factura.cita.servicio_realizado.nombre }}
-        </td>
-    </tr>
+            {% for vacunacion in factura.cita.vacunaciones.all %}
 
-    <tr>
-        <td>
-            <strong>Motivo del Cambio</strong>
-        </td>
-        <td>
-            {{ factura.cita.motivo_cambio_servicio }}
-        </td>
-    </tr>
+            <tr>
+                <td>
+                    {{ vacunacion.vacuna.nombre }}
+                </td>
 
-</table>
+                <td>
+                    {{ vacunacion.numero_dosis }}
+                </td>
 
-{% endif %}
+                <td>
+                    {{ vacunacion.proxima_dosis|default:"No aplica" }}
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        {% endif %}
 
         <p>
             <strong>Fecha Emisión:</strong>
@@ -187,7 +184,7 @@
                     {% if detalle.servicio %}
                         {{ detalle.servicio.nombre }}
                     {% else %}
-                        ---
+                        Vacunación
                     {% endif %}
 
                 </td>

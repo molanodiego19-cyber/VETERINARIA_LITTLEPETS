@@ -43,7 +43,11 @@ def crear_notificacion(usuario, plantilla_nombre, cita=None, contexto=None):
     print("📩 Notificación creada")
     return notificacion
 
+from django.core.mail import get_connection
+import ssl
 
+connection = get_connection()
+connection.ssl_context = ssl._create_unverified_context()
 # =========================
 # ENVIAR EMAIL
 # =========================

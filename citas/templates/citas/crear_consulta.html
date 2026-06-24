@@ -2,6 +2,8 @@
 
 {% block content %}
 <style>
+    html {font-size: 20px;}
+    
     .form-actions{
     display:flex;
     gap:12px;
@@ -71,37 +73,52 @@
     </div>
     {% endfor %}
 
-      <hr>
+<hr>
 
-<h4>🔄 Cambio de servicio (Opcional)</h4>
+<h4>💉 Aplicar vacunación (Opcional)</h4>
 
 <div class="form-group">
-    <label>Servicio realizado realmente</label>
+    <label>Vacuna aplicada</label>
 
-    <select name="servicio_cambiado" class="form-control">
-
+    <select name="vacuna_id" class="form-control">
         <option value="">
-            Mantener servicio original
+            No aplicar vacuna
         </option>
 
-        {% for servicio in servicios %}
-        <option value="{{ servicio.id }}">
-            {{ servicio.nombre }}
+        {% for vacuna in vacunas %}
+        <option value="{{ vacuna.id }}">
+            {{ vacuna.nombre }}
         </option>
         {% endfor %}
-
     </select>
 </div>
 
 <div class="form-group">
-    <label>Motivo del cambio</label>
+    <label>Número de dosis</label>
 
-    <textarea
-        name="motivo_cambio"
-        class="form-control"
-        rows="3"></textarea>
+    <input
+        type="number"
+        name="numero_dosis"
+        min="1"
+        class="form-control">
 </div>
 
+<div class="form-group">
+    <label>Próxima dosis</label>
+
+    <input
+        type="date"
+        name="proxima_dosis"
+        class="form-control">
+</div>
+
+<div class="form-group">
+    <label>Observaciones vacunación</label>
+
+    <textarea
+        name="observaciones_vacuna"
+        rows="3"
+        class="form-control"></textarea>
 </div>
 
     <!-- 🔹 BOTONES -->

@@ -74,9 +74,7 @@
         <thead>
     <tr>
         <th>Factura</th>
-        <th>Servicio Original</th>
-        <th>Servicio Facturado</th>
-        <th>Motivo Cambio</th>
+        <th>Servicio Agendado</th>
         <th>Estado</th>
         <th>Cantidad</th>
         <th>Total</th>
@@ -97,8 +95,8 @@
     <!-- SERVICIO ORIGINAL -->
     <td>
 
-        {% if d.factura.servicio_original %}
-            {{ d.factura.servicio_original.nombre }}
+        {% if d.factura.servicio %}
+            {{ d.factura.servicio.nombre }}
         {% elif d.servicio %}
             {{ d.servicio.nombre }}
         {% else %}
@@ -107,47 +105,10 @@
 
     </td>
 
-    <!-- SERVICIO FACTURADO -->
-    <td>
-
-        {% if d.servicio_cambiado %}
-            <span style="
-                color:#d97706;
-                font-weight:bold;
-            ">
-                {{ d.servicio_cambiado.nombre }}
-            </span>
-
-        {% elif d.servicio %}
-
-            {{ d.servicio.nombre }}
-
-        {% else %}
-
-            {{ d.descripcion }}
-
-        {% endif %}
-
-    </td>
-
-    <!-- MOTIVO -->
-    <td>
-
-        {% if d.notas %}
-            {{ d.notas }}
-        {% elif d.factura.motivo_cambio %}
-            {{ d.factura.motivo_cambio }}
-        {% else %}
-            Sin cambios
-        {% endif %}
-
-    </td>
-
     <!-- ESTADO -->
     <td>
 
-        {% if d.servicio_cambiado %}
-
+        {% if d.servicio %}
             <span style="
                 background:#fff3cd;
                 color:#856404;
@@ -155,7 +116,7 @@
                 border-radius:5px;
                 font-weight:bold;
             ">
-                Modificado
+                Normal
             </span>
 
         {% else %}

@@ -29,7 +29,7 @@ def verificar_rol(request, rol_permitido):
 
 def dashboard(request):
     if not verificar_sesion(request):
-        return redirect("login")
+        return redirect("usuarios:login")
 
     hoy = timezone.now().date()
     inicio_mes = hoy.replace(day=1)

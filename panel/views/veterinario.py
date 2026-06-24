@@ -14,6 +14,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 # EXCEL
 import openpyxl
 from veterinarioapp.models import Especialidad
+from usuarios.models import Usuario
 
 # =====================================================
 # FILTRO REUTILIZABLE
@@ -80,7 +81,7 @@ class VeterinarioDeleteView(View):
     def post(self, request, pk):
         veterinario = get_object_or_404(Veterinario, pk=pk)
 
-        veterinario.usuario.estado = "Inactivo"
+        veterinario.usuario.estado = Usuario.Estado.INACTIVO
         veterinario.usuario.save()
 
         return redirect("panel:panel_veterinario_list")

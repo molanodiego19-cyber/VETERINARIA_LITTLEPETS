@@ -9,7 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 import openpyxl
-
+from usuarios.models import Usuario
 # =====================================================
 # FILTRO REUTILIZABLE
 # =====================================================
@@ -142,7 +142,7 @@ class PropietarioDeleteView(View):
 
         propietario = get_object_or_404(Propietario, pk=pk)
 
-        propietario.usuario.estado = "Inactivo"
+        propietario.usuario.estado = Usuario.Estado.INACTIVO
         propietario.usuario.save()
 
         return redirect("panel:panel_propietario_list")

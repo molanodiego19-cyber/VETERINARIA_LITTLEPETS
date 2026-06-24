@@ -262,7 +262,6 @@
         <th>Hora</th>
         <th>Estado</th>
         <th>Cancelar</th>
-        <th>Recordatorio</th>
 
       </tr>
     </thead>
@@ -312,17 +311,15 @@
         <td>
 
           {% if c.estado == 'pendiente' %}
-            <form action="{% url 'citas:confirmar_cita_recepcionista' c.id %}" method="post" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn-confirmar">
-                ✅ Confirmar
-              </button>
-            </form>
+          <span style="color:rgb(67, 204, 223);font-weight:bold;">
+              {{ c.get_estado_display }}
+            </span>
+
 
         
           {% elif c.estado == 'confirmada' %}
 
-            <span style="color:rgb(67, 204, 223);font-weight:bold;">
+            <span style="color:rgb(85, 223, 67);font-weight:bold;">
               {{ c.get_estado_display }}
             </span>
 
@@ -364,6 +361,13 @@
                 </button>
             </form>
 
+            <form action="{% url 'citas:confirmar_cita_recepcionista' c.id %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-confirmar">
+                ✅ Confirmar
+              </button>
+            </form>
+
           {% elif c.estado == 'cancelada' %}
 
             <span style="color:red;font-weight:bold;">
@@ -374,24 +378,6 @@
 
             <span style="color:#666;font-weight:bold;">
               {{ c.get_estado_display }}
-            </span>
-
-          {% endif %}
-
-        </td>
-
-        <td>
-
-          {% if c.recordatorio_enviado %}
-
-            <span style="color:green;font-weight:bold;">
-              Enviado
-            </span>
-
-          {% else %}
-
-            <span style="color:red;font-weight:bold;">
-              Pendiente
             </span>
 
           {% endif %}

@@ -56,8 +56,13 @@
   padding: 0;
 }
 
+html{
+    font-size: 20px;
+}
+
 body {
   font-family: 'DM Sans', sans-serif;
+  font-size: 25px;
   background: var(--crema);
   color: var(--texto);
   min-height: 100vh;
@@ -182,7 +187,7 @@ nav {
   border: none;
   cursor: pointer;
   font-family: 'DM Sans', sans-serif;
-  font-size: .81rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--texto);
   transition: background .15s;
@@ -488,6 +493,7 @@ tbody td strong { color: var(--marron); font-weight: 600; }
   background: var(--blanco);
   border-radius: 20px;
   padding: 2.5rem;
+  margin: 0 auto;
   width: 100%;
   max-width: 480px;
   box-shadow: var(--sombra);

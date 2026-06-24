@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from citas.models import Cita, Servicio
 from usuarios.models import Usuario
-from django.utils import timezone
+
 from .models import Factura
 from .forms import FacturaForm
 
@@ -31,7 +31,11 @@ def crear_factura_servicio(request, cita_id):
 
     cita = get_object_or_404(
         Cita.objects.select_related(
-            "servicio", "servicio_realizado", "mascota", "veterinario"
+            "servicio",
+            "mascota",
+            "veterinario"
+        ).prefetch_related(
+            "vacunaciones__vacuna"
         ),
         id=cita_id,
     )
@@ -62,12 +66,14 @@ def crear_factura_servicio(request, cita_id):
     # SERVICIO A FACTURAR
     # ==========================================
 
-    servicio = cita.servicio_realizado if cita.servicio_realizado else cita.servicio
+    servicio = cita.servicio
 
-    subtotal = servicio.precio if servicio else Decimal("0.00")
+    subtotal = servicio.precio
+
+    for vacunacion in cita.vacunaciones.select_related("vacuna").all():
+        subtotal += vacunacion.vacuna.precio_venta
 
     impuestos = (subtotal * Decimal("0.01")).quantize(Decimal("0.01"))
-
     total = (subtotal + impuestos).quantize(Decimal("0.01"))
 
     # ==========================================
@@ -84,27 +90,11 @@ def crear_factura_servicio(request, cita_id):
 
             factura.cita = cita
 
-            # ======================================
-            # TRAZABILIDAD DE CAMBIO
-            # ======================================
+            subtotal = cita.servicio.precio
 
-            hubo_cambio = (
-                cita.servicio_realizado and cita.servicio_realizado != cita.servicio
-            )
+            for vacunacion in cita.vacunaciones.select_related("vacuna").all():
 
-            if hubo_cambio:
-
-                factura.servicio_original = cita.servicio
-
-                factura.servicio_cambiado = cita.servicio_realizado
-
-                factura.motivo_cambio = cita.motivo_cambio_servicio
-
-                subtotal = cita.servicio_realizado.precio
-
-            else:
-
-                subtotal = cita.servicio.precio if cita.servicio else Decimal("0.00")
+                subtotal += vacunacion.vacuna.precio_venta
 
             # ======================================
             # TOTALES
@@ -120,27 +110,7 @@ def crear_factura_servicio(request, cita_id):
 
             factura.save()
 
-            # ======================================
-            # DETALLES
-            # ======================================
-
             factura.generar_detalles()
-
-            detalle = factura.detalles.first()
-
-            if detalle and hubo_cambio:
-
-                detalle.servicio = cita.servicio
-
-                detalle.servicio_cambiado = cita.servicio_realizado
-
-                detalle.notas = (
-                    f"Servicio cambiado por veterinario. "
-                    f"Motivo: "
-                    f"{cita.motivo_cambio_servicio}"
-                )
-
-                detalle.save()
 
             # ======================================
             # ACTUALIZAR CITA
@@ -174,45 +144,6 @@ def crear_factura_servicio(request, cita_id):
             "total": total,
             "servicios": Servicio.objects.filter(activo=True),
         },
-    )
-
-
-def cambiar_servicio_factura(request, factura_id):
-
-    factura = get_object_or_404(Factura, id=factura_id)
-
-    detalle = factura.detalles.first()
-
-    if request.method == "POST":
-
-        servicio_id = request.POST.get("servicio_cambiado")
-
-        motivo = request.POST.get("motivo_cambio")
-
-        if servicio_id:
-
-            nuevo_servicio = Servicio.objects.get(id=servicio_id)
-
-            factura.servicio_cambiado = nuevo_servicio
-            factura.motivo_cambio = motivo
-            factura.fecha_cambio = timezone.now()
-
-            factura.save()
-
-            detalle.servicio_cambiado = nuevo_servicio
-            detalle.notas = motivo
-            detalle.save()
-
-            messages.success(request, "Servicio actualizado correctamente.")
-
-            return redirect("facturacion:detalle_factura", factura.id)
-
-    servicios = Servicio.objects.filter(estado="activo")
-
-    return render(
-        request,
-        "facturacion/cambiar_servicio.html",
-        {"factura": factura, "servicios": servicios},
     )
 
 
@@ -256,7 +187,7 @@ def detalle_factura(request, factura_id):
     # =================================================
 
     detalles = factura.detalles.select_related(
-        "factura", "servicio", "servicio_cambiado"
+        "factura", "servicio"
     ).all()
 
     # =================================================

@@ -11,8 +11,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {font-size: 25px;}
 body {
   font-family: 'DM Sans', sans-serif;
+  font-size: 50px;
   background: var(--crema);
   min-height: 100vh;
   display: flex;
@@ -27,7 +29,7 @@ body {
   border-radius: 20px;
   padding: 2.5rem;
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   box-shadow: 0 8px 32px rgba(0,0,0,.08);
 }
 

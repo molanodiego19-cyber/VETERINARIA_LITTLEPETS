@@ -9,6 +9,7 @@ from usuarios.forms import RecepcionistaCompletoForm, RecepcionistaUpdateForm
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
+from usuarios.models import Usuario
 
 # EXCEL
 import openpyxl
@@ -73,7 +74,7 @@ class RecepcionistaDeleteView(View):
     def post(self, request, pk):
         recepcionista = get_object_or_404(Recepcionista, pk=pk)
 
-        recepcionista.usuario.estado = "inactivo"
+        recepcionista.usuario.estado = Usuario.Estado.INACTIVO
         recepcionista.usuario.save()
 
         return redirect("panel:panel_recepcionista_list")

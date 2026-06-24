@@ -38,14 +38,21 @@ def login_view(request):
             return render(
                 request, "usuarios/login.html", {"error": "❌ Usuario no existe"}
             )
-
-        # USUARIO SUSPENDIDO
-        if usuario.estado == Usuario.Estado.SUSPENDIDO:
+        
+        if usuario.estado in [
+            Usuario.Estado.SUSPENDIDO,
+            Usuario.Estado.INACTIVO,
+        ]:
             return render(
                 request,
                 "usuarios/login.html",
-                {"error": "❌ Usuario suspendido. Contacta al administrador."},
+                {
+                    "error":f" Usuario {usuario.estado}. contacta al administrador"
+                },
             )
+
+
+       
 
         # SI EL BLOQUEO YA TERMINÓ
         if usuario.bloqueado_hasta and usuario.bloqueado_hasta <= timezone.now():

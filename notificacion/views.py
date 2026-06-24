@@ -7,8 +7,16 @@ from notificacion.tasks import (
     procesar_correos_pendientes,
     enviar_vacunas_pendientes,
 )
+from django.http import HttpResponse
+from django.conf import settings
 
-
+def smtp_info(request):
+    return HttpResponse(f"""
+        HOST: {settings.EMAIL_HOST}<br>
+        PORT: {settings.EMAIL_PORT}<br>
+        USER: {settings.EMAIL_HOST_USER}<br>
+        PASSWORD: {'CONFIGURADA' if settings.EMAIL_HOST_PASSWORD else 'VACIA'}<br>
+    """)
 # =========================
 # RUN SCHEDULER CON CELERY
 # =========================

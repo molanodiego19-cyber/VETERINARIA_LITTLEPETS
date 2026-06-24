@@ -36,6 +36,7 @@ from .models import (
     Servicio,
     Tratamiento,
     Vacunacion,
+    Vacuna
 )
 
 
@@ -643,6 +644,18 @@ def iniciar_consulta(request, cita_id):
     cita.estado = "en_proceso"
     cita.save()
 
+    #CREAR CONSULTA AL INICIAR
+
+    Consulta.objects.create(
+        cita=cita,
+        anamnesis="",
+        examen_fisico="",
+        diagnostico_presuntivo="",
+        diagnostico_definitivo="",
+        plan_terapeutico="",
+        observaciones="",
+    )
+
     categoria = cita.servicio.categoria.nombre_categoria.lower()
 
     categorias_vacunacion = [
@@ -675,85 +688,11 @@ class CrearConsultaView(CreateView):
     def get_initial(self):
         cita = get_object_or_404(Cita, id=self.kwargs.get('cita_id'))
         return {
-            'fecha_inicio': cita.fecha,
-            'fecha_fin': cita.fecha,
             'peso_en_consulta': cita.mascota.peso_kg if cita.mascota.peso_kg else None,
             'observaciones': cita.notas_adicionales,
             'mascota': cita.mascota,
             'veterinario': cita.veterinario,
         }
-    
-    @transaction.atomic
-    def post(self, request, *args, **kwargs):
-        self.object = None
-        accion = request.POST.get("accion")
-        cita = get_object_or_404(Cita, id=self.kwargs.get('cita_id'))
-
-        form = self.get_form()
-
-        if not form.is_valid():
-            return self.form_invalid(form)
-
-        # ✅ GUARDAR CONSULTA SIEMPRE
-        consulta = form.save(commit=False)
-        consulta.cita = cita
-        consulta.veterinario = cita.veterinario
-        consulta.save()
-
-        form.instance = consulta
-        form.save_m2m()
-
-        consulta.crear_historia_clinica()
-
-        cita.estado = 'finalizada'
-        cita.save()
-
-        # 🔵 CASO 1: SOLO CONSULTA
-        if accion != "tratamiento":
-            messages.success(self.request, "✅ Consulta guardada correctamente.")
-            return redirect('facturacion:crear_factura',cita_id=cita.id)
-
-        # 🟡 CASO 2: CONSULTA + TRATAMIENTO
-        return redirect('citas:crear_tratamiento', consulta_id=consulta.id)
-
-    @transaction.atomic
-    def form_valid(self, form):
-        cita = get_object_or_404(Cita, id=self.kwargs.get('cita_id'))
-
-        consulta = form.save(commit=False)
-        consulta.cita = cita
-        consulta.veterinario = cita.veterinario
-        consulta.save()
-
-        form.instance = consulta
-        form.save_m2m()
-        self.object = consulta
-
-        # 🔥 CREAR HISTORIA CLÍNICA
-        consulta.crear_historia_clinica()
-
-        # 🔄 CAMBIAR ESTADO
-        cita.estado = 'finalizada'
-        cita.save()
-
-        messages.success(self.request, "✅ Consulta guardada correctamente.")
-        return redirect(self.get_success_url())
-
-    def form_invalid(self, form):
-        messages.error(self.request, "❌ Error al guardar la consulta.")
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def get_success_url(self):
-        return reverse('facturacion:crear_factura', kwargs={'consulta_id': self.object.id})
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context["servicios"] = Servicio.objects.filter(
-            activo=True,
-            nombre__iexact="Consulta General"
-        )
-
-        return context
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
@@ -773,68 +712,67 @@ class CrearConsultaView(CreateView):
         # GUARDAR CONSULTA
         # ==========================
 
-        consulta = form.save(commit=False)
+        consulta = get_object_or_404(
+        Consulta,
+        cita=cita
+        )
 
-        consulta.cita = cita
-        consulta.veterinario = cita.veterinario
+        consulta.fecha_fin = timezone.now()
 
+        consulta.anamnesis = form.cleaned_data["anamnesis"]
+        consulta.examen_fisico = form.cleaned_data["examen_fisico"]
+
+        consulta.diagnostico_presuntivo = form.cleaned_data["diagnostico_presuntivo"]
+        consulta.diagnostico_definitivo = form.cleaned_data["diagnostico_definitivo"]
+
+        consulta.plan_terapeutico = form.cleaned_data["plan_terapeutico"]
+        consulta.observaciones = form.cleaned_data["observaciones"]
+
+        consulta.peso_en_consulta = form.cleaned_data["peso_en_consulta"]
+
+        consulta.temperatura = form.cleaned_data["temperatura"]
+
+        consulta.frecuencia_cardiaca = form.cleaned_data["frecuencia_cardiaca"]
+
+        consulta.frecuencia_respiratoria = form.cleaned_data["frecuencia_respiratoria"]
+
+ 
         consulta.save()
 
-        form.instance = consulta
-        form.save_m2m()
-
         consulta.crear_historia_clinica()
-
+        
         # ==========================
-        # CAMBIO OPCIONAL SERVICIO
+        # VACUNACIÓN OPCIONAL
         # ==========================
 
-        servicio_cambiado_id = request.POST.get("servicio_cambiado")
+        vacuna_id = request.POST.get("vacuna_id")
 
-        motivo_cambio = request.POST.get("motivo_cambio")
+        if vacuna_id:
 
-        if servicio_cambiado_id:
-
-            nuevo_servicio = get_object_or_404(
-                Servicio,
-                id=servicio_cambiado_id
+            vacuna = get_object_or_404(
+                Vacuna,
+                id=vacuna_id
             )
 
-            cita.servicio_realizado = nuevo_servicio
+            vacunacion = Vacunacion.objects.create(
+                cita=cita,
+                vacuna=vacuna,
+                numero_dosis=request.POST.get("numero_dosis") or 1,
+                proxima_dosis=request.POST.get("proxima_dosis") or None,
+                observaciones=request.POST.get(
+                    "observaciones_vacuna"
+                ),
+                peso_actual=consulta.peso_en_consulta
+            )
 
-            if motivo_cambio:
+            vacunacion.crear_historia_clinica()
 
-                observacion_actual = cita.notas_adicionales or ""
-
-                cita.notas_adicionales = (
-                    f"{observacion_actual}\n"
-                    f"Servicio modificado por veterinario: "
-                    f"{motivo_cambio}"
-                )
-
-        else:
-            cita.servicio_realizado = cita.servicio
         # ==========================
-        # ESTADO
+        # ESTADO CITA
         # ==========================
 
         cita.estado = "atendida"
-
-        if servicio_cambiado_id:
-
-            nuevo_servicio = get_object_or_404(
-                Servicio,
-                id=servicio_cambiado_id
-            )
-
-            cita.servicio_realizado = nuevo_servicio
-            cita.motivo_cambio_servicio = motivo_cambio
-
-        else:
-            # Se realizó el servicio original
-            cita.servicio_realizado = cita.servicio
-
-        cita.save()
+        cita.save(update_fields=["estado"])
 
         # ==========================
         # SOLO CONSULTA
@@ -842,7 +780,10 @@ class CrearConsultaView(CreateView):
 
         if accion != "tratamiento":
 
-            messages.success(request, "✅ Consulta guardada correctamente.")
+            messages.success(
+                request,
+                "✅ Consulta guardada correctamente."
+            )
 
             return redirect("usuarios:citas_veterinario")
 
@@ -850,9 +791,15 @@ class CrearConsultaView(CreateView):
         # CONSULTA + TRATAMIENTO
         # ==========================
 
-        messages.success(request, "✅ Consulta guardada correctamente.")
+        messages.success(
+            request,
+            "✅ Consulta guardada correctamente."
+        )
 
-        return redirect("citas:crear_tratamiento", consulta_id=consulta.id)
+        return redirect(
+            "citas:crear_tratamiento",
+            consulta_id=consulta.id
+        )
 
     def form_invalid(self, form):
         messages.error(self.request, "❌ Error al guardar la consulta.")
@@ -1000,21 +947,6 @@ def crear_vacunacion(request, cita_id):
             vacunacion.save()
 
             vacunacion.crear_historia_clinica()
-
-            servicio_cambiado_id = request.POST.get("servicio_cambiado")
-
-            motivo_cambio = request.POST.get("motivo_cambio")
-
-            if servicio_cambiado_id:
-
-                nuevo_servicio = Servicio.objects.get(id=servicio_cambiado_id)
-
-                cita.servicio_realizado = nuevo_servicio
-                cita.motivo_cambio_servicio = motivo_cambio
-
-            else:
-
-                cita.servicio_realizado = cita.servicio
 
             cita.estado = "atendida"
 

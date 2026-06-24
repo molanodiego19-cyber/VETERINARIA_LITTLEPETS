@@ -36,14 +36,6 @@ class Cita(models.Model):
     servicio = models.ForeignKey(
         "citas.Servicio", on_delete=models.CASCADE, related_name="citas"
     )
-    servicio_realizado = models.ForeignKey(
-        "citas.Servicio",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="citas_realizadas",
-    )
-    motivo_cambio_servicio = models.TextField(blank=True, null=True)
     vacuna = models.ForeignKey(
         "Vacuna", on_delete=models.SET_NULL, null=True, blank=True
     )
@@ -68,8 +60,7 @@ class Cita(models.Model):
 
     def clean(self):
 
-        if self.fecha and self.fecha < datetime.now().date():
-
+        if not self.pk and self.fecha and self.fecha < datetime.now().date():
             raise ValidationError("No puedes agendar en fechas pasadas")
 
         if self.fecha and self.hora and self.servicio:
@@ -136,12 +127,11 @@ class Cita(models.Model):
 
 
 # CLASE CONSULTA
-# CLASE CONSULTA
 class Consulta(models.Model):
 
     cita = models.ForeignKey(Cita, on_delete=models.CASCADE, related_name="consultas")
-    hora_inicio = models.TimeField()
-    hora_fin = models.TimeField()
+    fecha_inicio = models.DateTimeField(auto_now_add=True)
+    fecha_fin = models.DateTimeField(null=True, blank=True)
 
     anamnesis = models.TextField()
     examen_fisico = models.TextField()
@@ -168,14 +158,18 @@ class Consulta(models.Model):
         validators=[
             MinValueValidator(40),
             MaxValueValidator(300),
-        ]
+        ],
+        blank=True,
+        null=True
     )
 
     frecuencia_respiratoria = models.IntegerField(
         validators=[
             MinValueValidator(5),
             MaxValueValidator(100),
-        ]
+        ],
+        blank=True,
+        null=True
     )
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)

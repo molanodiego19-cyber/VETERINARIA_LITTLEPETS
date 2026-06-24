@@ -310,19 +310,11 @@ class ReagendarCitaForm(forms.ModelForm):
 
 class ConsultaForm(forms.ModelForm):
 
-    hora_inicio = forms.TimeField(
-        widget=forms.TimeInput(attrs={"type": "time", "class": "form-control"})
-    )
-
-    hora_fin = forms.TimeField(
-        widget=forms.TimeInput(attrs={"type": "time", "class": "form-control"})
-    )
-
     class Meta:
 
         model = Consulta
 
-        exclude = ["fecha_creacion"]
+        exclude = ["fecha_creacion", "fecha_fin", "fecha_inicio", "cita"]
 
         widgets = {
             "anamnesis": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
@@ -349,27 +341,6 @@ class ConsultaForm(forms.ModelForm):
             ),
         }
 
-    # ==========================================
-    # VALIDAR HORAS
-    # ==========================================
-
-    def clean(self):
-
-        cleaned_data = super().clean()
-
-        hora_inicio = cleaned_data.get("hora_inicio")
-        hora_fin = cleaned_data.get("hora_fin")
-
-        if hora_inicio and hora_fin:
-
-            if hora_fin <= hora_inicio:
-
-                self.add_error(
-                    "hora_fin", "La hora final debe ser mayor que la hora inicial."
-                )
-
-        return cleaned_data
-
 
 # =========================================================
 # CONSULTA COMPLETA FORM
@@ -382,7 +353,7 @@ class ConsultaCompletaForm(ConsultaForm):
 
         model = Consulta
 
-        exclude = ["fecha_creacion", "cita", "veterinario"]
+        exclude = ["fecha_creacion", "cita", "fecha_fin", "fecha_inicio"]
 
 
 # =========================================================

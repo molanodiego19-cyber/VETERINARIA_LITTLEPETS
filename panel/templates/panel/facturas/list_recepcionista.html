@@ -467,41 +467,24 @@
                 <!-- SERVICIO -->
                 <td>
 
-                {% if f.cita.servicio_realizado %}
+                <span class="badge-servicio">
+                    {{ f.cita.servicio.nombre }}
+                </span>
 
-                    {% if f.cita.servicio.id != f.cita.servicio_realizado.id %}
+                {% if f.cita.vacunaciones.exists %}
+                    <br><br>
 
-                        <div style="display:flex;flex-direction:column;gap:8px;">
-
-                            <span class="badge-servicio"
-                                style="background:#fff3cd;color:#856404;">
-                                📅 Agendado:
-                                {{ f.cita.servicio.nombre }}
-                            </span>
-
-                            <span class="badge-servicio"
-                                style="background:#d1fae5;color:#065f46;">
-                                ✅ Realizado:
-                                {{ f.cita.servicio_realizado.nombre }}
-                            </span>
-
-                        </div>
-
-                    {% else %}
-
-                        <span class="badge-servicio">
-                            {{ f.cita.servicio.nombre }}
+                    {% for vacunacion in f.cita.vacunaciones.all %}
+                        <span class="badge-servicio"
+                            style="background:#d1fae5;color:#065f46;">
+                            💉 {{ vacunacion.vacuna.nombre }}
                         </span>
-
-                    {% endif %}
-
-                {% else %}
+                    {% endfor %}
+                {% endif %}
 
                     <span class="badge-servicio">
                         {{ f.cita.servicio.nombre }}
                     </span>
-
-                {% endif %}
 
                 </td>
 
@@ -529,10 +512,19 @@
 
                 {{ f.notas|default:"Sin notas" }}
 
-                {% if f.cita.motivo_cambio_servicio %}
+                {% if f.cita.vacunaciones.exists %}
                     <hr>
-                    <strong>Cambio:</strong><br>
-                    {{ f.cita.motivo_cambio_servicio }}
+
+                    <strong>Vacunas aplicadas:</strong>
+
+                    <ul style="margin-top:8px;">
+                        {% for vacunacion in f.cita.vacunaciones.all %}
+                            <li>
+                                {{ vacunacion.vacuna.nombre }}
+                                (Dosis {{ vacunacion.numero_dosis }})
+                            </li>
+                        {% endfor %}
+                    </ul>
                 {% endif %}
 
                 </td>
