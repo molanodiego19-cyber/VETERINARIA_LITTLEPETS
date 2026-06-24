@@ -54,17 +54,25 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.conf import settings
 
+from notificacion.models import Notificacion
+from notificacion.services import enviar_email
+
 def test_email(request):
-    try:
-        send_mail(
-            subject="Prueba Brevo desde Render",
-            message="Si recibes este correo, SMTP funciona correctamente.",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=["TU_CORREO@gmail.com"],  # pon tu correo real
-            fail_silently=False,
-        )
 
-        return HttpResponse("✅ Email enviado correctamente")
+    class FakeUser:
+        correo = "TU_CORREO@gmail.com"
 
-    except Exception as e:
-        return HttpResponse(f"❌ ERROR: {e}")
+    class FakeNotif:
+        usuario = FakeUser()
+        asunto = "Prueba API Brevo"
+        cuerpo_mensaje = "Hola desde Little Pets"
+
+        def marcar_enviada(self):
+            pass
+
+        def marcar_error(self, e):
+            pass
+
+    enviar_email(FakeNotif())
+
+    return HttpResponse("Prueba enviada")

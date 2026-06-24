@@ -51,29 +51,55 @@ connection.ssl_context = ssl._create_unverified_context()
 # =========================
 # ENVIAR EMAIL
 # =========================
+import requests
+from django.conf import settings
+
+
 def enviar_email(notificacion):
 
     try:
-        print("HOST:", settings.EMAIL_HOST)
-        print("USER:", settings.EMAIL_HOST_USER)
-        print("DESTINO:", notificacion.usuario.correo)
 
-        email = EmailMultiAlternatives(
-            subject=notificacion.asunto,
-            body=notificacion.cuerpo_mensaje,
-            from_email=settings.EMAIL_HOST_USER,
-            to=[notificacion.usuario.correo],
+        payload = {
+            "sender": {
+                "name": "Little Pets",
+                "email": "littlepetscolombia@gmail.com"
+            },
+            "to": [
+                {
+                    "email": notificacion.usuario.correo
+                }
+            ],
+            "subject": notificacion.asunto,
+            "htmlContent": f"""
+            <html>
+                <body>
+                    {notificacion.cuerpo_mensaje}
+                </body>
+            </html>
+            """
+        }
+
+        headers = {
+            "accept": "application/json",
+            "api-key": settings.BREVO_API_KEY,
+            "content-type": "application/json"
+        }
+
+        response = requests.post(
+            "https://api.brevo.com/v3/smtp/email",
+            json=payload,
+            headers=headers,
+            timeout=30
         )
 
-        email.attach_alternative(
-            f"<html><body>{notificacion.cuerpo_mensaje}</body></html>", "text/html"
-        )
+        if response.status_code in [200, 201, 202]:
+            notificacion.marcar_enviada()
+            print("✅ Email enviado por API Brevo")
 
-        email.send()
-
-        notificacion.marcar_enviada()
-        print("✅ Email enviado")
+        else:
+            raise Exception(response.text)
 
     except Exception as e:
-        print("❌ ERROR EMAIL:", str(e))
+
+        print("❌ ERROR API:", e)
         notificacion.marcar_error(str(e))
