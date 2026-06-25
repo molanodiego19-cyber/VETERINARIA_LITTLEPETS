@@ -912,7 +912,7 @@ def crear_tratamiento(request, consulta_id):
             tratamiento.save()
 
             messages.success(request, "💊 Tratamiento creado correctamente")
-            return redirect("facturacion:crear_factura", cita_id=consulta.cita.id)
+            return redirect("usuarios:citas_veterinario")
 
     else:
         form = TratamientoForm()
