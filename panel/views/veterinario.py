@@ -112,34 +112,76 @@ def cargar_servicios(request):
 def reporte_veterinarios_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
-
     response["Content-Disposition"] = 'attachment; filename="veterinarios.pdf"'
 
     doc = SimpleDocTemplate(response)
 
     elementos = []
-
     styles = getSampleStyleSheet()
+
+    # ==========================================
+    # TÍTULO
+    # ==========================================
 
     titulo = Paragraph("Reporte de Veterinarios", styles["Title"])
 
     elementos.append(titulo)
-
     elementos.append(Spacer(1, 20))
 
-    data = [["ID", "Nombre", "Documento", "Especialidad", "Estado"]]
+    # ==========================================
+    # DATOS
+    # ==========================================
 
     veterinarios = filtrar_veterinarios(request)
 
-    for p in veterinarios:
+    # ==========================================
+    # RESUMEN
+    # ==========================================
+
+    total_veterinarios = veterinarios.count()
+
+    activos = veterinarios.filter(
+        usuario__estado="ACTIVO"
+    ).count()
+
+    inactivos = veterinarios.filter(
+        usuario__estado="INACTIVO"
+    ).count()
+
+    suspendidos = veterinarios.filter(
+        usuario__estado="SUSPENDIDO"
+    ).count()
+
+    resumen = f"""
+    <b>Total veterinarios:</b> {total_veterinarios}<br/>
+    <b>Activos:</b> {activos}<br/>
+    <b>Inactivos:</b> {inactivos}<br/>
+    <b>Suspendidos:</b> {suspendidos}
+    """
+
+    elementos.append(
+        Paragraph(resumen, styles["Normal"])
+    )
+
+    elementos.append(Spacer(1, 15))
+
+    # ==========================================
+    # TABLA
+    # ==========================================
+
+    data = [
+        ["ID", "Nombre", "Documento", "Especialidad", "Estado"]
+    ]
+
+    for v in veterinarios:
 
         data.append(
             [
-                str(p.id),
-                str(p.nombre),
-                str(p.documento),
-                str(p.especialidad),
-                str(p.usuario.estado),
+                str(v.id),
+                str(v.nombre),
+                str(v.documento),
+                str(v.especialidad),
+                str(v.usuario.estado),
             ]
         )
 
@@ -158,6 +200,10 @@ def reporte_veterinarios_pdf(request):
     )
 
     elementos.append(tabla)
+
+    # ==========================================
+    # CONSTRUIR PDF
+    # ==========================================
 
     doc.build(elementos)
 

@@ -105,35 +105,59 @@ class CitasListView(ListView):
 def reporte_citas_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
-
     response["Content-Disposition"] = 'attachment; filename="reporte_citas.pdf"'
 
     doc = SimpleDocTemplate(response)
-
     elementos = []
-
     styles = getSampleStyleSheet()
+
+    # ==========================================
+    # OBTENER CITAS
+    # ==========================================
+    citas = filtrar_citas(request)
+
+    # ==========================================
+    # RESUMEN
+    # ==========================================
+    total_citas = citas.count()
+
+    pendientes = citas.filter(estado="PENDIENTE").count()
+    confirmadas = citas.filter(estado="CONFIRMADA").count()
+    atendidas = citas.filter(estado="ATENDIDA").count()
+    facturadas = citas.filter(estado="FACTURADA").count()
+    canceladas = citas.filter(estado="CANCELADA").count()
 
     # ==========================================
     # TÍTULO
     # ==========================================
-
     titulo = Paragraph("Reporte General de Citas", styles["Title"])
 
     elementos.append(titulo)
+    elementos.append(Spacer(1, 15))
 
+    # ==========================================
+    # RESUMEN ESTADÍSTICO
+    # ==========================================
+    resumen = f"""
+    <b>Total de citas:</b> {total_citas}<br/>
+    <b>Pendientes:</b> {pendientes}<br/>
+    <b>Confirmadas:</b> {confirmadas}<br/>
+    <b>Atendidas:</b> {atendidas}<br/>
+    <b>Facturadas:</b> {facturadas}<br/>
+    <b>Canceladas:</b> {canceladas}
+    """
+
+    elementos.append(Paragraph(resumen, styles["Normal"]))
     elementos.append(Spacer(1, 20))
 
     # ==========================================
-    # DATOS
+    # TABLA
     # ==========================================
-
-    data = [["ID", "Mascota", "Veterinario", "Servicio", "Fecha", "Hora", "Estado"]]
-
-    citas = filtrar_citas(request)
+    data = [
+        ["ID", "Mascota", "Veterinario", "Servicio", "Fecha", "Hora", "Estado"]
+    ]
 
     for c in citas:
-
         data.append(
             [
                 str(c.id),
@@ -146,10 +170,6 @@ def reporte_citas_pdf(request):
             ]
         )
 
-    # ==========================================
-    # TABLA
-    # ==========================================
-
     tabla = Table(data)
 
     tabla.setStyle(
@@ -157,8 +177,8 @@ def reporte_citas_pdf(request):
             [
                 ("BACKGROUND", (0, 0), (-1, 0), colors.green),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("GRID", (0, 0), (-1, -1), 1, colors.black),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
                 ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
             ]
         )
@@ -167,9 +187,8 @@ def reporte_citas_pdf(request):
     elementos.append(tabla)
 
     # ==========================================
-    # CONSTRUIR PDF
+    # GENERAR PDF
     # ==========================================
-
     doc.build(elementos)
 
     return response

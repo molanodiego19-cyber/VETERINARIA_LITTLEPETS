@@ -89,15 +89,81 @@ def reporte_recepcionistas_pdf(request):
     elements = []
     styles = getSampleStyleSheet()
 
-    elements.append(Paragraph("Reporte de Recepcionistas", styles["Title"]))
-    elements.append(Spacer(1, 20))
-
-    data = [["ID", "Nombre", "Documento", "Estado"]]
-
+    # ==========================================
+    # RECEPCIONISTAS
+    # ==========================================
     recepcionistas = filtrar_recepcionistas(request)
 
+    # ==========================================
+    # ESTADÍSTICAS
+    # ==========================================
+    total_recepcionistas = recepcionistas.count()
+
+    activos = recepcionistas.filter(
+        usuario__estado="Activo"
+    ).count()
+
+    inactivos = recepcionistas.filter(
+        usuario__estado="Inactivo"
+    ).count()
+
+    suspendidos = recepcionistas.filter(
+        usuario__estado="Suspendido"
+    ).count()
+
+    # ==========================================
+    # TÍTULO
+    # ==========================================
+    elements.append(
+        Paragraph("Reporte de Recepcionistas", styles["Title"])
+    )
+
+    elements.append(Spacer(1, 15))
+
+    # ==========================================
+    # TABLA RESUMEN
+    # ==========================================
+    resumen = Table([
+        ["Total", "Activos", "Inactivos", "Suspendidos"],
+        [
+            total_recepcionistas,
+            activos,
+            inactivos,
+            suspendidos,
+        ],
+    ])
+
+    resumen.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.green),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ]
+        )
+    )
+
+    elements.append(resumen)
+    elements.append(Spacer(1, 20))
+
+    # ==========================================
+    # TABLA DETALLADA
+    # ==========================================
+    data = [
+        ["ID", "Nombre", "Documento", "Estado"]
+    ]
+
     for r in recepcionistas:
-        data.append([str(r.id), str(r.nombre), str(r.documento), str(r.usuario.estado)])
+        data.append(
+            [
+                str(r.id),
+                str(r.nombre),
+                str(r.documento),
+                str(r.usuario.estado),
+            ]
+        )
 
     table = Table(data)
 
@@ -107,6 +173,7 @@ def reporte_recepcionistas_pdf(request):
                 ("BACKGROUND", (0, 0), (-1, 0), colors.green),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                 ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
             ]
         )

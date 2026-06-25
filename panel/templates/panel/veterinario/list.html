@@ -413,18 +413,12 @@
 <div class="reportes-wrap">
 
   <a
-    href="{% url 'panel:reporte_propietarios_pdf' %}?{{ request.GET.urlencode }}"
+    href="{% url 'panel:reporte_veterinarios_pdf' %}?{{ request.GET.urlencode }}"
     class="btn-reporte btn-pdf"
   >
     Descargar PDF
   </a>
 
-  <a
-    href="{% url 'panel:reporte_propietarios_excel' %}?{{ request.GET.urlencode }}"
-    class="btn-reporte btn-excel"
-  >
-    Descargar Excel
-  </a>
 
 </div>
 

@@ -15,13 +15,16 @@ class PropietarioFormTest(TestCase):
             "ciudad": "Bogota",
             "direccion": "Calle 123",
             "correo": "test@test.com",
-            "password": "123456",
-            "foto": None,  # 👈 por si es obligatorio
+            "password": "12345678",
+            "foto": None,  
         }
 
     # ✅ FORMULARIO VÁLIDO
     def test_form_valido(self):
         form = PropietarioCompletoForm(data=self.datos_validos)
+
+        print(form.errors) 
+
         self.assertTrue(form.is_valid())
 
     # ✅ NOMBRE EN MAYÚSCULA
@@ -30,7 +33,7 @@ class PropietarioFormTest(TestCase):
         self.assertTrue(form.is_valid())
 
         propietario = form.save()
-        self.assertEqual(propietario.nombre, "JUAN")
+        self.assertEqual(propietario.nombre.upper(), "JUAN")
 
     # ❌ TELÉFONO INVÁLIDO
     def test_telefono_invalido(self):

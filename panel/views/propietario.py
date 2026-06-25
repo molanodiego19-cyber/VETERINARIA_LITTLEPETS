@@ -156,27 +156,91 @@ class PropietarioDeleteView(View):
 def reporte_propietarios_pdf(request):
 
     response = HttpResponse(content_type="application/pdf")
-
     response["Content-Disposition"] = 'attachment; filename="propietarios.pdf"'
 
     doc = SimpleDocTemplate(response)
-
     elementos = []
-
     styles = getSampleStyleSheet()
 
-    titulo = Paragraph("Reporte de Propietarios", styles["Title"])
-
-    elementos.append(titulo)
-
-    elementos.append(Spacer(1, 20))
-
-    data = [["ID", "Nombre", "Documento", "Correo", "Ciudad", "Teléfono", "Estado"]]
-
+    # ==========================================
+    # OBTENER PROPIETARIOS
+    # ==========================================
     propietarios = filtrar_propietarios(request)
 
-    for p in propietarios:
+    # ==========================================
+    # ESTADÍSTICAS
+    # ==========================================
+    total_propietarios = propietarios.count()
 
+    activos = propietarios.filter(
+        usuario__estado="Activo"
+    ).count()
+
+    inactivos = propietarios.filter(
+        usuario__estado="Inactivo"
+    ).count()
+
+    suspendidos = propietarios.filter(
+        usuario__estado="Suspendido"
+    ).count()
+
+    # ==========================================
+    # TÍTULO
+    # ==========================================
+    titulo = Paragraph(
+        "Reporte de Propietarios",
+        styles["Title"]
+    )
+
+    elementos.append(titulo)
+    elementos.append(Spacer(1, 15))
+
+    # ==========================================
+    # TABLA RESUMEN
+    # ==========================================
+    resumen_data = [
+        ["Total", "Activos", "Inactivos", "Suspendidos"],
+        [
+            total_propietarios,
+            activos,
+            inactivos,
+            suspendidos,
+        ],
+    ]
+
+    resumen_tabla = Table(resumen_data)
+
+    resumen_tabla.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.green),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+            ]
+        )
+    )
+
+    elementos.append(resumen_tabla)
+    elementos.append(Spacer(1, 20))
+
+    # ==========================================
+    # TABLA DETALLADA
+    # ==========================================
+    data = [
+        [
+            "ID",
+            "Nombre",
+            "Documento",
+            "Correo",
+            "Ciudad",
+            "Teléfono",
+            "Estado",
+        ]
+    ]
+
+    for p in propietarios:
         data.append(
             [
                 str(p.id),
@@ -205,10 +269,12 @@ def reporte_propietarios_pdf(request):
 
     elementos.append(tabla)
 
+    # ==========================================
+    # GENERAR PDF
+    # ==========================================
     doc.build(elementos)
 
     return response
-
 
 # =====================================================
 # REPORTE EXCEL
